@@ -88,7 +88,7 @@ class Master_kriteria extends CI_Controller {
 	{
 		$this->load->library('Enkripsi');
 		$id = $this->input->post('id');
-		$oldData = $this->m_kategori->get_by_id($id);
+		$oldData = $this->m_kriteria->get_by_id($id);
 		
 		if(!$oldData){
 			return redirect($this->uri->segment(1));
@@ -101,48 +101,52 @@ class Master_kriteria extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	public function add_data_kategori()
+	public function add_data_kriteria()
 	{
 		$obj_date = new DateTime();
 		$timestamp = $obj_date->format('Y-m-d H:i:s');
 		$arr_valid = $this->rule_validasi();
 		
-		$nama = trim(strtoupper(strtolower($this->input->post('nama_kat'))));
-
+		$nama = trim(strtoupper(strtolower($this->input->post('nama'))));
+		$id_kategori = $this->input->post('kategori');
+		
 		if ($arr_valid['status'] == FALSE) {
 			echo json_encode($arr_valid);
 			return;
 		}
 
 		$data_ins = [
-			'id' => $this->m_kategori->get_max_id(),
+			'id' => $this->m_kriteria->get_max_id(),
+			'id_kategori' => $id_kategori,
 			'nama' => $nama,
 			'created_at' => $timestamp
 		];
 		
-		$insert = $this->m_kategori->save($data_ins);
+		$insert = $this->m_kriteria->save($data_ins);
 		
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			$retval['status'] = false;
-			$retval['pesan'] = 'Gagal menambahkan Kategori';
+			$retval['pesan'] = 'Gagal menambahkan Kriteria';
 		}else{
 			$this->db->trans_commit();
 			$retval['status'] = true;
-			$retval['pesan'] = 'Sukses menambahkan Kategori';
+			$retval['pesan'] = 'Sukses menambahkan Kriteria';
 		}
 
 		echo json_encode($retval);
 	}
 
-	public function update_data_kategori()
+	public function update_data_kriteria()
 	{
-		$id = $this->input->post('id_kat');
+		$id = $this->input->post('id');
 		$obj_date = new DateTime();
 		$timestamp = $obj_date->format('Y-m-d H:i:s');
 		
 		$arr_valid = $this->rule_validasi();
-		$nama = trim(strtoupper(strtolower($this->input->post('nama_kat'))));
+		
+		$nama = trim(strtoupper(strtolower($this->input->post('nama'))));
+		$id_kategori = $this->input->post('kategori');
 
 		if ($arr_valid['status'] == FALSE) {
 			echo json_encode($arr_valid);
@@ -153,20 +157,21 @@ class Master_kriteria extends CI_Controller {
 		
 		$data_upd = [
 			'nama' => $nama,
+			'id_kategori' => $id_kategori,
 			'updated_at' => $timestamp
 		];
 
 		$where = ['id' => $id];
-		$update = $this->m_kategori->update($where, $data_upd);
+		$update = $this->m_kriteria->update($where, $data_upd);
 
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			$data['status'] = false;
-			$data['pesan'] = 'Gagal update Master kategori';
+			$data['pesan'] = 'Gagal update Master kriteria';
 		}else{
 			$this->db->trans_commit();
 			$data['status'] = true;
-			$data['pesan'] = 'Sukses update Master kategori';
+			$data['pesan'] = 'Sukses update Master kriteria';
 		}
 		
 		echo json_encode($data);
@@ -179,13 +184,13 @@ class Master_kriteria extends CI_Controller {
 	public function delete_data()
 	{
 		$id = $this->input->post('id');
-		$del = $this->m_kategori->softdelete_by_id($id);
+		$del = $this->m_kriteria->softdelete_by_id($id);
 		if($del) {
 			$retval['status'] = TRUE;
-			$retval['pesan'] = 'Data Master kategori dihapus';
+			$retval['pesan'] = 'Data Master kriteria dihapus';
 		}else{
 			$retval['status'] = FALSE;
-			$retval['pesan'] = 'Data Master kategori dihapus';
+			$retval['pesan'] = 'Data Master kriteria dihapus';
 		}
 
 		echo json_encode($retval);
@@ -225,9 +230,15 @@ class Master_kriteria extends CI_Controller {
 		$data['inputerror'] = array();
 		$data['status'] = TRUE;
 
-		if ($this->input->post('nama_kat') == '') {
-			$data['inputerror'][] = 'nama_kat';
+		if ($this->input->post('nama') == '') {
+			$data['inputerror'][] = 'nama';
             $data['error_string'][] = 'Wajib Memilih Nama';
+            $data['status'] = FALSE;
+		}
+
+		if ($this->input->post('kategori') == '') {
+			$data['inputerror'][] = 'kategori';
+            $data['error_string'][] = 'Wajib Memilih Kategori';
             $data['status'] = FALSE;
 		}
 

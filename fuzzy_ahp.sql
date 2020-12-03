@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 02/12/2020 00:01:46
+ Date: 03/12/2020 08:33:23
 */
 
 SET NAMES utf8mb4;
@@ -58,6 +58,57 @@ INSERT INTO `m_himpunan` VALUES (16, '8 kali kurang penting', '2/9', '1/4', '2/7
 INSERT INTO `m_himpunan` VALUES (17, '9 kali kurang penting', '2/9', '2/9', '1/4', 0.2222, 0.2222, 0.2500, '2020-12-01 23:59:16', NULL, NULL);
 
 -- ----------------------------
+-- Table structure for m_kategori
+-- ----------------------------
+DROP TABLE IF EXISTS `m_kategori`;
+CREATE TABLE `m_kategori`  (
+  `id` int(11) NOT NULL,
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `updated_at` datetime(0) NULL DEFAULT NULL,
+  `deleted_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of m_kategori
+-- ----------------------------
+INSERT INTO `m_kategori` VALUES (1, 'UMUM', '2020-12-02 22:58:05', NULL, NULL);
+INSERT INTO `m_kategori` VALUES (2, 'DRAINASE', '2020-12-02 22:58:15', NULL, NULL);
+INSERT INTO `m_kategori` VALUES (3, 'PEKERJAAN TANAH', '2020-12-02 22:58:27', NULL, NULL);
+INSERT INTO `m_kategori` VALUES (4, 'PERKERASAN BERBUTIR DAN BETON SEMEN', '2020-12-02 22:58:44', NULL, NULL);
+INSERT INTO `m_kategori` VALUES (5, 'PERKERASAN BERASPAL', '2020-12-02 22:58:53', NULL, NULL);
+INSERT INTO `m_kategori` VALUES (6, 'STRUKTUR', '2020-12-02 22:59:02', '2020-12-02 22:59:40', NULL);
+INSERT INTO `m_kategori` VALUES (7, 'PENGEMBALIAN KONDISI', '2020-12-02 22:59:11', NULL, NULL);
+
+-- ----------------------------
+-- Table structure for m_kriteria
+-- ----------------------------
+DROP TABLE IF EXISTS `m_kriteria`;
+CREATE TABLE `m_kriteria`  (
+  `id` int(11) NOT NULL,
+  `id_kategori` int(11) NULL DEFAULT NULL,
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `updated_at` datetime(0) NULL DEFAULT NULL,
+  `deleted_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of m_kriteria
+-- ----------------------------
+INSERT INTO `m_kriteria` VALUES (1, 1, 'PENGUKURAN', '2020-12-03 08:24:39', NULL, NULL);
+INSERT INTO `m_kriteria` VALUES (2, 1, 'PAS. PAPAN NAMA PROYEK', '2020-12-03 08:24:57', NULL, NULL);
+INSERT INTO `m_kriteria` VALUES (3, 1, 'PENGAMANAN LALU LINTAS', '2020-12-03 08:25:09', NULL, NULL);
+INSERT INTO `m_kriteria` VALUES (4, 1, 'PASANG RAMBU LALU LINTAS', '2020-12-03 08:25:20', NULL, NULL);
+INSERT INTO `m_kriteria` VALUES (5, 1, 'PEMBERSIHAN', '2020-12-03 08:25:32', '2020-12-03 08:30:38', NULL);
+INSERT INTO `m_kriteria` VALUES (6, 1, 'MOBILISASI DAN DEMOBILISASI', '2020-12-03 08:25:45', NULL, NULL);
+INSERT INTO `m_kriteria` VALUES (7, 1, 'QUALITY CONTROL', '2020-12-03 08:25:56', NULL, NULL);
+INSERT INTO `m_kriteria` VALUES (8, 1, 'PEMINDAHAN TIANG UTILITAS', '2020-12-03 08:26:06', NULL, NULL);
+INSERT INTO `m_kriteria` VALUES (9, 1, 'PEMINDAHAN POHON', '2020-12-03 08:26:18', NULL, NULL);
+
+-- ----------------------------
 -- Table structure for m_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `m_menu`;
@@ -87,6 +138,8 @@ INSERT INTO `m_menu` VALUES (4, 2, 'Setting Role', 'Setting Role', 'set_role', '
 INSERT INTO `m_menu` VALUES (6, 0, 'Master', 'Master', '', 'flaticon-folder-1', 1, 1, 2, 0, 0, 0);
 INSERT INTO `m_menu` VALUES (7, 6, 'Data User', 'Data User', 'master_user', 'flaticon-users', 1, 2, 1, 1, 1, 1);
 INSERT INTO `m_menu` VALUES (8, 6, 'Master Himpunan', 'Master Himpunan', 'master_himpunan', 'flaticon2-console', 1, 2, 2, 1, 1, 1);
+INSERT INTO `m_menu` VALUES (9, 6, 'Master Kategori', 'Master Kategori', 'master_kategori', 'flaticon-background', 1, 2, 3, 1, 1, 1);
+INSERT INTO `m_menu` VALUES (10, 6, 'Master Kriteria', 'Master Kriteria', 'master_kriteria', 'flaticon-web', 1, 2, 4, 1, 1, 1);
 
 -- ----------------------------
 -- Table structure for m_role
@@ -128,7 +181,7 @@ CREATE TABLE `m_user`  (
 -- ----------------------------
 -- Records of m_user
 -- ----------------------------
-INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-01 21:09:12', 'USR-00001', NULL, NULL, NULL, NULL);
+INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-03 08:07:17', 'USR-00001', NULL, NULL, NULL, NULL);
 INSERT INTO `m_user` VALUES (2, 1, 'coba', 'Tzg1eTllUlU2a2xNQk5yYktIM1pwUT09', NULL, NULL, 'USR-00002', 'coba-1602775328.jpg', '2020-10-15 22:22:08', '2020-10-15 22:43:54', '2020-10-15 22:58:50');
 
 -- ----------------------------
@@ -154,6 +207,8 @@ INSERT INTO `t_role_menu` VALUES (1, 1, 0, 0, 0);
 INSERT INTO `t_role_menu` VALUES (6, 1, 0, 0, 0);
 INSERT INTO `t_role_menu` VALUES (7, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (8, 1, 1, 1, 1);
+INSERT INTO `t_role_menu` VALUES (9, 1, 1, 1, 1);
+INSERT INTO `t_role_menu` VALUES (10, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (2, 1, 0, 0, 0);
 INSERT INTO `t_role_menu` VALUES (4, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (3, 1, 1, 1, 1);

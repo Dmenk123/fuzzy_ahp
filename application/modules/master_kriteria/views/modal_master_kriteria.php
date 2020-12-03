@@ -17,8 +17,13 @@
           </div>
           <div class="form-group">
             <label for="" class="form-control-label">Kategori:</label>
-            <select name="kategori" id="kategori" class="form-control">
-              <option value="ass">asas</option>
+            <select name="kategori" id="kategori" class="form-control"> 
+              <?php 
+              $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result();
+              echo '<option value="">Silahkan Pilih Kategori</option>';
+              foreach ($data_kat as $key => $value) {
+                echo '<option value="'.$value->id.'">'.$value->nama.'</option>';
+              } ?>
             </select>
             <span class="help-block"></span>
           </div>

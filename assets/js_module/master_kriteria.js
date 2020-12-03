@@ -54,10 +54,11 @@ function edit_data(id)
         data : {id:id},
         success: function(data)
         {
-            $('[name="id_kat"]').val(data.old_data.id);
-            $('[name="nama_kat"]').val(data.old_data.nama);
-            $('#modal_kategori_form').modal('show');
-	        $('#modal_title').text('Edit Kategori'); 
+            $('[name="id"]').val(data.old_data.id);
+            $('[name="nama"]').val(data.old_data.nama);
+            $('[name="kategori"]').val(data.old_data.id_kategori);
+            $('#modal_kriteria_form').modal('show');
+	        $('#modal_title').text('Edit Kriteria'); 
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -77,14 +78,14 @@ function save()
     var txtAksi;
 
     if(save_method == 'add') {
-        url = base_url + 'master_kategori/add_data_kategori';
-        txtAksi = 'Tambah Kategori';
+        url = base_url + 'master_kriteria/add_data_kriteria';
+        txtAksi = 'Tambah kriteria';
     }else{
-        url = base_url + 'master_kategori/update_data_kategori';
-        txtAksi = 'Edit Kategori';
+        url = base_url + 'master_kriteria/update_data_kriteria';
+        txtAksi = 'Edit kriteria';
     }
     
-    var form = $('#form-kategori')[0];
+    var form = $('#form-kriteria')[0];
     var data = new FormData(form);
     
     $("#btnSave").prop("disabled", true);
@@ -148,7 +149,7 @@ function delete_data(id){
       }).then((result) => {
         if (result.value) {
             $.ajax({
-                url : base_url + 'master_kategori/delete_data',
+                url : base_url + 'master_kriteria/delete_data',
                 type: "POST",
                 dataType: "JSON",
                 data : {id:id},
