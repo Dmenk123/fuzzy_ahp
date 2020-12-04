@@ -43,6 +43,7 @@
           <!--begin: Form Wizard Form-->
           <form class="kt-form" id="form_hitung_kategori">
             <input type="hidden" class="form-control" id="step_kriteria" name="step_kriteria" value="<?= $this->input->get('kriteria'); ?>">
+            <input type="hidden" class="form-control" id="id_kategori" name="id_kategori" value="<?= $kategori->id; ?>">
             <!--begin: Form Wizard Step 1-->
             <div class="kt-wizard-v2__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
               <?php 

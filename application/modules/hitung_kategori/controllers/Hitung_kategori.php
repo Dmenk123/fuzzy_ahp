@@ -13,6 +13,7 @@ class Hitung_kategori extends CI_Controller {
 		$this->load->model('m_user');
 		$this->load->model('m_kriteria');
 		$this->load->model('m_kategori');
+		$this->load->model('t_hitung_kategori');
 		$this->load->model('m_global');
 	}
 
@@ -61,17 +62,18 @@ class Hitung_kategori extends CI_Controller {
 
 		//cek query string kriteria
 		$keri = $this->input->get('kriteria');
-		$is_cocok_keri = false;
+		#flag kriteria cocok
+		$is_cocok_keriteria = false;
 
 		foreach ($kriteria as $k => $v) {
 			if($v->kode_kriteria == strtoupper(strtolower($keri))){
-				$is_cocok_keri = true;
+				$is_cocok_keriteria = true;
 			}else{
 				continue;
 			}
 		}
 		
-		if($is_cocok_keri == false) {
+		if($is_cocok_keriteria == false) {
 			return redirect('hitung_kategori');
 		}	
 		
@@ -80,7 +82,7 @@ class Hitung_kategori extends CI_Controller {
 				if($i == $z) {
 					continue;
 				}
-				$retval[$kriteria[$z-1]->kode_kriteria][] = ['kode'=>$kriteria[$i-1]->kode_kriteria, 'nama' => $kriteria[$i-1]->nama];
+				$retval[$kriteria[$z-1]->kode_kriteria][] = ['kode'=>$kriteria[$i-1]->kode_kriteria, 'nama' => $kriteria[$i-1]->nama, 'id' => $kriteria[$i-1]->id];
 			}
 		}
 
@@ -128,7 +130,75 @@ class Hitung_kategori extends CI_Controller {
 
 	public function next_step()
 	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_kategori = $this->input->post('id_kategori');
+		$step_kriteria = $this->input->post('step_kriteria');
+
+		## id kriteria terpilih
+		$data_kriteria_row = $this->m_global->single_row('*', ['id_kategori' => $id_kategori, 'kode_kriteria' => $step_kriteria], 'm_kriteria');
+		$id_kriteria = $data_kriteria_row->id;
+
+		## data kriteria
+		$kriteria = $this->m_global->multi_row('*', ['id_kategori' => $id_kategori, 'deleted_at' => null], 'm_kriteria', NULL, 'urut');
 		
+		for ($i=1; $i <= count($kriteria); $i++) { 
+			for ($z=1; $z <= $i; $z++) { 
+				if($i == $z) {
+					continue;
+				}
+
+				$step[$kriteria[$z-1]->kode_kriteria][] = [
+					'kode'=>$kriteria[$i-1]->kode_kriteria, 
+					'nama' => $kriteria[$i-1]->nama,
+					'id' => $kriteria[$i-1]->id
+				];
+			}
+		}
+		// var_dump($step[$step_kriteria]);exit;
+		//$this->db->trans_begin();
+	
+		foreach ($step[$step_kriteria] as $key => $value) {
+			### insert
+			$data_ins[] = [
+				'id' => $this->t_hitung_kategori->get_max_id(),
+				'id_kategori' => $id_kategori,
+				'id_kriteria' => $id_kriteria,
+				'kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+				'id_himpunan' => $this->input->post('himpunan')[$key],
+				'id_kriteria_tujuan' => $value['id'],
+				'kode_kriteria_tujuan' => $value['kode'],
+				'created_at' => $timestamp
+			];
+			
+			//$insert = $this->m_kriteria->save($data_ins);
+
+			### insert reverse
+			/**
+			 * todo : 
+			 * 1 .cari reversenya dulu berdasarkan himpunan terpilih 
+			 * 2. jika ketemu gunakan reverse tersebut.
+			 */
+
+		}
+
+		
+		echo "<pre>";
+		print_r ($data_ins);
+		echo "</pre>";
+		exit;
+
+		// if ($this->db->trans_status() === FALSE){
+		// 	$this->db->trans_rollback();
+		// 	$retval['status'] = false;
+		// 	$retval['pesan'] = 'Gagal menambahkan Kriteria';
+		// }else{
+		// 	$this->db->trans_commit();
+		// 	$retval['status'] = true;
+		// 	$retval['pesan'] = 'Sukses menambahkan Kriteria';
+		// }
+
+		// echo json_encode($retval);
 	}
 
 
