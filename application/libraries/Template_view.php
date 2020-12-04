@@ -345,7 +345,7 @@ class Template_view extends CI_Controller {
 		$data['tampil_menu'] = $sidebarComponent;
 		if($content['css']){
 			// $data['css'] = $this->_ci->load->view($content['css'], $data, TRUE);
-			$data['link_js']      = 'assets/css_module/'.$content['css'];
+			$data['link_css']      = 'assets/css_module/'.$content['css'];
 		}
 		
 		if($content['js']){
