@@ -14,19 +14,53 @@ $(document).ready(function() {
         let form = $('#form_hitung_kategori')[0];
         let data = new FormData(form);
         //data.append('step_kriteria', step_kriteria);
-        
-        $.ajax({
-            type: "POST",
-            enctype: 'multipart/form-data',
-            url: base_url+'hitung_kategori/next_step',
-            data: data,
-            dataType: "JSON",
-            processData: false,
-            contentType: false, 
-            cache: false,
-            timeout: 600000,
-            success: function (response) {
-                
+        swalConfirm.fire({
+            title: 'Konfirmasi',
+            text: "Lanjut Ke Langkah Berikutnya ?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya !',
+            cancelButtonText: 'Tidak !',
+            reverseButtons: true
+          }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: base_url+'hitung_kategori/next_step',
+                    data: data,
+                    dataType: "JSON",
+                    processData: false,
+                    contentType: false, 
+                    cache: false,
+                    timeout: 600000,
+                    success: function (response) {
+                        if(response.status){
+                            if(response.data_step.next_step != 'false') {
+                                swalConfirm.fire(
+                                    'Sukses !', 
+                                    data.pesan, 
+                                    'success'
+                                ).then(function() {
+                                    window.location.href = base_url+"hitung_kategori/formulir_hitung/"+response.data_step.id_kategori+'?kriteria='+response.data_step.next_step_kode;
+                                });
+                            }
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        swalConfirm.fire('Terjadi Kesalahan');
+                    }
+                });
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+              swalConfirm.fire(
+                'Dibatalkan',
+                'Aksi Dibatalakan',
+                'error'
+              )
             }
         });
     });

@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 05/12/2020 00:44:56
+ Date: 06/12/2020 11:21:21
 */
 
 SET NAMES utf8mb4;
@@ -185,7 +185,7 @@ CREATE TABLE `m_user`  (
 -- ----------------------------
 -- Records of m_user
 -- ----------------------------
-INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-04 21:49:02', 'USR-00001', NULL, NULL, NULL, NULL);
+INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-06 07:54:05', 'USR-00001', NULL, NULL, NULL, NULL);
 INSERT INTO `m_user` VALUES (2, 1, 'coba', 'Tzg1eTllUlU2a2xNQk5yYktIM1pwUT09', NULL, NULL, 'USR-00002', 'coba-1602775328.jpg', '2020-10-15 22:22:08', '2020-10-15 22:43:54', '2020-10-15 22:58:50');
 
 -- ----------------------------
@@ -209,6 +209,22 @@ CREATE TABLE `t_hitung_kategori`  (
 -- ----------------------------
 -- Records of t_hitung_kategori
 -- ----------------------------
+INSERT INTO `t_hitung_kategori` VALUES (1, 1, 1, 'C1', 1, 2, 'C2', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (2, 1, 2, 'C2', 17, 1, 'C1', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (3, 1, 1, 'C1', 2, 3, 'C3', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (4, 1, 3, 'C3', 16, 1, 'C1', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (5, 1, 1, 'C1', 3, 4, 'C4', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (6, 1, 4, 'C4', 15, 1, 'C1', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (7, 1, 1, 'C1', 4, 5, 'C5', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (8, 1, 5, 'C5', 14, 1, 'C1', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (9, 1, 1, 'C1', 5, 6, 'C6', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (10, 1, 6, 'C6', 13, 1, 'C1', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (11, 1, 1, 'C1', 6, 7, 'C7', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (12, 1, 7, 'C7', 12, 1, 'C1', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (13, 1, 1, 'C1', 7, 8, 'C8', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (14, 1, 8, 'C8', 11, 1, 'C1', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (15, 1, 1, 'C1', 8, 9, 'C9', '2020-12-06 11:20:51', NULL, NULL);
+INSERT INTO `t_hitung_kategori` VALUES (16, 1, 9, 'C9', 10, 1, 'C1', '2020-12-06 11:20:51', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_pasangan_himpunan
@@ -238,12 +254,12 @@ INSERT INTO `t_pasangan_himpunan` VALUES (8, 8, 10, '2020-12-03 22:36:23', NULL,
 INSERT INTO `t_pasangan_himpunan` VALUES (9, 9, 9, '2020-12-03 22:36:23', NULL, NULL);
 INSERT INTO `t_pasangan_himpunan` VALUES (10, 10, 8, '2020-12-03 22:36:23', NULL, NULL);
 INSERT INTO `t_pasangan_himpunan` VALUES (11, 11, 7, '2020-12-03 22:36:23', NULL, NULL);
-INSERT INTO `t_pasangan_himpunan` VALUES (13, 12, 6, '2020-12-03 22:36:23', NULL, NULL);
-INSERT INTO `t_pasangan_himpunan` VALUES (14, 13, 5, '2020-12-03 22:36:23', NULL, NULL);
-INSERT INTO `t_pasangan_himpunan` VALUES (15, 14, 4, '2020-12-03 22:36:23', NULL, NULL);
-INSERT INTO `t_pasangan_himpunan` VALUES (16, 15, 3, '2020-12-03 22:36:23', NULL, NULL);
-INSERT INTO `t_pasangan_himpunan` VALUES (17, 16, 2, '2020-12-03 22:36:23', NULL, NULL);
-INSERT INTO `t_pasangan_himpunan` VALUES (18, 17, 1, '2020-12-03 22:36:23', NULL, NULL);
+INSERT INTO `t_pasangan_himpunan` VALUES (12, 12, 6, '2020-12-03 22:36:23', NULL, NULL);
+INSERT INTO `t_pasangan_himpunan` VALUES (13, 13, 5, '2020-12-03 22:36:23', NULL, NULL);
+INSERT INTO `t_pasangan_himpunan` VALUES (14, 14, 4, '2020-12-03 22:36:23', NULL, NULL);
+INSERT INTO `t_pasangan_himpunan` VALUES (15, 15, 3, '2020-12-03 22:36:23', NULL, NULL);
+INSERT INTO `t_pasangan_himpunan` VALUES (16, 16, 2, '2020-12-03 22:36:23', NULL, NULL);
+INSERT INTO `t_pasangan_himpunan` VALUES (17, 17, 1, '2020-12-03 22:36:23', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_role_menu

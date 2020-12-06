@@ -155,12 +155,24 @@ class Hitung_kategori extends CI_Controller {
 				];
 			}
 		}
-		// var_dump($step[$step_kriteria]);exit;
-		//$this->db->trans_begin();
-	
+
+		//set flag first/last step
+		$is_first_step = 'false';
+		$is_last_step = 'false';
+
+		## cari posisi step berapa sekarang
+		$index_step = 0;
+		foreach ($step as $kkk => $vvv) {
+			$index_step += 1;
+			if($kkk == $step_kriteria) {
+				break;
+			}
+		}
+		// var_dump($index_step);exit;
+		$this->db->trans_begin();
 		foreach ($step[$step_kriteria] as $key => $value) {
 			### insert
-			$data_ins[] = [
+			$data_ins = [
 				'id' => $this->t_hitung_kategori->get_max_id(),
 				'id_kategori' => $id_kategori,
 				'id_kriteria' => $id_kriteria,
@@ -171,7 +183,7 @@ class Hitung_kategori extends CI_Controller {
 				'created_at' => $timestamp
 			];
 			
-			//$insert = $this->m_kriteria->save($data_ins);
+			$insert = $this->t_hitung_kategori->save($data_ins);
 
 			### insert reverse
 			/**
@@ -180,25 +192,78 @@ class Hitung_kategori extends CI_Controller {
 			 * 2. jika ketemu gunakan reverse tersebut.
 			 */
 
+			$q_reverse = $this->m_global->single_row('*', ['id_himpunan_use' => $this->input->post('himpunan')[$key], 'deleted_at' =>null], 't_pasangan_himpunan');
+			$data_reverse_ins = [
+				'id' => $this->t_hitung_kategori->get_max_id(),
+				'id_kategori' => $id_kategori,
+				'id_kriteria' => $value['id'],
+				'kode_kriteria' => $value['kode'],
+				'id_himpunan' => $q_reverse->id_himpunan_reverse,
+				'id_kriteria_tujuan' => $id_kriteria,
+				'kode_kriteria_tujuan' => trim(strtoupper(strtolower($step_kriteria))),
+				'created_at' => $timestamp
+			];
+
+			$insert = $this->t_hitung_kategori->save($data_reverse_ins);
 		}
 
-		
-		echo "<pre>";
-		print_r ($data_ins);
-		echo "</pre>";
-		exit;
+		// echo "<pre>";
+		// print_r ($data_reverse_ins);
+		// echo "</pre>";
+		// exit;
 
-		// if ($this->db->trans_status() === FALSE){
-		// 	$this->db->trans_rollback();
-		// 	$retval['status'] = false;
-		// 	$retval['pesan'] = 'Gagal menambahkan Kriteria';
-		// }else{
-		// 	$this->db->trans_commit();
-		// 	$retval['status'] = true;
-		// 	$retval['pesan'] = 'Sukses menambahkan Kriteria';
-		// }
+		if($index_step == 1) {
+			$is_first_step = 'true';
+		}else if($index_step == count($step)){
+			$is_last_step = 'true';
+		}
 
-		// echo json_encode($retval);
+		if($is_last_step == 'false') {
+			if($is_first_step){
+				$prev_step = 'false';
+				$next_step = $index_step + 1;
+
+				$prev_step_kode = 'false';
+				$next_step_kode = 'C'.$next_step;
+			}else{
+				$prev_step = $index_step - 1;
+				$next_step = $index_step + 1;
+
+				$prev_step_kode = 'C'.$prev_step;
+				$next_step_kode = 'C'.$next_step;
+			}	
+		}else{
+			$prev_step = $index_step - 1;
+			$next_step = 'false';
+
+			$prev_step_kode = 'C'.$prev_step;
+			$next_step_kode = 'false';
+		}
+
+		$data_step = [
+			'id_kategori' => $id_kategori,
+			'index_step' => $index_step,
+			'is_first_step' => $is_first_step,
+			'is_last_step' => $is_last_step,
+			'next_step' => $next_step,
+			'next_step_kode' => $next_step_kode,
+			'prev_step' => $prev_step,
+			'prev_step_kode' => $prev_step_kode,
+		];
+
+		if ($this->db->trans_status() === FALSE){
+			$this->db->trans_rollback();
+			$retval['status'] = false;
+			$retval['data_step'] = null;
+			$retval['pesan'] = 'Gagal Melakukan Perhitungan';
+		}else{
+			$this->db->trans_commit();
+			$retval['status'] = true;
+			$retval['data_step'] = $data_step;
+			$retval['pesan'] = 'Sukses Melakukan Perhitungan';
+		}
+
+		echo json_encode($retval);
 	}
 
 
