@@ -39,7 +39,7 @@ $(document).ready(function() {
                             if(response.data_step.next_step != 'false') {
                                 swalConfirm.fire(
                                     'Sukses !', 
-                                    data.pesan, 
+                                    response.pesan, 
                                     'success'
                                 ).then(function() {
                                     window.location.href = base_url+"hitung_kategori/formulir_hitung/"+response.data_step.id_kategori+'?kriteria='+response.data_step.next_step_kode;

@@ -10,6 +10,7 @@
 
             <!--doc: Remove "kt-wizard-v2__nav-items--clickable" class and also set 'clickableSteps: false' in the JS init to disable manually clicking step titles -->
             <div class="kt-wizard-v2__nav-items kt-wizard-v2__nav-items--clickable">
+              <h4>List Step Kriteria</h4>
               <?php 
               foreach ($kriteria as $key => $value) { 
                 if($key == (count($kriteria)-1)) {

@@ -51,7 +51,7 @@ class Hitung_kategori extends CI_Controller {
 		$id_user = $this->session->userdata('id_user'); 
 		$data_user = $this->m_user->get_detail_user($id_user);
 		$kat = $this->m_kategori->get_by_condition(['id' => $id, 'deleted_at' => null], true);
-		$data_himpunan = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_himpunan', NULL, 'id');
+		$data_himpunan = $this->m_global->multi_row('*', ['deleted_at' => null, 'is_sama_penting' => null], 'm_himpunan', NULL, 'id');
 		$kriteria_opt = $this->input->get('kriteria');
 
 		if(!$kat) {
@@ -170,6 +170,22 @@ class Hitung_kategori extends CI_Controller {
 		}
 		// var_dump($index_step);exit;
 		$this->db->trans_begin();
+		$q_himpunan_sama = $this->m_global->single_row('*', ['is_sama_penting' => 1, 'deleted_at' =>null], 'm_himpunan');
+		
+		## insert awalan misal ci -> ci, c2 -> c2 berdasarkan kriterianya
+		$ins_awal = [
+			'id' => $this->t_hitung_kategori->get_max_id(),
+			'id_kategori' => $id_kategori,
+			'id_kriteria' => $id_kriteria,
+			'kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+			'id_himpunan' => $q_himpunan_sama->id,
+			'id_kriteria_tujuan' => $id_kriteria,
+			'kode_kriteria_tujuan' => trim(strtoupper(strtolower($step_kriteria))),
+			'created_at' => $timestamp
+		];
+		
+		$insert = $this->t_hitung_kategori->save($ins_awal);
+
 		foreach ($step[$step_kriteria] as $key => $value) {
 			### insert
 			$data_ins = [
