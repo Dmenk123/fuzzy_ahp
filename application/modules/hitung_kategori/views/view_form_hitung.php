@@ -17,7 +17,7 @@
                   break;
                 }
               ?>
-                <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" <?php if(strtoupper(strtolower($_GET['kriteria'])) == $value->kode_kriteria) { echo 'data-ktwizard-state="current"'; }?> >
+                <div class="kt-wizard-v2__nav-item step_kriteria" data-ktwizard-type="step" <?php if(strtoupper(strtolower($_GET['kriteria'])) == $value->kode_kriteria) { echo 'data-ktwizard-state="current"'; }?> data-kriteria="<?=$value->kode_kriteria;?>" data-kategori="<?= $this->uri->segment(3) ;?>">
                   <div class="kt-wizard-v2__nav-body">
                     <div class="kt-wizard-v2__nav-icon">
                       <i class="flaticon-clipboard"></i>
@@ -56,7 +56,7 @@
                 }
               }
               ?>
-              
+
               <div class="kt-form__section kt-form__section--first">
                 <div class="kt-wizard-v2__form">
                   
@@ -67,9 +67,11 @@
                             <label><?= $row['nama'].' ('.$row['kode'].')'; ?>:</label>
                             <select name="himpunan[]" class="form-control select2">
                               <option value="">Silahkan Pilih Salah Satu</option>
-                              <?php foreach ($data_himpunan as $k => $v) {
-                                  echo '<option value="'.$v->id.'">'.$v->nama.' [lower : '.$v->lower_txt.', medium : '.$v->medium_txt.', upper : '.$v->upper_txt.']</option>';
-                              }?>
+                              <?php foreach ($data_himpunan as $k => $v) { ?>
+                                <option value="<?=$v->id?>" <?php if(count($old_data) >= 1) { if($v->id == $old_data[$idx]->id_himpunan) { echo 'selected'; } } ?>>
+                                  <?= $v->nama; ?> [lower : <?= $v->lower_txt; ?>, medium : <?= $v->medium_txt; ?>, upper : <?= $v->upper_txt;?>]
+                                </option>;
+                              <?php } ?>
                             </select>
                           </div>
                       </div>
