@@ -12,6 +12,8 @@ class Data_hitung extends CI_Controller {
 
 		$this->load->model('m_user');
 		$this->load->model('m_kriteria');
+		$this->load->model('m_kategori');
+		$this->load->model('t_hitung_kategori');
 		$this->load->model('m_global');
 	}
 
@@ -43,6 +45,127 @@ class Data_hitung extends CI_Controller {
 
 		$this->template_view->load_view($content, $data);
 	}
+
+	public function hasil_perhitungan($id)
+	{
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		$kat = $this->m_kategori->get_by_condition(['id' => $id, 'deleted_at' => null], true);
+				
+		if(!$kat) {
+			return redirect('data_hitung');
+		}
+		/**
+		 * data passing ke halaman view content
+		 */
+		$data = array(
+			'title' => 'Hasil Perhitungan Kategori',
+			'data_user' => $data_user,
+			'kategori' => $kat
+		);
+
+		/**
+		 * content data untuk template
+		 * param (css : link css pada direktori assets/css_module)
+		 * param (modal : modal komponen pada modules/nama_modul/views/nama_modal)
+		 * param (js : link js pada direktori assets/js_module)
+		 */
+		$content = [
+			'css' 	=> null,
+			'modal' => null,
+			'js'	=> 'data_hitung.js',
+			'view'	=> 'view_hasil_hitung'
+		];
+
+		$this->template_view->load_view($content, $data);
+	}
+
+	public function formulir_hitung($id)
+	{
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		$kat = $this->m_kategori->get_by_condition(['id' => $id, 'deleted_at' => null], true);
+		$data_himpunan = $this->m_global->multi_row('*', ['deleted_at' => null, 'is_sama_penting' => null], 'm_himpunan', NULL, 'id');
+
+		if(!$kat) {
+			return redirect('hitung_kategori');
+		}
+		
+		//cek query string kriteria
+		$keri = $this->input->get('kriteria');
+		
+		//cari hipunan 1=1
+		$q_himpunan_sama = $this->m_global->single_row('*', ['is_sama_penting' => 1, 'deleted_at' =>null], 'm_himpunan');
+		//cari data lawas
+		$old_data = $this->m_global->multi_row('*', [
+			'id_kategori' => $id,
+			'kode_kriteria' => $keri, 
+			'id_himpunan !=' => $q_himpunan_sama->id,
+			'flag_proses_kode_kriteria' => $keri
+		], 't_hitung_kategori', NULL, 'id');
+		$kriteria = $this->m_global->multi_row('*', ['id_kategori' => $kat->id, 'deleted_at' => null], 'm_kriteria', NULL, 'urut');
+
+		#flag kriteria cocok
+		$is_cocok_keriteria = false;
+
+		foreach ($kriteria as $k => $v) {
+			if($v->kode_kriteria == strtoupper(strtolower($keri))){
+				$is_cocok_keriteria = true;
+			}else{
+				continue;
+			}
+		}
+		
+		if($is_cocok_keriteria == false) {
+			return redirect('hitung_kategori');
+		}	
+		
+		for ($i=1; $i <= count($kriteria); $i++) { 
+			for ($z=1; $z <= $i; $z++) { 
+				if($i == $z) {
+					continue;
+				}
+				$retval[$kriteria[$z-1]->kode_kriteria][] = ['kode'=>$kriteria[$i-1]->kode_kriteria, 'nama' => $kriteria[$i-1]->nama, 'id' => $kriteria[$i-1]->id];
+			}
+		}
+
+		/**
+		 * data passing ke halaman view content
+		 */
+		$data = array(
+			'title' => 'Form Perhitungan AHP '.$kat->nama,
+			'data_user' => $data_user,
+			'kategori' => $kat,
+			'kriteria' => $kriteria,
+			'step' => $retval,
+			'data_himpunan' => $data_himpunan,
+			'old_data' => $old_data
+		);
+
+		
+		// echo "<pre>";
+		// print_r ($data);
+		// echo "</pre>";
+		// exit;
+
+
+		/**
+		 * content data untuk template
+		 * param (css : link css pada direktori assets/css_module)
+		 * param (modal : modal komponen pada modules/nama_modul/views/nama_modal)
+		 * param (js : link js pada direktori assets/js_module)
+		 */
+		$content = [
+			'css' 	=> 'form_hitung.css',
+			'modal' => 'modal_hitung_kategori',
+			'js'	=> 'hitung_kategori.js',
+			'view'	=> 'view_form_hitung'
+		];
+		
+		$this->template_view->load_view($content, $data);
+	}
+
+	/////////////////////////
 
 	public function list_data()
 	{

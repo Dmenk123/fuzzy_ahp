@@ -14,6 +14,7 @@ class Hitung_kategori extends CI_Controller {
 		$this->load->model('m_kriteria');
 		$this->load->model('m_kategori');
 		$this->load->model('t_hitung_kategori');
+		$this->load->model('t_hitung_kategori_det');
 		$this->load->model('m_global');
 	}
 
@@ -46,43 +47,95 @@ class Hitung_kategori extends CI_Controller {
 		$this->template_view->load_view($content, $data);
 	}
 
-	public function formulir_hitung($id)
+	public function list_perhitungan($id)
 	{
 		$id_user = $this->session->userdata('id_user'); 
 		$data_user = $this->m_user->get_detail_user($id_user);
-		$kat = $this->m_kategori->get_by_condition(['id' => $id, 'deleted_at' => null], true);
+		
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'hk.id_kategori = k.id']
+		];
+		$data_hitung = $this->m_global->multi_row('hk.*, k.nama as nama_kategori', ['hk.id_kategori' => $id, 'hk.deleted_at' => null], 't_hitung_kategori as hk', $join, 'hk.created_at desc');
+		
+		/**
+		 * data passing ke halaman view content
+		 */
+		$data = array(
+			'title' => 'Formulir Perhitungan',
+			'data_user' => $data_user,
+			'data_hitung' => $data_hitung
+		);
+
+		/**
+		 * content data untuk template
+		 * param (css : link css pada direktori assets/css_module)
+		 * param (modal : modal komponen pada modules/nama_modul/views/nama_modal)
+		 * param (js : link js pada direktori assets/js_module)
+		 */
+		$content = [
+			'css' 	=> null,
+			'modal' => null,
+			'js'	=> 'hitung_kategori.js',
+			'view'	=> 'view_list_hitung_kategori'
+		];
+
+		$this->template_view->load_view($content, $data);
+		
+	}
+
+	public function formulir_hitung($id=false)
+	{
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		$id_kat = $keri = $this->input->get('kategori');
+		$keri = $this->input->get('kriteria');
+		
+		$kat = $this->m_kategori->get_by_condition(['id' => $id_kat, 'deleted_at' => null], true);
+		// var_dump($kat);exit;
 		$data_himpunan = $this->m_global->multi_row('*', ['deleted_at' => null, 'is_sama_penting' => null], 'm_himpunan', NULL, 'id');
 
 		if(!$kat) {
-			return redirect('hitung_kategori');
+			return redirect('hitung_kategori/list_perhitungan/'.$id_kat);
 		}
-		
-		//cek query string kriteria
-		$keri = $this->input->get('kriteria');
 		
 		//cari hipunan 1=1
 		$q_himpunan_sama = $this->m_global->single_row('*', ['is_sama_penting' => 1, 'deleted_at' =>null], 'm_himpunan');
-		//cari data lawas
-		$old_data = $this->m_global->multi_row('*', [
-			'id_kategori' => $id,
-			'kode_kriteria' => $keri, 
-			'id_himpunan !=' => $q_himpunan_sama->id,
-			'flag_proses_kode_kriteria' => $keri
-		], 't_hitung_kategori', NULL, 'id');
+		
+		## jika data baru (add data)
+		if($id == false) {
+			$old_data = [];
+		}else{
+			## cari data lawas (edit) 
+			$sel = 'hk_det.*, hk.id_kategori';
+			$from = 't_hitung_kategori_det as hk_det';
+			$join = [ 
+				['table' => 't_hitung_kategori as hk', 'on' => 'hk_det.id_hitung_kategori = hk.id']
+			];
+			$where = [
+				'hk.id' => $id,
+				'hk.id_kategori' => $kat->id,
+				'hk_det.id_himpunan !=' => $q_himpunan_sama->id,
+				'hk.flag_proses_kode_kriteria' => $keri
+			];
+
+			$old_data = $this->m_global->multi_row($sel, $where, $from, $join, 'hk_det.id');
+		}
+
+
 		$kriteria = $this->m_global->multi_row('*', ['id_kategori' => $kat->id, 'deleted_at' => null], 'm_kriteria', NULL, 'urut');
 
 		#flag kriteria cocok
-		$is_cocok_keriteria = false;
+		$is_cocok_kriteria = false;
 
 		foreach ($kriteria as $k => $v) {
 			if($v->kode_kriteria == strtoupper(strtolower($keri))){
-				$is_cocok_keriteria = true;
+				$is_cocok_kriteria = true;
 			}else{
 				continue;
 			}
 		}
-		
-		if($is_cocok_keriteria == false) {
+
+		if($is_cocok_kriteria == false) {
 			return redirect('hitung_kategori');
 		}	
 		
@@ -94,7 +147,7 @@ class Hitung_kategori extends CI_Controller {
 				$retval[$kriteria[$z-1]->kode_kriteria][] = ['kode'=>$kriteria[$i-1]->kode_kriteria, 'nama' => $kriteria[$i-1]->nama, 'id' => $kriteria[$i-1]->id];
 			}
 		}
-
+		
 		/**
 		 * data passing ke halaman view content
 		 */
@@ -130,7 +183,6 @@ class Hitung_kategori extends CI_Controller {
 		
 		$this->template_view->load_view($content, $data);
 	}
-
 
 	public function next_step()
 	{
@@ -188,7 +240,7 @@ class Hitung_kategori extends CI_Controller {
 		
 		if($old_data) {
 			## delete
-			$del = $this->m_global->delete(['id_kategori' => $id_kategori, 'flag_proses_id_kriteria' => $id_kriteria], 't_hitung_kategori');
+			$del = $this->m_global->delete(['id_kategori' => $id_kategori, 'flag_proses_id_kriteria' => $id_kriteria], 't_hitung_kategori_det');
 		}
 
 		## insert awalan misal ci -> ci, c2 -> c2 berdasarkan kriterianya

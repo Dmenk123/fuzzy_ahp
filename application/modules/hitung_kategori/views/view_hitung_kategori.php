@@ -35,7 +35,7 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
           <div class="col-lg-12 row">
             <?php foreach ($data_kat as $key => $value) { ?>
               <div class="col-lg-6 div_menu" style="cursor:pointer" 
-              onclick="javascript:window.location.href='<?=base_url('hitung_kategori/formulir_hitung/'.$value->id.'?kriteria=C1');?>'">
+              onclick="javascript:window.location.href='<?=base_url('hitung_kategori/list_perhitungan/'.$value->id);?>'">
                 <div class="kt-portlet kt-iconbox kt-iconbox--wave">
                   <div class="kt-portlet__body">
                     <div class="kt-iconbox__body">

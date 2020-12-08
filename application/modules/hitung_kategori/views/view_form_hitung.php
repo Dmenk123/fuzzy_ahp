@@ -12,12 +12,17 @@
             <div class="kt-wizard-v2__nav-items kt-wizard-v2__nav-items--clickable">
               <h4>List Step Kriteria</h4>
               <?php 
+              if($old_data){
+                $id_hitung = $old_data[0]->id_hitung_kategori;
+              }else{
+                $id_hitung = false;
+              }
               foreach ($kriteria as $key => $value) { 
                 if($key == (count($kriteria)-1)) {
                   break;
                 }
               ?>
-                <div class="kt-wizard-v2__nav-item step_kriteria" data-ktwizard-type="step" <?php if(strtoupper(strtolower($_GET['kriteria'])) == $value->kode_kriteria) { echo 'data-ktwizard-state="current"'; }?> data-kriteria="<?=$value->kode_kriteria;?>" data-kategori="<?= $this->uri->segment(3) ;?>">
+                <div class="kt-wizard-v2__nav-item step_kriteria" data-ktwizard-type="step" <?php if(strtoupper(strtolower($_GET['kriteria'])) == $value->kode_kriteria) { echo 'data-ktwizard-state="current"'; }?> data-idhitung = "<?=$id_hitung;?>" data-kriteria="<?=$value->kode_kriteria;?>" data-kategori="<?= $this->input->get('kategori');?>">
                   <div class="kt-wizard-v2__nav-body">
                     <div class="kt-wizard-v2__nav-icon">
                       <i class="flaticon-clipboard"></i>

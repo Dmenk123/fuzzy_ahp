@@ -125,7 +125,14 @@ $(document).ready(function() {
         e.preventDefault();
         let step_kriteria = $(this).data('kriteria');
         let step_kategori = $(this).data('kategori');
-        window.location.href = base_url+"hitung_kategori/formulir_hitung/"+step_kategori+'?kriteria='+step_kriteria;
+        let id_hitung = $(this).data('idhitung');
+       
+        if(id_hitung != false){
+            window.location.href = base_url+"hitung_kategori/formulir_hitung/"+id_hitung+"?kategori="+step_kategori+"&kriteria="+step_kriteria;
+        }else{
+            window.location.href = base_url+"hitung_kategori/formulir_hitung?kategori="+step_kategori+"&kriteria="+step_kriteria;
+        }
+        
     });
 
     $('#btn_prev').click(function (e) { 
@@ -142,25 +149,7 @@ $(document).ready(function() {
     /////////////////////////////////////////////////////////
 
 	//datatables
-	table = $('#tabel_data').DataTable({
-		responsive: true,
-        searchDelay: 500,
-        processing: true,
-        serverSide: true,
-		ajax: {
-			url  : base_url + "master_kriteria/list_data",
-			type : "POST" 
-		},
-
-		//set column definition initialisation properties
-		columnDefs: [
-			{
-				targets: [-1], //last column
-				orderable: false, //set not orderable
-			},
-		],
-    });
-  
+    table = $('#tabel_data').DataTable();
     
     $(".modal").on("hidden.bs.modal", function(){
         reset_modal_form();
