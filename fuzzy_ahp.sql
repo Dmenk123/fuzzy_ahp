@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 07/12/2020 00:30:05
+ Date: 10/12/2020 14:50:39
 */
 
 SET NAMES utf8mb4;
@@ -148,6 +148,27 @@ INSERT INTO `m_menu` VALUES (12, 11, 'Perhitungan Perkategori', 'Perhitungan Per
 INSERT INTO `m_menu` VALUES (13, 11, 'Data Perhitungan', 'Data Perhitungan', 'data_hitung', 'flaticon-statistics', 1, 2, 2, 1, 1, 1);
 
 -- ----------------------------
+-- Table structure for m_proyek
+-- ----------------------------
+DROP TABLE IF EXISTS `m_proyek`;
+CREATE TABLE `m_proyek`  (
+  `id` int(11) NOT NULL,
+  `nama_proyek` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `keterangan_proyek` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `tahun_proyek` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `updated_at` datetime(0) NULL DEFAULT NULL,
+  `deleted_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of m_proyek
+-- ----------------------------
+INSERT INTO `m_proyek` VALUES (1, 'Jembatan Suramadu', 'Pembangunan Jembatan Suramadu', 2020, '2020-12-09 12:18:33', NULL, NULL);
+INSERT INTO `m_proyek` VALUES (2, 'Musholla', 'Pembangunan Musholla', 2019, '2020-12-09 12:18:33', NULL, NULL);
+
+-- ----------------------------
 -- Table structure for m_role
 -- ----------------------------
 DROP TABLE IF EXISTS `m_role`;
@@ -187,7 +208,7 @@ CREATE TABLE `m_user`  (
 -- ----------------------------
 -- Records of m_user
 -- ----------------------------
-INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-06 22:11:45', 'USR-00001', NULL, NULL, NULL, NULL);
+INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-10 12:40:39', 'USR-00001', NULL, NULL, NULL, NULL);
 INSERT INTO `m_user` VALUES (2, 1, 'coba', 'Tzg1eTllUlU2a2xNQk5yYktIM1pwUT09', NULL, NULL, 'USR-00002', 'coba-1602775328.jpg', '2020-10-15 22:22:08', '2020-10-15 22:43:54', '2020-10-15 22:58:50');
 
 -- ----------------------------
@@ -196,7 +217,30 @@ INSERT INTO `m_user` VALUES (2, 1, 'coba', 'Tzg1eTllUlU2a2xNQk5yYktIM1pwUT09', N
 DROP TABLE IF EXISTS `t_hitung_kategori`;
 CREATE TABLE `t_hitung_kategori`  (
   `id` int(11) NOT NULL,
+  `id_proyek` int(11) NULL DEFAULT NULL,
+  `id_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `id_kategori` int(11) NULL DEFAULT NULL,
+  `total_lower` float(20, 4) NULL DEFAULT NULL,
+  `total_medium` float(20, 4) NULL DEFAULT NULL,
+  `total_upper` float(20, 4) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `updated_at` datetime(0) NULL DEFAULT NULL,
+  `deleted_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_hitung_kategori
+-- ----------------------------
+INSERT INTO `t_hitung_kategori` VALUES (1, 2, '1', 1, 121.4614, 141.3417, 158.9998, '2020-12-09 20:49:10', NULL, NULL);
+
+-- ----------------------------
+-- Table structure for t_hitung_kategori_det
+-- ----------------------------
+DROP TABLE IF EXISTS `t_hitung_kategori_det`;
+CREATE TABLE `t_hitung_kategori_det`  (
+  `id` int(11) NOT NULL,
+  `id_hitung_kategori` int(11) NULL DEFAULT NULL,
   `id_kriteria` int(11) NULL DEFAULT NULL,
   `kode_kriteria` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `id_himpunan` int(11) NULL DEFAULT NULL,
@@ -211,81 +255,89 @@ CREATE TABLE `t_hitung_kategori`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of t_hitung_kategori
+-- Records of t_hitung_kategori_det
 -- ----------------------------
-INSERT INTO `t_hitung_kategori` VALUES (1, 1, 1, 'C1', 9, 1, 'C1', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (2, 1, 1, 'C1', 1, 2, 'C2', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (3, 1, 2, 'C2', 17, 1, 'C1', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (4, 1, 1, 'C1', 2, 3, 'C3', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (5, 1, 3, 'C3', 16, 1, 'C1', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (6, 1, 1, 'C1', 3, 4, 'C4', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (7, 1, 4, 'C4', 15, 1, 'C1', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (8, 1, 1, 'C1', 4, 5, 'C5', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (9, 1, 5, 'C5', 14, 1, 'C1', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (10, 1, 1, 'C1', 5, 6, 'C6', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (11, 1, 6, 'C6', 13, 1, 'C1', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (12, 1, 1, 'C1', 6, 7, 'C7', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (13, 1, 7, 'C7', 12, 1, 'C1', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (14, 1, 1, 'C1', 7, 8, 'C8', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (15, 1, 8, 'C8', 11, 1, 'C1', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (16, 1, 1, 'C1', 8, 9, 'C9', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (17, 1, 9, 'C9', 10, 1, 'C1', 1, 'C1', '2020-12-07 00:22:04', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (18, 1, 2, 'C2', 9, 2, 'C2', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (19, 1, 2, 'C2', 1, 3, 'C3', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (20, 1, 3, 'C3', 17, 2, 'C2', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (21, 1, 2, 'C2', 2, 4, 'C4', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (22, 1, 4, 'C4', 16, 2, 'C2', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (23, 1, 2, 'C2', 3, 5, 'C5', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (24, 1, 5, 'C5', 15, 2, 'C2', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (25, 1, 2, 'C2', 4, 6, 'C6', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (26, 1, 6, 'C6', 14, 2, 'C2', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (27, 1, 2, 'C2', 5, 7, 'C7', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (28, 1, 7, 'C7', 13, 2, 'C2', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (29, 1, 2, 'C2', 6, 8, 'C8', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (30, 1, 8, 'C8', 12, 2, 'C2', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (31, 1, 2, 'C2', 7, 9, 'C9', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (32, 1, 9, 'C9', 11, 2, 'C2', 2, 'C2', '2020-12-07 00:26:59', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (33, 1, 3, 'C3', 9, 3, 'C3', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (34, 1, 3, 'C3', 1, 4, 'C4', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (35, 1, 4, 'C4', 17, 3, 'C3', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (36, 1, 3, 'C3', 2, 5, 'C5', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (37, 1, 5, 'C5', 16, 3, 'C3', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (38, 1, 3, 'C3', 3, 6, 'C6', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (39, 1, 6, 'C6', 15, 3, 'C3', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (40, 1, 3, 'C3', 4, 7, 'C7', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (41, 1, 7, 'C7', 14, 3, 'C3', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (42, 1, 3, 'C3', 5, 8, 'C8', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (43, 1, 8, 'C8', 13, 3, 'C3', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (44, 1, 3, 'C3', 6, 9, 'C9', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (45, 1, 9, 'C9', 12, 3, 'C3', 3, 'C3', '2020-12-07 00:27:35', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (46, 1, 4, 'C4', 9, 4, 'C4', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (47, 1, 4, 'C4', 1, 5, 'C5', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (48, 1, 5, 'C5', 17, 4, 'C4', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (49, 1, 4, 'C4', 2, 6, 'C6', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (50, 1, 6, 'C6', 16, 4, 'C4', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (51, 1, 4, 'C4', 3, 7, 'C7', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (52, 1, 7, 'C7', 15, 4, 'C4', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (53, 1, 4, 'C4', 4, 8, 'C8', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (54, 1, 8, 'C8', 14, 4, 'C4', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (55, 1, 4, 'C4', 5, 9, 'C9', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (56, 1, 9, 'C9', 13, 4, 'C4', 4, 'C4', '2020-12-07 00:28:06', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (57, 1, 5, 'C5', 9, 5, 'C5', 5, 'C5', '2020-12-07 00:28:50', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (58, 1, 5, 'C5', 1, 6, 'C6', 5, 'C5', '2020-12-07 00:28:50', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (59, 1, 6, 'C6', 17, 5, 'C5', 5, 'C5', '2020-12-07 00:28:50', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (60, 1, 5, 'C5', 2, 7, 'C7', 5, 'C5', '2020-12-07 00:28:50', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (61, 1, 7, 'C7', 16, 5, 'C5', 5, 'C5', '2020-12-07 00:28:50', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (62, 1, 5, 'C5', 3, 8, 'C8', 5, 'C5', '2020-12-07 00:28:50', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (63, 1, 8, 'C8', 15, 5, 'C5', 5, 'C5', '2020-12-07 00:28:50', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (64, 1, 5, 'C5', 4, 9, 'C9', 5, 'C5', '2020-12-07 00:28:50', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (65, 1, 9, 'C9', 14, 5, 'C5', 5, 'C5', '2020-12-07 00:28:50', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (66, 1, 7, 'C7', 9, 7, 'C7', 7, 'C7', '2020-12-07 00:29:19', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (67, 1, 7, 'C7', 1, 8, 'C8', 7, 'C7', '2020-12-07 00:29:19', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (68, 1, 8, 'C8', 17, 7, 'C7', 7, 'C7', '2020-12-07 00:29:19', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (69, 1, 7, 'C7', 2, 9, 'C9', 7, 'C7', '2020-12-07 00:29:19', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (70, 1, 9, 'C9', 16, 7, 'C7', 7, 'C7', '2020-12-07 00:29:19', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (71, 1, 8, 'C8', 9, 8, 'C8', 8, 'C8', '2020-12-07 00:29:43', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (72, 1, 8, 'C8', 1, 9, 'C9', 8, 'C8', '2020-12-07 00:29:43', NULL, NULL);
-INSERT INTO `t_hitung_kategori` VALUES (73, 1, 9, 'C9', 17, 8, 'C8', 8, 'C8', '2020-12-07 00:29:43', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (1, 1, 1, 'C1', 9, 1, 'C1', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (2, 1, 1, 'C1', 1, 2, 'C2', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (3, 1, 2, 'C2', 17, 1, 'C1', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (4, 1, 1, 'C1', 2, 3, 'C3', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (5, 1, 3, 'C3', 16, 1, 'C1', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (6, 1, 1, 'C1', 3, 4, 'C4', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (7, 1, 4, 'C4', 15, 1, 'C1', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (8, 1, 1, 'C1', 4, 5, 'C5', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (9, 1, 5, 'C5', 14, 1, 'C1', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (10, 1, 1, 'C1', 5, 6, 'C6', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (11, 1, 6, 'C6', 13, 1, 'C1', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (12, 1, 1, 'C1', 6, 7, 'C7', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (13, 1, 7, 'C7', 12, 1, 'C1', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (14, 1, 1, 'C1', 7, 8, 'C8', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (15, 1, 8, 'C8', 11, 1, 'C1', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (16, 1, 1, 'C1', 8, 9, 'C9', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (17, 1, 9, 'C9', 10, 1, 'C1', 1, 'C1', '2020-12-09 21:57:14', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (18, 1, 2, 'C2', 9, 2, 'C2', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (19, 1, 2, 'C2', 1, 3, 'C3', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (20, 1, 3, 'C3', 17, 2, 'C2', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (21, 1, 2, 'C2', 2, 4, 'C4', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (22, 1, 4, 'C4', 16, 2, 'C2', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (23, 1, 2, 'C2', 3, 5, 'C5', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (24, 1, 5, 'C5', 15, 2, 'C2', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (25, 1, 2, 'C2', 4, 6, 'C6', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (26, 1, 6, 'C6', 14, 2, 'C2', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (27, 1, 2, 'C2', 5, 7, 'C7', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (28, 1, 7, 'C7', 13, 2, 'C2', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (29, 1, 2, 'C2', 6, 8, 'C8', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (30, 1, 8, 'C8', 12, 2, 'C2', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (31, 1, 2, 'C2', 7, 9, 'C9', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (32, 1, 9, 'C9', 11, 2, 'C2', 2, 'C2', '2020-12-09 22:05:20', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (33, 1, 3, 'C3', 9, 3, 'C3', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (34, 1, 3, 'C3', 1, 4, 'C4', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (35, 1, 4, 'C4', 17, 3, 'C3', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (36, 1, 3, 'C3', 2, 5, 'C5', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (37, 1, 5, 'C5', 16, 3, 'C3', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (38, 1, 3, 'C3', 3, 6, 'C6', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (39, 1, 6, 'C6', 15, 3, 'C3', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (40, 1, 3, 'C3', 4, 7, 'C7', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (41, 1, 7, 'C7', 14, 3, 'C3', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (42, 1, 3, 'C3', 5, 8, 'C8', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (43, 1, 8, 'C8', 13, 3, 'C3', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (44, 1, 3, 'C3', 6, 9, 'C9', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (45, 1, 9, 'C9', 12, 3, 'C3', 3, 'C3', '2020-12-09 22:14:24', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (46, 1, 4, 'C4', 9, 4, 'C4', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (47, 1, 4, 'C4', 1, 5, 'C5', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (48, 1, 5, 'C5', 17, 4, 'C4', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (49, 1, 4, 'C4', 2, 6, 'C6', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (50, 1, 6, 'C6', 16, 4, 'C4', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (51, 1, 4, 'C4', 3, 7, 'C7', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (52, 1, 7, 'C7', 15, 4, 'C4', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (53, 1, 4, 'C4', 4, 8, 'C8', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (54, 1, 8, 'C8', 14, 4, 'C4', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (55, 1, 4, 'C4', 5, 9, 'C9', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (56, 1, 9, 'C9', 13, 4, 'C4', 4, 'C4', '2020-12-09 22:14:56', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (57, 1, 5, 'C5', 9, 5, 'C5', 5, 'C5', '2020-12-09 22:16:58', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (58, 1, 5, 'C5', 1, 6, 'C6', 5, 'C5', '2020-12-09 22:16:58', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (59, 1, 6, 'C6', 17, 5, 'C5', 5, 'C5', '2020-12-09 22:16:58', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (60, 1, 5, 'C5', 2, 7, 'C7', 5, 'C5', '2020-12-09 22:16:58', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (61, 1, 7, 'C7', 16, 5, 'C5', 5, 'C5', '2020-12-09 22:16:58', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (62, 1, 5, 'C5', 3, 8, 'C8', 5, 'C5', '2020-12-09 22:16:58', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (63, 1, 8, 'C8', 15, 5, 'C5', 5, 'C5', '2020-12-09 22:16:58', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (64, 1, 5, 'C5', 4, 9, 'C9', 5, 'C5', '2020-12-09 22:16:58', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (65, 1, 9, 'C9', 14, 5, 'C5', 5, 'C5', '2020-12-09 22:16:58', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (66, 1, 6, 'C6', 9, 6, 'C6', 6, 'C6', '2020-12-09 22:17:25', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (67, 1, 6, 'C6', 1, 7, 'C7', 6, 'C6', '2020-12-09 22:17:25', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (68, 1, 7, 'C7', 17, 6, 'C6', 6, 'C6', '2020-12-09 22:17:25', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (69, 1, 6, 'C6', 2, 8, 'C8', 6, 'C6', '2020-12-09 22:17:25', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (70, 1, 8, 'C8', 16, 6, 'C6', 6, 'C6', '2020-12-09 22:17:25', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (71, 1, 6, 'C6', 3, 9, 'C9', 6, 'C6', '2020-12-09 22:17:25', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (72, 1, 9, 'C9', 15, 6, 'C6', 6, 'C6', '2020-12-09 22:17:25', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (73, 1, 7, 'C7', 9, 7, 'C7', 7, 'C7', '2020-12-09 22:17:33', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (74, 1, 7, 'C7', 1, 8, 'C8', 7, 'C7', '2020-12-09 22:17:33', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (75, 1, 8, 'C8', 17, 7, 'C7', 7, 'C7', '2020-12-09 22:17:33', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (76, 1, 7, 'C7', 2, 9, 'C9', 7, 'C7', '2020-12-09 22:17:33', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (77, 1, 9, 'C9', 16, 7, 'C7', 7, 'C7', '2020-12-09 22:17:33', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (78, 1, 8, 'C8', 9, 8, 'C8', 8, 'C8', '2020-12-10 14:45:10', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (79, 1, 8, 'C8', 1, 9, 'C9', 8, 'C8', '2020-12-10 14:45:10', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (80, 1, 9, 'C9', 17, 8, 'C8', 8, 'C8', '2020-12-10 14:45:10', NULL, NULL);
+INSERT INTO `t_hitung_kategori_det` VALUES (81, 1, 9, 'C9', 9, 9, 'C9', 8, 'C8', '2020-12-10 14:45:10', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_pasangan_himpunan

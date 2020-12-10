@@ -24,7 +24,8 @@
           <div class="kt-portlet__head-wrapper">
             <div class="kt-portlet__head-actions row">
               <div>
-              <a href="<?=base_url('hitung_kategori/formulir_hitung?kategori='.$this->uri->segment(3).'&kriteria=C1');?>" class="btn btn-bold btn-label-brand btn-sm"><i class="la la-plus"></i>Tambah Data</a>
+              <!-- <a href="<?=base_url('hitung_kategori/formulir_hitung?kategori='.$this->uri->segment(3).'&kriteria=C1');?>" class="btn btn-bold btn-label-brand btn-sm"><i class="la la-plus"></i>Tambah Data</a> -->
+              <a href="<?=base_url('hitung_kategori/formulir_proyek?kategori='.$this->uri->segment(3).'&kriteria=C1');?>" class="btn btn-bold btn-label-brand btn-sm"><i class="la la-plus"></i>Tambah Data</a>
               </div>
             </div>
           </div>
@@ -37,6 +38,7 @@
           <thead>
             <tr>
               <th style="width: 5%;">No</th>
+              <th>Proyek</th>
               <th>Nama Kategori</th>
               <th>Total lower</th>
               <th>Total Medium</th>
@@ -49,6 +51,7 @@
               <?php foreach ($data_hitung as $k => $v) { ?>
                 <tr>
                   <th><?= ++$k; ?></th>
+                  <th><?= $v->nama_proyek.' ['.$v->tahun_proyek.']'; ?></th>
                   <th><?= $v->nama_kategori; ?></th>
                   <th><?= $v->total_lower; ?></th>
                   <th><?= $v->total_medium; ?></th>

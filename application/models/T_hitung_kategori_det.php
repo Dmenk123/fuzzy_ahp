@@ -62,4 +62,16 @@ class T_hitung_kategori_det extends CI_Model
 			return '1';
 		} 
 	}
+
+	public function get_nilai_total_himpunan($id_hitung)
+	{
+		$this->db->select('hk_det.kode_kriteria, Round(sum(hp.lower_val), 4) as total_lower, Round(sum(hp.medium_val), 4) as total_medium, Round(sum(hp.upper_val), 4) as total_upper');
+		$this->db->from($this->table.' as hk_det');
+		$this->db->join('m_himpunan hp', 'hk_det.id_himpunan = hp.id', 'left');
+		$this->db->where(['hk_det.id_hitung_kategori' => $id_hitung, 'hp.deleted_at' => null]);
+		$this->db->group_by('hk_det.kode_kriteria');
+		$this->db->order_by('hk_det.kode_kriteria', 'esc');
+		$query = $this->db->get();
+		return $query->result();
+	}
 }

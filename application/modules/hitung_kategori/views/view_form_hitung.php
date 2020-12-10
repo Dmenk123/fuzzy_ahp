@@ -1,10 +1,10 @@
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
   <div class="kt-portlet">
+    
     <div class="kt-portlet__body kt-portlet__body--fit">
+      <!-- begin:: Content Head -->
       <div class="kt-grid  kt-wizard-v2 kt-wizard-v2--white" id="kt_wizard_v2" data-ktwizard-state="step-first">
-        
-      <div class="kt-grid__item kt-wizard-v2__aside">
-
+        <div class="kt-grid__item kt-wizard-v2__aside">    
           <!--begin: Form Wizard Nav -->
           <div class="kt-wizard-v2__nav">
 
@@ -12,17 +12,17 @@
             <div class="kt-wizard-v2__nav-items kt-wizard-v2__nav-items--clickable">
               <h4>List Step Kriteria</h4>
               <?php 
-              if($old_data){
-                $id_hitung = $old_data[0]->id_hitung_kategori;
-              }else{
-                $id_hitung = false;
-              }
+              // if($old_data){
+              //   $id_hitung = $old_data[0]->id_hitung_kategori;
+              // }else{
+              //   $id_hitung = false;
+              // }
               foreach ($kriteria as $key => $value) { 
                 if($key == (count($kriteria)-1)) {
                   break;
                 }
               ?>
-                <div class="kt-wizard-v2__nav-item step_kriteria" data-ktwizard-type="step" <?php if(strtoupper(strtolower($_GET['kriteria'])) == $value->kode_kriteria) { echo 'data-ktwizard-state="current"'; }?> data-idhitung = "<?=$id_hitung;?>" data-kriteria="<?=$value->kode_kriteria;?>" data-kategori="<?= $this->input->get('kategori');?>">
+                <div class="kt-wizard-v2__nav-item step_kriteria" data-ktwizard-type="step" <?php if(strtoupper(strtolower($_GET['kriteria'])) == $value->kode_kriteria) { echo 'data-ktwizard-state="current"'; }?> data-idhitung = "<?= $this->uri->segment(3); ?>" data-kriteria="<?=$value->kode_kriteria;?>" data-kategori="<?= $this->input->get('kategori');?>">
                   <div class="kt-wizard-v2__nav-body">
                     <div class="kt-wizard-v2__nav-icon">
                       <i class="flaticon-clipboard"></i>
@@ -50,12 +50,14 @@
           <form class="kt-form" id="form_hitung_kategori">
             <input type="hidden" class="form-control" id="step_kriteria" name="step_kriteria" value="<?= $this->input->get('kriteria'); ?>">
             <input type="hidden" class="form-control" id="id_kategori" name="id_kategori" value="<?= $kategori->id; ?>">
+            <input type="hidden" class="form-control" id="id_hitung" name="id_hitung" value="<?= $this->uri->segment(3); ?>">
             <!--begin: Form Wizard Step 1-->
             <div class="kt-wizard-v2__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
               <?php 
               foreach ($kriteria as $key => $value) {
                 if($value->kode_kriteria == $this->input->get('kriteria')){
-                  echo '<div class="kt-heading kt-heading--md">'.$value->nama.' ('.$value->kode_kriteria.')</div>';
+                  echo '<div class="kt-heading kt-heading--md">'.$title.'</div>';
+                  echo '<div class="kt-heading kt-heading--sm"> Kriteria : '.$value->nama.' ('.$value->kode_kriteria.')</div>';
                   echo '<div class="kt-heading kt-heading--sm">Penentuan Perbandingan kriteria '.$value->nama.' Terhadap kriteria-kriteria lainnya dibawah ini.</div>';
                   break;
                 }

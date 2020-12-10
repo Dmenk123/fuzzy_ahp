@@ -42,7 +42,7 @@ $(document).ready(function() {
                                     response.pesan, 
                                     'success'
                                 ).then(function() {
-                                    window.location.href = base_url+"hitung_kategori/formulir_hitung/"+response.data_step.id_kategori+'?kriteria='+response.data_step.next_step_kode;
+                                    window.location.href = base_url+"hitung_kategori/formulir_hitung/"+response.data_step.id_hitung+'?kategori='+response.data_step.id_kategori+'&kriteria='+response.data_step.next_step_kode;
                                 });
                             }
                         }
@@ -64,6 +64,74 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#btn_next_proyek').click(function (e) { 
+        e.preventDefault();
+        //let step_kriteria = $('#step_kriteria').val();
+        let form = $('#form_hitung_proyek')[0];
+        let data = new FormData(form);
+        //data.append('step_kriteria', step_kriteria);
+        swalConfirm.fire({
+            title: 'Konfirmasi',
+            text: "Lanjut Ke Langkah Berikutnya ?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya !',
+            cancelButtonText: 'Tidak !',
+            reverseButtons: true
+          }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: base_url+'hitung_kategori/next_step_proyek',
+                    data: data,
+                    dataType: "JSON",
+                    processData: false,
+                    contentType: false, 
+                    cache: false,
+                    timeout: 600000,
+                    success: function (response) {
+                        if(response.status){
+                            swalConfirm.fire(
+                                'Sukses !', 
+                                response.pesan, 
+                                'success'
+                            ).then(function() {
+                                window.location.href = base_url+"hitung_kategori/formulir_hitung/"+response.id_hitung+'?kategori='+response.id_kategori+'&kriteria=C1';
+                            });
+                        }else{
+                            for (var i = 0; i < response.inputerror.length; i++) 
+                            {
+                                if (response.inputerror[i] != 'proyek') {
+                                    //ikut style global
+                                    $('[name="'+response.inputerror[i]+'"]').addClass('is-invalid');
+                                    $('[name="'+response.inputerror[i]+'"]').next().text(response.error_string[i]).addClass('invalid-feedback'); 
+                                }else{
+                                    //select span help-block class set text error string
+                                    $('[name="'+response.inputerror[i]+'"]').next().next().text(response.error_string[i]).addClass('invalid-feedback-select');
+                                }
+                            }
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        swalConfirm.fire('Terjadi Kesalahan');
+                    }
+                });
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+              swalConfirm.fire(
+                'Dibatalkan',
+                'Aksi Dibatalakan',
+                'error'
+              )
+            }
+        });
+    });
+
 
     $('#btn_finish').click(function (e) { 
         e.preventDefault();
@@ -98,7 +166,7 @@ $(document).ready(function() {
                                 response.pesan, 
                                 'success'
                             ).then(function() {
-                                window.location.href = base_url+"data_hitung/kategori/"+response.id_kategori;
+                                window.location.href = base_url+"hitung_kategori/list_perhitungan/"+response.id_hitung;
                             });
                             
                         }
