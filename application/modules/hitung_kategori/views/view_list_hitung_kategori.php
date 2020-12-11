@@ -60,9 +60,15 @@
                     <div class="btn-group">
                       <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Opsi</button>
                       <div class="dropdown-menu">
-                        <a class="dropdown-item" href="<?=base_url('hitung_kategori/formulir_hitung/'.$v->id.'?kategori='.$this->uri->segment(3).'&kriteria=C1');?>">
-                          <i class="la la-pencil"></i> Edit
-                        </a>
+                        <?php if($v->total_lower) { ?>
+                          <a class="dropdown-item" target="_blank" href="<?=base_url('data_hitung/detail_perhitungan/'.$v->id.'?kategori='.$this->uri->segment(3).'&kriteria=C1');?>">
+                            <i class="la la-bar-chart-o"></i> Lihat Data
+                          </a>
+                          <a class="dropdown-item" href="<?=base_url('hitung_kategori/formulir_hitung/'.$v->id.'?kategori='.$this->uri->segment(3).'&kriteria=C1');?>">
+                            <i class="la la-pencil"></i> Edit
+                          </a>
+                        <?php } ?>
+                       
                         <button class="dropdown-item" onclick="delete_data('<?= $v->id; ?>')">
                           <i class="la la-trash"></i> Hapus
                         </button>

@@ -9,25 +9,7 @@ $(document).ready(function() {
     });
 
 	//datatables
-	table = $('#tabel_data').DataTable({
-		responsive: true,
-        searchDelay: 500,
-        processing: true,
-        serverSide: true,
-		ajax: {
-			url  : base_url + "master_kriteria/list_data",
-			type : "POST" 
-		},
-
-		//set column definition initialisation properties
-		columnDefs: [
-			{
-				targets: [-1], //last column
-				orderable: false, //set not orderable
-			},
-		],
-    });
-  
+    table = $('#tabel_data').DataTable();
     
     $(".modal").on("hidden.bs.modal", function(){
         reset_modal_form();

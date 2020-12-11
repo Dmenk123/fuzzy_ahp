@@ -70,7 +70,21 @@ class T_hitung_kategori_det extends CI_Model
 		$this->db->join('m_himpunan hp', 'hk_det.id_himpunan = hp.id', 'left');
 		$this->db->where(['hk_det.id_hitung_kategori' => $id_hitung, 'hp.deleted_at' => null]);
 		$this->db->group_by('hk_det.kode_kriteria');
-		$this->db->order_by('hk_det.kode_kriteria', 'esc');
+		$this->db->order_by('hk_det.kode_kriteria', 'asc');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_data_himpunan_hitung($id_hitung)
+	{
+		$this->db->select('hk_det.id, hk_det.id_himpunan, hk_det.kode_kriteria, hp.lower_val, hp.medium_val, hp.upper_val, hk_det.kode_kriteria_tujuan, hk_det.flag_proses_kode_kriteria, hp.nama, hp.lower_txt, hp.medium_txt, hp.upper_txt, ka.nama as nama_kategori, kr.nama as nama_kriteria');
+		$this->db->from($this->table.' as hk_det');
+		$this->db->join('m_himpunan hp', 'hk_det.id_himpunan = hp.id', 'left');
+		$this->db->join('t_hitung_kategori hk', 'hk_det.id_hitung_kategori = hk.id', 'left');
+		$this->db->join('m_kategori ka', 'hk.id_kategori = ka.id', 'left');
+		$this->db->join('m_kriteria kr', 'hk_det.id_kriteria = kr.id', 'left');
+		$this->db->where(['hk_det.id_hitung_kategori' => $id_hitung, 'hp.deleted_at' => null]);
+		$this->db->order_by('hk_det.kode_kriteria ASC, hk_det.kode_kriteria_tujuan ASC');
 		$query = $this->db->get();
 		return $query->result();
 	}
