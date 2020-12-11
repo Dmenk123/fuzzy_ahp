@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 10/12/2020 14:50:39
+ Date: 11/12/2020 23:22:42
 */
 
 SET NAMES utf8mb4;
@@ -145,7 +145,6 @@ INSERT INTO `m_menu` VALUES (9, 6, 'Master Kategori', 'Master Kategori', 'master
 INSERT INTO `m_menu` VALUES (10, 6, 'Master Kriteria', 'Master Kriteria', 'master_kriteria', 'flaticon-web', 1, 2, 4, 1, 1, 1);
 INSERT INTO `m_menu` VALUES (11, 0, 'Perhitungan', 'Perhitungan', '', 'flaticon-list', 1, 1, 3, 0, 0, 0);
 INSERT INTO `m_menu` VALUES (12, 11, 'Perhitungan Perkategori', 'Perhitungan Perkategori', 'hitung_kategori', 'flaticon-list-2', 1, 2, 1, 1, 1, 1);
-INSERT INTO `m_menu` VALUES (13, 11, 'Data Perhitungan', 'Data Perhitungan', 'data_hitung', 'flaticon-statistics', 1, 2, 2, 1, 1, 1);
 
 -- ----------------------------
 -- Table structure for m_proyek
@@ -208,7 +207,7 @@ CREATE TABLE `m_user`  (
 -- ----------------------------
 -- Records of m_user
 -- ----------------------------
-INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-10 12:40:39', 'USR-00001', NULL, NULL, NULL, NULL);
+INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-11 21:31:29', 'USR-00001', NULL, NULL, NULL, NULL);
 INSERT INTO `m_user` VALUES (2, 1, 'coba', 'Tzg1eTllUlU2a2xNQk5yYktIM1pwUT09', NULL, NULL, 'USR-00002', 'coba-1602775328.jpg', '2020-10-15 22:22:08', '2020-10-15 22:43:54', '2020-10-15 22:58:50');
 
 -- ----------------------------

@@ -102,6 +102,8 @@ class Data_hitung extends CI_Controller {
 		$step_kriteria = $this->input->get('step_kriteria');
 		$data_himpunan_hitung = $this->t_hitung_kategori_det->get_data_himpunan_hitung($id_hitung);
 		$kriteria = $this->m_global->multi_row('*', ['id_kategori' => $id_kategori, 'deleted_at' => null], 'm_kriteria', NULL, 'urut');		
+		$data_tot_himpunan = $this->t_hitung_kategori_det->get_nilai_total_himpunan($id_hitung);
+		$data_hitung = $this->t_hitung_kategori->get_by_id($id_hitung);
 
 		/**
 		 * data passing ke halaman view content
@@ -110,6 +112,8 @@ class Data_hitung extends CI_Controller {
 			'title' => 'Detail Perhitungan Perkategori',
 			'data_user' => $data_user,
 			'data_himpunan_hitung' => $data_himpunan_hitung,
+			'data_tot_himpunan' => $data_tot_himpunan,
+			'data_hitung' => $data_hitung,
 			'kriteria' => $kriteria
 		);
 
