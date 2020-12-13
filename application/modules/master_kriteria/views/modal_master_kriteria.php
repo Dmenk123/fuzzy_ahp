@@ -27,6 +27,28 @@
             </select>
             <span class="help-block"></span>
           </div>
+          <div class="form-group">
+            <label for="" class="form-control-label">Kode Kriteria:</label>
+            <select name="kode" id="kode" class="form-control"> 
+              <?php 
+              echo '<option value="">Silahkan Pilih Kode Kriteria</option>';
+              for ($i=1; $i <= 20; $i++) { 
+                echo '<option value="C'.$i.'">C'.$i.'</option>';
+              } ?>
+            </select>
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="" class="form-control-label">Urut:</label>
+            <select name="urut" id="urut" class="form-control"> 
+              <?php 
+              echo '<option value="">Silahkan Pilih Urutan Kriteria</option>';
+              for ($i=1; $i <= 20; $i++) { 
+                echo '<option value="'.$i.'">'.$i.'</option>';
+              } ?>
+            </select>
+            <span class="help-block"></span>
+          </div>
         </form>
       </div>
       <div class="modal-footer">

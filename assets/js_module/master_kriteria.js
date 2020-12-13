@@ -57,6 +57,8 @@ function edit_data(id)
             $('[name="id"]').val(data.old_data.id);
             $('[name="nama"]').val(data.old_data.nama);
             $('[name="kategori"]').val(data.old_data.id_kategori);
+            $('[name="kode"]').val(data.old_data.kode_kriteria);
+            $('[name="urut"]').val(data.old_data.urut);
             $('#modal_kriteria_form').modal('show');
 	        $('#modal_title').text('Edit Kriteria'); 
         },

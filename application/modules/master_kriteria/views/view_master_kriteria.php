@@ -37,6 +37,8 @@
               <th style="width: 5%;">No</th>
               <th>Nama Kriteria</th>
               <th>Nama Kategori</th>
+              <th>Kode Kriteria</th>
+              <th>Urut</th>
               <th style="width: 5%;">Aksi</th>
             </tr>
           </thead>
