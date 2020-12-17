@@ -1,8 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class T_hitung_kategori extends CI_Model
+class T_hitung extends CI_Model
 {
-	var $table = 't_hitung_kategori';
+	var $table = 't_hitung';
 	
 	public function __construct()
 	{
