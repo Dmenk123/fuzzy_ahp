@@ -35,16 +35,16 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
             <thead>
               <tr align="center">
                 <th rowspan="2" valign="top"></th>
-                <?php foreach ($kriteria as $k => $v) { ?>
+                <?php foreach ($kategori as $k => $v) { ?>
                   <th colspan="3" valign="middle">
                     <div class="col-12"><?= $v->nama; ?></div>
-                    <div class="col-12"><?= $v->kode_kriteria; ?></div>
+                    <div class="col-12"><?= $v->kode_kategori; ?></div>
                   </th>
                   <?php } ?>
                   <th colspan="3" valign="top">Total</th>
               </tr>
               <tr align="center">
-              <?php for ($i=0; $i <= count($kriteria); $i++) { ?>
+              <?php for ($i=0; $i <= count($kategori); $i++) { ?>
                 <th>l</th>
                 <th>m</th>
                 <th>u</th>
@@ -56,14 +56,14 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
                 $idx = 0;
                 $counter_kolom = 0;
               ?>
-              <?php foreach ($kriteria as $kk => $vv) {
+              <?php foreach ($kategori as $kk => $vv) {
                 echo '<tr>';
                 ## counter untuk colspan
                 $counter_kolom = 0; 
                 foreach ($data_himpunan_hitung as $key => $val) {
-                  if($val->kode_kriteria == $vv->kode_kriteria) {
+                  if($val->kode_kategori == $vv->kode_kategori) {
                     if($idx == 0){
-                      echo '<th>'.$val->kode_kriteria.'</th>';
+                      echo '<th>'.$val->kode_kategori.'</th>';
                     }
 
                     if($val->lower_val == '1.0000' && $val->medium_val == '1.0000' && $val->upper_val == '1.0000'){
@@ -103,7 +103,7 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
       </div>
 
       <div class="kt-portlet__body" id="sintesis_area">
-        <h4>Tabel Sintesis</h4> <span> <a href="<?=base_url('data_hitung/detail_sintesis/').$this->uri->segment(3); ?>?kategori=1&kriteria=C1" target="_blank">Lihat Detail Sintesis</a></span>
+        <h4>Tabel Sintesis</h4> <span> <a href="<?=base_url('data_hitung/detail_sintesis/').$this->enkripsi->enc_dec('encrypt', $this->uri->segment(3)); ?>?kategori=1&kriteria=C1" target="_blank">Lihat Detail Sintesis</a></span>
         <div class="col-lg-12 row table-responsive"> 
           <table class="table table-bordered table-hover">
             <thead>
@@ -118,7 +118,7 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
               <?php $idx = 0; ?>
               <?php foreach ($arr_data_sintesis as $kk => $vv) {
                 echo '<tr align="center">';
-                echo '<td>'.$vv->kode_kriteria.'</td>';
+                echo '<td>'.$vv->kode_kategori.'</td>';
                 echo '<td>'.number_format($vv->sintesis_lower, 4).'</td>';
                 echo '<td>'.number_format($vv->sintesis_medium, 4).'</td>';
                 echo '<td>'.number_format($vv->sintesis_upper, 4).'</td>';

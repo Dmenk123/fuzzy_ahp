@@ -39,7 +39,6 @@
             <tr>
               <th style="width: 5%;">No</th>
               <th>Proyek</th>
-              <th>Nama Kategori</th>
               <th>Total lower</th>
               <th>Total Medium</th>
               <th>Total Upper</th>
@@ -52,7 +51,6 @@
                 <tr>
                   <th><?= ++$k; ?></th>
                   <th><?= $v->nama_proyek.' ['.$v->tahun_proyek.']'; ?></th>
-                  <th><?= $v->nama_kategori; ?></th>
                   <th><?= $v->total_lower; ?></th>
                   <th><?= $v->total_medium; ?></th>
                   <th><?= $v->total_upper; ?></th>
@@ -61,10 +59,10 @@
                       <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Opsi</button>
                       <div class="dropdown-menu">
                         <?php if($v->total_lower) { ?>
-                          <a class="dropdown-item" target="_blank" href="<?=base_url('data_hitung/detail_perhitungan/'.$v->id.'?kategori='.$this->uri->segment(3).'&kriteria=C1');?>">
+                          <a class="dropdown-item" target="_blank" href="<?=base_url('data_hitung/detail_perhitungan/').$this->enkripsi->enc_dec('encrypt', $v->id);?>">
                             <i class="la la-bar-chart-o"></i> Lihat Data
                           </a>
-                          <a class="dropdown-item" href="<?=base_url('hitung_kategori/formulir_hitung/'.$v->id.'?kategori='.$this->uri->segment(3).'&kriteria=C1');?>">
+                          <a class="dropdown-item" href="<?=base_url('hitung_ahp/formulir_hitung/').$this->enkripsi->enc_dec('encrypt', $v->id).'?kategori='.$this->enkripsi->enc_dec('encrypt', 1);?>">
                             <i class="la la-pencil"></i> Edit
                           </a>
                         <?php } ?>

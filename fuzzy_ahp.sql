@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 18/12/2020 00:03:37
+ Date: 18/12/2020 19:55:36
 */
 
 SET NAMES utf8mb4;
@@ -214,7 +214,7 @@ CREATE TABLE `m_user`  (
 -- ----------------------------
 -- Records of m_user
 -- ----------------------------
-INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-17 22:38:59', 'USR-00001', NULL, NULL, NULL, NULL);
+INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-18 16:08:55', 'USR-00001', NULL, NULL, NULL, NULL);
 INSERT INTO `m_user` VALUES (2, 1, 'coba', 'Tzg1eTllUlU2a2xNQk5yYktIM1pwUT09', NULL, NULL, 'USR-00002', 'coba-1602775328.jpg', '2020-10-15 22:22:08', '2020-10-15 22:43:54', '2020-10-15 22:58:50');
 
 -- ----------------------------
@@ -237,7 +237,7 @@ CREATE TABLE `t_hitung`  (
 -- ----------------------------
 -- Records of t_hitung
 -- ----------------------------
-INSERT INTO `t_hitung` VALUES (1, 2, '1', NULL, NULL, NULL, '2020-12-18 00:02:59', NULL, NULL);
+INSERT INTO `t_hitung` VALUES (1, 2, '1', 51.7515, 64.9580, 81.0691, '2020-12-18 19:43:01', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_hitung_det
@@ -249,8 +249,8 @@ CREATE TABLE `t_hitung_det`  (
   `id_kategori` int(11) NULL DEFAULT NULL,
   `kode_kategori` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `id_himpunan` int(11) NULL DEFAULT NULL,
-  `id_kriteria_tujuan` int(11) NULL DEFAULT NULL,
-  `kode_kriteria_tujuan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `id_kategori_tujuan` int(11) NULL DEFAULT NULL,
+  `kode_kategori_tujuan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `flag_proses_id_kategori` int(11) NULL DEFAULT NULL COMMENT 'di proses pada id_kategori berapa ?',
   `flag_proses_kode_kategori` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'di proses pada kode_kategori berapa ?',
   `created_at` datetime(0) NULL DEFAULT NULL,
@@ -262,6 +262,55 @@ CREATE TABLE `t_hitung_det`  (
 -- ----------------------------
 -- Records of t_hitung_det
 -- ----------------------------
+INSERT INTO `t_hitung_det` VALUES (1, 1, 1, 'C1', 9, 1, 'C1', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (2, 1, 1, 'C1', 4, 2, 'C2', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (3, 1, 2, 'C2', 14, 1, 'C1', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (4, 1, 1, 'C1', 6, 3, 'C3', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (5, 1, 3, 'C3', 12, 1, 'C1', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (6, 1, 1, 'C1', 5, 4, 'C4', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (7, 1, 4, 'C4', 13, 1, 'C1', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (8, 1, 1, 'C1', 7, 5, 'C5', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (9, 1, 5, 'C5', 11, 1, 'C1', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (10, 1, 1, 'C1', 1, 6, 'C6', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (11, 1, 6, 'C6', 17, 1, 'C1', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (12, 1, 1, 'C1', 8, 7, 'C7', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (13, 1, 7, 'C7', 10, 1, 'C1', 1, 'C1', '2020-12-18 19:43:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (14, 1, 2, 'C2', 9, 2, 'C2', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (15, 1, 2, 'C2', 5, 3, 'C3', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (16, 1, 3, 'C3', 13, 2, 'C2', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (17, 1, 2, 'C2', 4, 4, 'C4', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (18, 1, 4, 'C4', 14, 2, 'C2', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (19, 1, 2, 'C2', 6, 5, 'C5', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (20, 1, 5, 'C5', 12, 2, 'C2', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (21, 1, 2, 'C2', 3, 6, 'C6', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (22, 1, 6, 'C6', 15, 2, 'C2', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (23, 1, 2, 'C2', 7, 7, 'C7', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (24, 1, 7, 'C7', 11, 2, 'C2', 2, 'C2', '2020-12-18 19:49:58', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (25, 1, 3, 'C3', 9, 3, 'C3', 3, 'C3', '2020-12-18 19:51:10', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (26, 1, 3, 'C3', 6, 4, 'C4', 3, 'C3', '2020-12-18 19:51:10', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (27, 1, 4, 'C4', 12, 3, 'C3', 3, 'C3', '2020-12-18 19:51:10', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (28, 1, 3, 'C3', 7, 5, 'C5', 3, 'C3', '2020-12-18 19:51:10', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (29, 1, 5, 'C5', 11, 3, 'C3', 3, 'C3', '2020-12-18 19:51:10', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (30, 1, 3, 'C3', 5, 6, 'C6', 3, 'C3', '2020-12-18 19:51:10', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (31, 1, 6, 'C6', 13, 3, 'C3', 3, 'C3', '2020-12-18 19:51:10', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (32, 1, 3, 'C3', 8, 7, 'C7', 3, 'C3', '2020-12-18 19:51:10', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (33, 1, 7, 'C7', 10, 3, 'C3', 3, 'C3', '2020-12-18 19:51:10', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (34, 1, 4, 'C4', 9, 4, 'C4', 4, 'C4', '2020-12-18 19:51:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (35, 1, 4, 'C4', 7, 5, 'C5', 4, 'C4', '2020-12-18 19:51:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (36, 1, 5, 'C5', 11, 4, 'C4', 4, 'C4', '2020-12-18 19:51:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (37, 1, 4, 'C4', 2, 6, 'C6', 4, 'C4', '2020-12-18 19:51:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (38, 1, 6, 'C6', 16, 4, 'C4', 4, 'C4', '2020-12-18 19:51:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (39, 1, 4, 'C4', 8, 7, 'C7', 4, 'C4', '2020-12-18 19:51:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (40, 1, 7, 'C7', 10, 4, 'C4', 4, 'C4', '2020-12-18 19:51:30', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (41, 1, 5, 'C5', 9, 5, 'C5', 5, 'C5', '2020-12-18 19:51:45', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (42, 1, 5, 'C5', 4, 6, 'C6', 5, 'C5', '2020-12-18 19:51:45', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (43, 1, 6, 'C6', 14, 5, 'C5', 5, 'C5', '2020-12-18 19:51:45', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (44, 1, 5, 'C5', 7, 7, 'C7', 5, 'C5', '2020-12-18 19:51:45', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (45, 1, 7, 'C7', 11, 5, 'C5', 5, 'C5', '2020-12-18 19:51:45', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (46, 1, 6, 'C6', 9, 6, 'C6', 6, 'C6', '2020-12-18 19:51:56', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (47, 1, 6, 'C6', 7, 7, 'C7', 6, 'C6', '2020-12-18 19:51:56', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (48, 1, 7, 'C7', 11, 6, 'C6', 6, 'C6', '2020-12-18 19:51:56', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (49, 1, 7, 'C7', 9, 7, 'C7', 6, 'C6', '2020-12-18 19:51:56', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_pasangan_himpunan
@@ -351,5 +400,12 @@ CREATE TABLE `t_sintesis`  (
 -- ----------------------------
 -- Records of t_sintesis
 -- ----------------------------
+INSERT INTO `t_sintesis` VALUES (1, 1, 1, 'C1', 0.1542, 0.2386, 0.3478, '2020-12-18 19:51:56', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (2, 1, 2, 'C2', 0.1392, 0.2130, 0.3169, '2020-12-18 19:51:56', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (3, 1, 3, 'C3', 0.0831, 0.1370, 0.2158, '2020-12-18 19:51:56', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (4, 1, 4, 'C4', 0.0866, 0.1344, 0.2042, '2020-12-18 19:51:56', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (5, 1, 5, 'C5', 0.0789, 0.1232, 0.1965, '2020-12-18 19:51:56', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (6, 1, 6, 'C6', 0.0409, 0.0614, 0.0922, '2020-12-18 19:51:56', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (7, 1, 7, 'C7', 0.0555, 0.0924, 0.1932, '2020-12-18 19:51:56', NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

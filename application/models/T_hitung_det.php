@@ -65,26 +65,25 @@ class T_hitung_det extends CI_Model
 
 	public function get_nilai_total_himpunan($id_hitung)
 	{
-		$this->db->select('hk_det.kode_kriteria, Round(sum(hp.lower_val), 4) as total_lower, Round(sum(hp.medium_val), 4) as total_medium, Round(sum(hp.upper_val), 4) as total_upper');
-		$this->db->from($this->table.' as hk_det');
-		$this->db->join('m_himpunan hp', 'hk_det.id_himpunan = hp.id', 'left');
-		$this->db->where(['hk_det.id_hitung_kategori' => $id_hitung, 'hp.deleted_at' => null]);
-		$this->db->group_by('hk_det.kode_kriteria');
-		$this->db->order_by('hk_det.kode_kriteria', 'asc');
+		$this->db->select('h_det.kode_kategori, Round(sum(hp.lower_val), 4) as total_lower, Round(sum(hp.medium_val), 4) as total_medium, Round(sum(hp.upper_val), 4) as total_upper');
+		$this->db->from($this->table.' as h_det');
+		$this->db->join('m_himpunan hp', 'h_det.id_himpunan = hp.id', 'left');
+		$this->db->where(['h_det.id_hitung' => $id_hitung, 'hp.deleted_at' => null]);
+		$this->db->group_by('h_det.kode_kategori');
+		$this->db->order_by('h_det.kode_kategori', 'asc');
 		$query = $this->db->get();
 		return $query->result();
 	}
 
 	public function get_data_himpunan_hitung($id_hitung)
 	{
-		$this->db->select('hk_det.id, hk_det.id_himpunan, hk_det.kode_kriteria, hp.lower_val, hp.medium_val, hp.upper_val, hk_det.kode_kriteria_tujuan, hk_det.flag_proses_kode_kriteria, hp.nama, hp.lower_txt, hp.medium_txt, hp.upper_txt, ka.nama as nama_kategori, kr.nama as nama_kriteria');
-		$this->db->from($this->table.' as hk_det');
-		$this->db->join('m_himpunan hp', 'hk_det.id_himpunan = hp.id', 'left');
-		$this->db->join('t_hitung_kategori hk', 'hk_det.id_hitung_kategori = hk.id', 'left');
-		$this->db->join('m_kategori ka', 'hk.id_kategori = ka.id', 'left');
-		$this->db->join('m_kriteria kr', 'hk_det.id_kriteria = kr.id', 'left');
-		$this->db->where(['hk_det.id_hitung_kategori' => $id_hitung, 'hp.deleted_at' => null]);
-		$this->db->order_by('hk_det.kode_kriteria ASC, hk_det.kode_kriteria_tujuan ASC');
+		$this->db->select('h_det.id, h_det.id_himpunan, h_det.kode_kategori, hp.lower_val, hp.medium_val, hp.upper_val, h_det.kode_kategori_tujuan, h_det.flag_proses_kode_kategori, hp.nama, hp.lower_txt, hp.medium_txt, hp.upper_txt, ka.nama as nama_kategori');
+		$this->db->from($this->table.' as h_det');
+		$this->db->join('m_himpunan hp', 'h_det.id_himpunan = hp.id', 'left');
+		$this->db->join('t_hitung h', 'h_det.id_hitung = h.id', 'left');
+		$this->db->join('m_kategori ka', 'h_det.id_kategori = ka.id', 'left');
+		$this->db->where(['h_det.id_hitung' => $id_hitung, 'hp.deleted_at' => null]);
+		$this->db->order_by('h_det.kode_kategori ASC, h_det.kode_kategori_tujuan ASC');
 		$query = $this->db->get();
 		return $query->result();
 	}

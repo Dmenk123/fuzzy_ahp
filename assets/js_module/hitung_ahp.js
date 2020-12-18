@@ -27,7 +27,7 @@ $(document).ready(function() {
                 $.ajax({
                     type: "POST",
                     enctype: 'multipart/form-data',
-                    url: base_url+'hitung_kategori/next_step',
+                    url: base_url+'hitung_ahp/next_step',
                     data: data,
                     dataType: "JSON",
                     processData: false,
@@ -42,7 +42,7 @@ $(document).ready(function() {
                                     response.pesan, 
                                     'success'
                                 ).then(function() {
-                                    window.location.href = base_url+"hitung_kategori/formulir_hitung/"+response.data_step.id_hitung+'?kategori='+response.data_step.id_kategori+'&kriteria='+response.data_step.next_step_kode;
+                                    window.location.href = base_url+"hitung_ahp/formulir_hitung/"+response.data_step.id_hitung+'?kategori='+response.data_step.next_step;
                                 });
                             }
                         }
@@ -132,7 +132,6 @@ $(document).ready(function() {
         });
     });
 
-
     $('#btn_finish').click(function (e) { 
         e.preventDefault();
         //let step_kriteria = $('#step_kriteria').val();
@@ -152,7 +151,7 @@ $(document).ready(function() {
                 $.ajax({
                     type: "POST",
                     enctype: 'multipart/form-data',
-                    url: base_url+'hitung_kategori/finish_step',
+                    url: base_url+'hitung_ahp/finish_step',
                     data: data,
                     dataType: "JSON",
                     processData: false,
@@ -166,7 +165,7 @@ $(document).ready(function() {
                                 response.pesan, 
                                 'success'
                             ).then(function() {
-                                window.location.href = base_url+"hitung_kategori/list_perhitungan/"+response.id_hitung;
+                                window.location.href = base_url+"hitung_ahp";
                             });
                             
                         }
@@ -189,16 +188,15 @@ $(document).ready(function() {
         });
     });
 
-    $('.step_kriteria').click(function (e) { 
+    $('.step_kategori').click(function (e) { 
         e.preventDefault();
-        let step_kriteria = $(this).data('kriteria');
-        let step_kategori = $(this).data('kategori');
+        let id_kategori = $(this).data('kategori');
         let id_hitung = $(this).data('idhitung');
        
         if(id_hitung != false){
-            window.location.href = base_url+"hitung_kategori/formulir_hitung/"+id_hitung+"?kategori="+step_kategori+"&kriteria="+step_kriteria;
+            window.location.href = base_url+"hitung_ahp/formulir_hitung/"+id_hitung+"?kategori="+id_kategori;
         }else{
-            window.location.href = base_url+"hitung_kategori/formulir_hitung?kategori="+step_kategori+"&kriteria="+step_kriteria;
+            window.location.href = base_url+"hitung_ahp/formulir_hitung?kategori="+id_kategori;
         }
         
     });

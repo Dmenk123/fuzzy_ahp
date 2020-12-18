@@ -13,8 +13,8 @@ class Data_hitung extends CI_Controller {
 		$this->load->model('m_user');
 		$this->load->model('m_kriteria');
 		$this->load->model('m_kategori');
-		$this->load->model('t_hitung_kategori');
-		$this->load->model('t_hitung_kategori_det');
+		$this->load->model('t_hitung');
+		$this->load->model('t_hitung_det');
 		$this->load->model('t_sintesis');
 		$this->load->model('m_global');
 	}
@@ -64,7 +64,7 @@ class Data_hitung extends CI_Controller {
 		];
 
 		$data_hitung = $this->m_global->multi_row(
-			'hk.*, k.nama as nama_kategori, p.nama_proyek, p.tahun_proyek', ['hk.id_kategori' => $id, 'hk.deleted_at' => null], 't_hitung_kategori as hk', $join, 'hk.created_at desc');
+			'hk.*, k.nama as nama_kategori, p.nama_proyek, p.tahun_proyek', ['hk.id_kategori' => $id, 'hk.deleted_at' => null], 't_hitung as hk', $join, 'hk.created_at desc');
 
 		/**
 		 * data passing ke halaman view content
@@ -92,36 +92,40 @@ class Data_hitung extends CI_Controller {
 		$this->template_view->load_view($content, $data);
 	}
 
-	public function detail_perhitungan($id_hitung)
+	public function detail_perhitungan($id_hitung = false)
 	{
 		$obj_date = new DateTime();
 		$id_user = $this->session->userdata('id_user'); 
 		$data_user = $this->m_user->get_detail_user($id_user);
-
 		$timestamp = $obj_date->format('Y-m-d H:i:s');
-		$id_kategori = $this->input->get('kategori');
-		$step_kriteria = $this->input->get('step_kriteria');
-		$data_himpunan_hitung = $this->t_hitung_kategori_det->get_data_himpunan_hitung($id_hitung);
+
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+
+		$data_himpunan_hitung = $this->t_hitung_det->get_data_himpunan_hitung($id_hitung);
 
 		if(!$data_himpunan_hitung) {
 			return redirect('data_hitung');
 		}
 
-		$kriteria = $this->m_global->multi_row('*', ['id_kategori' => $id_kategori, 'deleted_at' => null], 'm_kriteria', NULL, 'urut');		
-		$data_tot_himpunan = $this->t_hitung_kategori_det->get_nilai_total_himpunan($id_hitung);
-		$data_hitung = $this->t_hitung_kategori->get_by_id($id_hitung);
-		$arr_data_sintesis = $this->t_sintesis->get_by_condition(['id_hitung_kategori' => $id_hitung, 'deleted_at' => null]);
+		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');		
+		$data_tot_himpunan = $this->t_hitung_det->get_nilai_total_himpunan($id_hitung);
+		$data_hitung = $this->t_hitung->get_by_id($id_hitung);
+		$arr_data_sintesis = $this->t_sintesis->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
 
 		/**
 		 * data passing ke halaman view content
 		 */
 		$data = array(
-			'title' => 'Detail Perhitungan Perkategori',
+			'title' => 'Detail Perhitungan',
 			'data_user' => $data_user,
 			'data_himpunan_hitung' => $data_himpunan_hitung,
 			'data_tot_himpunan' => $data_tot_himpunan,
 			'data_hitung' => $data_hitung,
-			'kriteria' => $kriteria,
+			'kategori' => $kategori,
 			'arr_data_sintesis' => $arr_data_sintesis
 		);
 
@@ -157,8 +161,8 @@ class Data_hitung extends CI_Controller {
 		$id_kategori = $this->input->get('kategori');
 		$step_kriteria = $this->input->get('step_kriteria');
 		$kriteria = $this->m_global->multi_row('*', ['id_kategori' => $id_kategori, 'deleted_at' => null], 'm_kriteria', NULL, 'urut');		
-		$data_tot_himpunan = $this->t_hitung_kategori_det->get_nilai_total_himpunan($id_hitung);
-		$data_hitung = $this->t_hitung_kategori->get_by_id($id_hitung);
+		$data_tot_himpunan = $this->t_hitung_det->get_nilai_total_himpunan($id_hitung);
+		$data_hitung = $this->t_hitung->get_by_id($id_hitung);
 
 		for ($i=1; $i <= count($kriteria); $i++) { 
 

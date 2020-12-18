@@ -146,18 +146,20 @@ class Hitung_ahp extends CI_Controller {
 		];
 		
 		$insert = $this->t_hitung->save($data_insert);
+		
+		
 
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			$retval['status'] = false;
-			$retval['id_hitung'] = $id;
-			$retval['id_kategori'] = $kat->id;
+			$retval['id_hitung'] = $this->enkripsi->enc_dec('encrypt', $id);
+			$retval['id_kategori'] = $this->enkripsi->enc_dec('encrypt', $kat->id);
 			$retval['pesan'] = 'Proses Perhitungan Gagal';
 		}else{
 			$this->db->trans_commit();
 			$retval['status'] = true;
-			$retval['id_hitung'] = $id;
-			$retval['id_kategori'] = $kat->id;
+			$retval['id_hitung'] = $this->enkripsi->enc_dec('encrypt', $id);
+			$retval['id_kategori'] = $this->enkripsi->enc_dec('encrypt', $kat->id);
 			$retval['pesan'] = 'Proses Perhitungan Sukses';
 		}
 
@@ -168,8 +170,7 @@ class Hitung_ahp extends CI_Controller {
 	{
 		$id_user = $this->session->userdata('id_user'); 
 		$data_user = $this->m_user->get_detail_user($id_user);
-		$id_kat = $keri = $this->input->get('kategori');
-		
+		$id_kat = $this->enkripsi->enc_dec('decrypt', $this->input->get('kategori'));
 		$kat = $this->m_kategori->get_by_condition(['id' => $id_kat, 'deleted_at' => null], true);
 		
 		$data_himpunan = $this->m_global->multi_row('*', ['deleted_at' => null, 'is_sama_penting' => null], 'm_himpunan', NULL, 'id');
@@ -186,6 +187,7 @@ class Hitung_ahp extends CI_Controller {
 			$old_data = [];
 			$data_hitung = [];
 		}else{
+			$id = $this->enkripsi->enc_dec('decrypt', $id);
 			$data_hitung = $this->m_global->single_row('t_hitung.*, m_proyek.nama_proyek', ['t_hitung.id' => $id, 't_hitung.deleted_at' =>null], 't_hitung', [['table' => 'm_proyek', 'on' => 't_hitung.id_proyek = m_proyek.id']]);
 
 			if(!$data_hitung) {
@@ -200,7 +202,7 @@ class Hitung_ahp extends CI_Controller {
 					'id_hitung' => $id,
 					'id_himpunan !=' => $q_himpunan_sama->id,
 					'kode_kategori' => $kat->kode_kategori,
-					'flag_proses_kode_kriteria' => $kat->kode_kategori
+					'flag_proses_kode_kategori' => $kat->kode_kategori,
 				];
 
 				$old_data = $this->m_global->multi_row('*', $where, 't_hitung_det', null, 'id');
@@ -231,7 +233,8 @@ class Hitung_ahp extends CI_Controller {
 			'kategori' => $kategori,
 			'step' => $retval,
 			'data_himpunan' => $data_himpunan,
-			'old_data' => $old_data
+			'old_data' => $old_data,
+			'kat' => $kat
 		);
 
 		
@@ -257,50 +260,48 @@ class Hitung_ahp extends CI_Controller {
 		$this->template_view->load_view($content, $data);
 	}
 
-	////////////////////////////////////////////////////////
-
-	
-
-	
-
 	public function next_step()
 	{
 		$obj_date = new DateTime();
 		$timestamp = $obj_date->format('Y-m-d H:i:s');
 		$id_hitung = $this->input->post('id_hitung');
 		$id_kategori = $this->input->post('id_kategori');
-		$step_kriteria = $this->input->post('step_kriteria');
 
-		## id kriteria terpilih
-		$data_kriteria_row = $this->m_global->single_row('*', ['id_kategori' => $id_kategori, 'kode_kriteria' => $step_kriteria], 'm_kriteria');
-		$id_kriteria = $data_kriteria_row->id;
-
-		## data kriteria
-		$kriteria = $this->m_global->multi_row('*', ['id_kategori' => $id_kategori, 'deleted_at' => null], 'm_kriteria', NULL, 'urut');
+		## id kategori terpilih
+		$data_kategori_row = $this->m_global->single_row('*', ['id' => $id_kategori, 'deleted_at' => null], 'm_kategori');
+		
+		$id_kategori = $data_kategori_row->id;
+		$step_kategori = $data_kategori_row->kode_kategori;
+		
+		## data kategori
+		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
 
 		##cari himpunan 1 = 1
 		$q_himpunan_sama = $this->m_global->single_row('*', ['is_sama_penting' => 1, 'deleted_at' =>null], 'm_himpunan');
 		
-		for ($i=1; $i <= count($kriteria); $i++) { 
+		for ($i=1; $i <= count($kategori); $i++) { 
 			for ($z=1; $z <= $i; $z++) { 
 				if($i == $z) {
 					continue;
 				}
 
-				$step[$kriteria[$z-1]->kode_kriteria][] = [
-					'kode'=>$kriteria[$i-1]->kode_kriteria, 
-					'nama' => $kriteria[$i-1]->nama,
-					'id' => $kriteria[$i-1]->id
+				$step[$kategori[$z-1]->kode_kategori][] = [
+					'kode'=>$kategori[$i-1]->kode_kategori, 
+					'nama' => $kategori[$i-1]->nama,
+					'id' => $kategori[$i-1]->id
 				];
 			}
 		}
+		// var_dump($step);exit;
 
 		$old_data = $this->m_global->multi_row('*', [
-			'id_hitung_kategori' => $id_hitung,
-			'kode_kriteria' => $step_kriteria, 
+			'id_hitung' => $id_hitung,
 			'id_himpunan !=' => $q_himpunan_sama->id,
-			'flag_proses_kode_kriteria' => $step_kriteria
+			'flag_proses_kode_kategori' => $step_kategori
 		], 't_hitung_det', NULL, 'id');
+
+		// echo $this->db->last_query();exit;
+		
 
 		//set flag first/last step
 		$is_first_step = 'false';
@@ -310,7 +311,7 @@ class Hitung_ahp extends CI_Controller {
 		$index_step = 0;
 		foreach ($step as $kkk => $vvv) {
 			$index_step += 1;
-			if($kkk == $step_kriteria) {
+			if($kkk == $step_kategori) {
 				break;
 			}
 		}
@@ -320,37 +321,37 @@ class Hitung_ahp extends CI_Controller {
 		
 		if($old_data) {
 			## delete
-			$del = $this->m_global->delete(['id_hitung_kategori' => $id_hitung, 'flag_proses_id_kriteria' => $id_kriteria], 't_hitung_det');
+			$del = $this->m_global->delete(['id_hitung' => $id_hitung, 'flag_proses_id_kategori' => $id_kategori], 't_hitung_det');
 		}
 
 		## insert awalan misal ci -> ci, c2 -> c2 berdasarkan kriterianya
 		$ins_awal = [
 			'id' => $this->t_hitung_det->get_max_id(),
-			'id_hitung_kategori' => $id_hitung,
-			'id_kriteria' => $id_kriteria,
-			'kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+			'id_hitung' => $id_hitung,
+			'id_kategori' => $id_kategori,
+			'kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 			'id_himpunan' => $q_himpunan_sama->id,
-			'id_kriteria_tujuan' => $id_kriteria,
-			'kode_kriteria_tujuan' => trim(strtoupper(strtolower($step_kriteria))),
-			'flag_proses_id_kriteria' => $id_kriteria,
-			'flag_proses_kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+			'id_kategori_tujuan' => $id_kategori,
+			'kode_kategori_tujuan' => trim(strtoupper(strtolower($step_kategori))),
+			'flag_proses_id_kategori' => $id_kategori,
+			'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 			'created_at' => $timestamp
 		];
 		
 		$insert = $this->t_hitung_det->save($ins_awal);
 
-		foreach ($step[$step_kriteria] as $key => $value) {
+		foreach ($step[$step_kategori] as $key => $value) {
 			### insert
 			$data_ins = [
 				'id' => $this->t_hitung_det->get_max_id(),
-				'id_hitung_kategori' => $id_hitung,
-				'id_kriteria' => $id_kriteria,
-				'kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+				'id_hitung' => $id_hitung,
+				'id_kategori' => $id_kategori,
+				'kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 				'id_himpunan' => $this->input->post('himpunan')[$key],
-				'id_kriteria_tujuan' => $value['id'],
-				'kode_kriteria_tujuan' => $value['kode'],
-				'flag_proses_id_kriteria' => $id_kriteria,
-				'flag_proses_kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+				'id_kategori_tujuan' => $value['id'],
+				'kode_kategori_tujuan' => $value['kode'],
+				'flag_proses_id_kategori' => $id_kategori,
+				'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 				'created_at' => $timestamp
 			];
 			
@@ -364,16 +365,17 @@ class Hitung_ahp extends CI_Controller {
 			 */
 
 			$q_reverse = $this->m_global->single_row('*', ['id_himpunan_use' => $this->input->post('himpunan')[$key], 'deleted_at' =>null], 't_pasangan_himpunan');
+
 			$data_reverse_ins = [
 				'id' => $this->t_hitung_det->get_max_id(),
-				'id_hitung_kategori' => $id_hitung,
-				'id_kriteria' => $value['id'],
-				'kode_kriteria' => $value['kode'],
+				'id_hitung' => $id_hitung,
+				'id_kategori' => $value['id'],
+				'kode_kategori' => $value['kode'],
 				'id_himpunan' => $q_reverse->id_himpunan_reverse,
-				'id_kriteria_tujuan' => $id_kriteria,
-				'kode_kriteria_tujuan' => trim(strtoupper(strtolower($step_kriteria))),
-				'flag_proses_id_kriteria' => $id_kriteria,
-				'flag_proses_kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+				'id_kategori_tujuan' => $id_kategori,
+				'kode_kategori_tujuan' => trim(strtoupper(strtolower($step_kategori))),
+				'flag_proses_id_kategori' => $id_kategori,
+				'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 				'created_at' => $timestamp
 			];
 
@@ -414,12 +416,12 @@ class Hitung_ahp extends CI_Controller {
 		}
 
 		$data_step = [
-			'id_hitung' => $id_hitung,
+			'id_hitung' => $this->enkripsi->enc_dec('encrypt', $id_hitung),
 			'id_kategori' => $id_kategori,
 			'index_step' => $index_step,
 			'is_first_step' => $is_first_step,
 			'is_last_step' => $is_last_step,
-			'next_step' => $next_step,
+			'next_step' => $this->enkripsi->enc_dec('encrypt', $next_step),
 			'next_step_kode' => $next_step_kode,
 			'prev_step' => $prev_step,
 			'prev_step_kode' => $prev_step_kode,
@@ -446,37 +448,38 @@ class Hitung_ahp extends CI_Controller {
 		$timestamp = $obj_date->format('Y-m-d H:i:s');
 		$id_hitung = $this->input->post('id_hitung');
 		$id_kategori = $this->input->post('id_kategori');
-		$step_kriteria = $this->input->post('step_kriteria');
 
-		## id kriteria terpilih
-		$data_kriteria_row = $this->m_global->single_row('*', ['id_kategori' => $id_kategori, 'kode_kriteria' => $step_kriteria], 'm_kriteria');
-		$id_kriteria = $data_kriteria_row->id;
+		## id kategori terpilih
+		$data_kategori_row = $this->m_global->single_row('*', ['id' => $id_kategori, 'deleted_at' => null], 'm_kategori');
 
-		## data kriteria
-		$kriteria = $this->m_global->multi_row('*', ['id_kategori' => $id_kategori, 'deleted_at' => null], 'm_kriteria', NULL, 'urut');
+		$id_kategori = $data_kategori_row->id;
+		$step_kategori = $data_kategori_row->kode_kategori;
+
+		## data kategori
+		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
 
 		##cari himpunan 1 = 1
 		$q_himpunan_sama = $this->m_global->single_row('*', ['is_sama_penting' => 1, 'deleted_at' =>null], 'm_himpunan');
 		
-		for ($i=1; $i <= count($kriteria); $i++) { 
+		for ($i=1; $i <= count($kategori); $i++) { 
 			for ($z=1; $z <= $i; $z++) { 
 				if($i == $z) {
 					continue;
 				}
 
-				$step[$kriteria[$z-1]->kode_kriteria][] = [
-					'kode'=>$kriteria[$i-1]->kode_kriteria, 
-					'nama' => $kriteria[$i-1]->nama,
-					'id' => $kriteria[$i-1]->id
+				$step[$kategori[$z-1]->kode_kategori][] = [
+					'kode'=>$kategori[$i-1]->kode_kategori, 
+					'nama' => $kategori[$i-1]->nama,
+					'id' => $kategori[$i-1]->id
 				];
 			}
 		}
 
 		$old_data = $this->m_global->multi_row('*', [
-			'id_hitung_kategori' => $id_hitung,
-			'kode_kriteria' => $step_kriteria, 
+			'id_hitung' => $id_hitung,
+			'kode_kategori' => $step_kategori, 
 			'id_himpunan !=' => $q_himpunan_sama->id,
-			'flag_proses_kode_kriteria' => $step_kriteria
+			'flag_proses_kode_kategori' => $step_kategori
 		], 't_hitung_det', NULL, 'id');
 
 		
@@ -488,37 +491,37 @@ class Hitung_ahp extends CI_Controller {
 		
 		if($old_data) {
 			## delete
-			$del = $this->m_global->delete(['id_hitung_kategori' => $id_hitung, 'flag_proses_id_kriteria' => $id_kriteria], 't_hitung_det');
+			$del = $this->m_global->delete(['id_hitung' => $id_hitung, 'flag_proses_kode_kategori' => $id_kategori], 't_hitung_det');
 		}
 
 		## insert awalan misal ci -> ci, c2 -> c2 berdasarkan kriterianya
 		$ins_awal = [
 			'id' => $this->t_hitung_det->get_max_id(),
-			'id_hitung_kategori' => $id_hitung,
-			'id_kriteria' => $id_kriteria,
-			'kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+			'id_hitung' => $id_hitung,
+			'id_kategori' => $id_kategori,
+			'kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 			'id_himpunan' => $q_himpunan_sama->id,
-			'id_kriteria_tujuan' => $id_kriteria,
-			'kode_kriteria_tujuan' => trim(strtoupper(strtolower($step_kriteria))),
-			'flag_proses_id_kriteria' => $id_kriteria,
-			'flag_proses_kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+			'id_kategori_tujuan' => $id_kategori,
+			'kode_kategori_tujuan' => trim(strtoupper(strtolower($step_kategori))),
+			'flag_proses_id_kategori' => $id_kategori,
+			'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 			'created_at' => $timestamp
 		];
 		
 		$insert = $this->t_hitung_det->save($ins_awal);
 
-		foreach ($step[$step_kriteria] as $key => $value) {
+		foreach ($step[$step_kategori] as $key => $value) {
 			### insert
 			$data_ins = [
 				'id' => $this->t_hitung_det->get_max_id(),
-				'id_hitung_kategori' => $id_hitung,
-				'id_kriteria' => $id_kriteria,
-				'kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+				'id_hitung' => $id_hitung,
+				'id_kategori' => $id_kategori,
+				'kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 				'id_himpunan' => $this->input->post('himpunan')[$key],
-				'id_kriteria_tujuan' => $value['id'],
-				'kode_kriteria_tujuan' => $value['kode'],
-				'flag_proses_id_kriteria' => $id_kriteria,
-				'flag_proses_kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+				'id_kategori_tujuan' => $value['id'],
+				'kode_kategori_tujuan' => $value['kode'],
+				'flag_proses_id_kategori' => $id_kategori,
+				'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 				'created_at' => $timestamp
 			];
 			
@@ -532,32 +535,33 @@ class Hitung_ahp extends CI_Controller {
 			 */
 
 			$q_reverse = $this->m_global->single_row('*', ['id_himpunan_use' => $this->input->post('himpunan')[$key], 'deleted_at' =>null], 't_pasangan_himpunan');
+
 			$data_reverse_ins = [
 				'id' => $this->t_hitung_det->get_max_id(),
-				'id_hitung_kategori' => $id_hitung,
-				'id_kriteria' => $value['id'],
-				'kode_kriteria' => $value['kode'],
+				'id_hitung' => $id_hitung,
+				'id_kategori' => $value['id'],
+				'kode_kategori' => $value['kode'],
 				'id_himpunan' => $q_reverse->id_himpunan_reverse,
-				'id_kriteria_tujuan' => $id_kriteria,
-				'kode_kriteria_tujuan' => trim(strtoupper(strtolower($step_kriteria))),
-				'flag_proses_id_kriteria' => $id_kriteria,
-				'flag_proses_kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+				'id_kategori_tujuan' => $id_kategori,
+				'kode_kategori_tujuan' => trim(strtoupper(strtolower($step_kategori))),
+				'flag_proses_id_kategori' => $id_kategori,
+				'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 				'created_at' => $timestamp
 			];
 
 			$insert = $this->t_hitung_det->save($data_reverse_ins);
 
-			## insert awalan kriteria+1 (1=1)
+			## insert awalan kategori+1 (1=1)
 			$ins_awal_2 = [
 				'id' => $this->t_hitung_det->get_max_id(),
-				'id_hitung_kategori' => $id_hitung,
-				'id_kriteria' => $value['id'],
-				'kode_kriteria' => $value['kode'],
+				'id_hitung' => $id_hitung,
+				'id_kategori' => $value['id'],
+				'kode_kategori' => $value['kode'],
 				'id_himpunan' => $q_himpunan_sama->id,
-				'id_kriteria_tujuan' => $value['id'],
-				'kode_kriteria_tujuan' => $value['kode'],
-				'flag_proses_id_kriteria' => $id_kriteria,
-				'flag_proses_kode_kriteria' => trim(strtoupper(strtolower($step_kriteria))),
+				'id_kategori_tujuan' => $value['id'],
+				'kode_kategori_tujuan' => $value['kode'],
+				'flag_proses_id_kategori' => $id_kategori,
+				'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
 				'created_at' => $timestamp
 			];
 			
@@ -587,20 +591,20 @@ class Hitung_ahp extends CI_Controller {
 		$upd = $this->m_global->update('t_hitung', $data_upd, ['id' => $id_hitung]);
 
 		##cek exist sintesis data
-		$arr_data_sintesis = $this->t_sintesis->get_by_condition(['id_hitung_kategori' => $id_hitung, 'deleted_at' => null]);
+		$arr_data_sintesis = $this->t_sintesis->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
 		
 		if($arr_data_sintesis) {
 			## delete
-			$del_sintesis = $this->m_global->delete(['id_hitung_kategori' => $id_hitung, 'deleted_at' => null], 't_sintesis');
+			$del_sintesis = $this->m_global->delete(['id_hitung' => $id_hitung, 'deleted_at' => null], 't_sintesis');
 		}
 
 		## hitung sintesis dan input data
-		foreach ($kriteria as $kk => $vv) {
+		foreach ($kategori as $kk => $vv) {
 			$data_sintesis = [
 				'id' => $this->t_sintesis->get_max_id(),
-				'id_hitung_kategori' => $id_hitung,
-				'id_kriteria' => $vv->id,
-				'kode_kriteria' => $vv->kode_kriteria,
+				'id_hitung' => $id_hitung,
+				'id_kategori' => $vv->id,
+				'kode_kategori' => $vv->kode_kategori,
 				'sintesis_lower' => round((float)$data_tot_himpunan[$kk]->total_lower / (float)$grand_total_upper, 4),
 				'sintesis_medium' => round((float)$data_tot_himpunan[$kk]->total_medium / (float)$grand_total_medium, 4),
 				'sintesis_upper' => round((float)$data_tot_himpunan[$kk]->total_upper / (float)$grand_total_lower, 4),
@@ -614,14 +618,12 @@ class Hitung_ahp extends CI_Controller {
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			$retval['status'] = false;
-			$retval['id_kategori'] = $id_kategori;
-			$retval['id_hitung'] = $id_hitung;
+			$retval['id_hitung'] = $this->enkripsi->enc_dec('encrypt', $id_hitung);
 			$retval['pesan'] = 'Proses Perhitungan Gagal';
 		}else{
 			$this->db->trans_commit();
 			$retval['status'] = true;
-			$retval['id_kategori'] = $id_kategori;
-			$retval['id_hitung'] = $id_hitung;
+			$retval['id_hitung'] = $this->enkripsi->enc_dec('encrypt', $id_hitung);
 			$retval['pesan'] = 'Proses Perhitungan Sukses';
 		}
 
