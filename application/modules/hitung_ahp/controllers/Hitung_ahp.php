@@ -16,6 +16,7 @@ class Hitung_ahp extends CI_Controller {
 		$this->load->model('t_hitung');
 		$this->load->model('t_hitung_det');
 		$this->load->model('t_sintesis');
+		$this->load->model('t_hitungan_vektor');
 		$this->load->model('m_global');
 	}
 
@@ -491,7 +492,7 @@ class Hitung_ahp extends CI_Controller {
 		
 		if($old_data) {
 			## delete
-			$del = $this->m_global->delete(['id_hitung' => $id_hitung, 'flag_proses_kode_kategori' => $id_kategori], 't_hitung_det');
+			$del = $this->m_global->delete(['id_hitung' => $id_hitung, 'flag_proses_id_kategori' => $id_kategori], 't_hitung_det');
 		}
 
 		## insert awalan misal ci -> ci, c2 -> c2 berdasarkan kriterianya
@@ -612,9 +613,39 @@ class Hitung_ahp extends CI_Controller {
 			];
 
 			$insert = $this->t_sintesis->save($data_sintesis);
+			$collection_sintesis[] = $data_sintesis;
 		}
 		
+		##cek exist vektor data
+		$arr_data_vektor = $this->t_hitungan_vektor->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
 		
+		if($arr_data_vektor) {
+			## delete
+			$del_vektor = $this->m_global->delete(['id_hitung' => $id_hitung, 'deleted_at' => null], 't_hitungan_vektor');
+		}
+
+		$data_vektor = $this->get_hitungan_vektor($collection_sintesis, $kategori);
+
+		foreach ($data_vektor as $k_vtr => $v_vtr) {
+			$data_ins_vektor = [
+				'id_hitung' => $id_hitung,
+				'id_kategori_proses' => $v_vtr['id_kategori_proses'],
+				'kode_kategori_proses' => $v_vtr['kode_kategori_proses'],
+				'id_kategori' => $v_vtr['id_kategori'],
+				'kode_kategori' => $v_vtr['kode_kategori'],
+				'nilai_l' => $v_vtr['l'],
+				'nilai_m' => $v_vtr['m'],
+				'nilai_u' => $v_vtr['u'],
+				'bawah' => $v_vtr['bawah'],
+				'total' => $v_vtr['total'],
+				'hasil' => $v_vtr['hasil'],
+				'created_at' => $timestamp
+			];
+
+			$insert = $this->t_hitungan_vektor->save($data_ins_vektor);
+		}
+
+
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			$retval['status'] = false;
@@ -628,6 +659,49 @@ class Hitung_ahp extends CI_Controller {
 		}
 
 		echo json_encode($retval);
+	}
+
+	public function get_hitungan_vektor($data_sintesis, $kategori)
+	{
+		// $data_sintesis = $this->m_global->multi_row('*', ['id_hitung' => 1, 'deleted_at' => null], 't_sintesis', null, 'id');
+		// $kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
+		
+		foreach ($kategori as $k_kat => $kat) {
+			$kode_kat_proses = $kat->kode_kategori;
+			$id_kat_proses = $kat->id;
+
+			foreach ($data_sintesis as $k_sin => $sin) {
+				if ($kat->id == $sin['id_kategori']) {
+					continue;
+				}
+				
+				$data_l = (float)$sin['sintesis_lower'] - (float)$data_sintesis[$k_kat]['sintesis_upper'];
+				$data_m = (float)$data_sintesis[$k_kat]['sintesis_medium'] - (float)$data_sintesis[$k_kat]['sintesis_upper'];
+				$data_u = (float)$sin['sintesis_medium'] - (float)$sin['sintesis_lower'];
+				$bawah = round((float)$data_m - (float)$data_u, 4);
+				$total = round((float)$data_l / $bawah, 4);
+
+				$rs['id_kategori_proses'] = $id_kat_proses;
+				$rs['kode_kategori_proses'] = $kode_kat_proses;
+				$rs['id_kategori'] = $sin['id_kategori'];
+				$rs['kode_kategori'] = $sin['kode_kategori'];
+				$rs['l'] = $data_l;
+				$rs['m'] = $data_m;
+				$rs['u'] = $data_u;
+				$rs['bawah'] = $bawah;
+				$rs['total'] = $total;
+
+				if($total >= 1.000) {
+					$rs['hasil'] = round(1.000, 4);
+				}else{
+					$rs['hasil'] = $total;
+				}
+			
+				$retval[] = $rs;
+			}
+		}
+
+		return $retval;
 	}
 
 	///////////////////////////////////////////////////////////////////
@@ -654,4 +728,5 @@ class Hitung_ahp extends CI_Controller {
 
         return $data;
 	}
+	
 }
