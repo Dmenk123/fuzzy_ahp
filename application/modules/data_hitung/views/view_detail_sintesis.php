@@ -42,12 +42,12 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
             </thead>
             <tbody>
               <?php $idx = 0; ?>
-              <?php foreach ($kriteria as $kk => $vv) {
+              <?php foreach ($data_sintesis as $kk => $vv) {
                 echo '<tr align="center">';
-                echo '<td>'.$vv->kode_kriteria.'</td>';
-                echo '<td>'.round((float)$data_tot_himpunan[$kk]->total_lower / (float)$data_hitung->total_upper, 4).'</td>';
-                echo '<td>'.round((float)$data_tot_himpunan[$kk]->total_medium / (float)$data_hitung->total_medium, 4).'</td>';
-                echo '<td>'.round((float)$data_tot_himpunan[$kk]->total_upper / (float)$data_hitung->total_lower, 4).'</td>';
+                echo '<td>'.$vv->kode_kategori.'</td>';
+                echo '<td>'.number_format($vv->sintesis_lower, 4).'</td>';
+                echo '<td>'.number_format($vv->sintesis_medium, 4).'</td>';
+                echo '<td>'.number_format($vv->sintesis_upper, 4).'</td>';
                 echo '</tr>';
               } ?>
             </tbody>
@@ -61,19 +61,35 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
           <table class="table table-bordered table-hover">
             <thead>
               <tr align="center">
-                <th colspan="4"></th>
+                <th colspan="5"></th>
                 <th>Bawah</th>
                 <th>Total</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               <?php $idx = 0; ?>
-              <?php foreach ($kriteria as $kk => $vv) {
+              <?php 
+                // $flag_kode_kat = $data[0]->kode_kategori_proses;
+                $flag_kode_kat = 'XX'; 
+              ?>
+              <?php foreach ($data as $kk => $vv) {
                 echo '<tr align="center">';
-                echo '<td>'.$vv->kode_kriteria.'</td>';
-                echo '<td>'.round((float)$data_tot_himpunan[$kk]->total_lower / (float)$data_hitung->total_upper, 4).'</td>';
-                echo '<td>'.round((float)$data_tot_himpunan[$kk]->total_medium / (float)$data_hitung->total_medium, 4).'</td>';
-                echo '<td>'.round((float)$data_tot_himpunan[$kk]->total_upper / (float)$data_hitung->total_lower, 4).'</td>';
+                
+                if($vv->kode_kategori_proses != $flag_kode_kat) {
+                  echo '<td>'.$vv->kode_kategori_proses.'</td>';
+                  $flag_kode_kat = $vv->kode_kategori_proses;
+                }else{
+                  echo '<td></td>';
+                }
+                
+                echo '<td>'.$vv->kode_kategori.'</td>';
+                echo '<td>'.round((float)$vv->nilai_l, 4).'</td>';
+                echo '<td>'.round((float)$vv->nilai_m, 4).'</td>';
+                echo '<td>'.round((float)$vv->nilai_u, 4).'</td>';
+                echo '<td>'.round((float)$vv->bawah, 4).'</td>';
+                echo '<td>'.round((float)$vv->total, 4).'</td>';
+                echo '<td><strong>'.$vv->hasil.'</strong></td>';
                 echo '</tr>';
               } ?>
             </tbody>

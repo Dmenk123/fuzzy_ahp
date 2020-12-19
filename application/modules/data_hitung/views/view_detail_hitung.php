@@ -103,7 +103,7 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
       </div>
 
       <div class="kt-portlet__body" id="sintesis_area">
-        <h4>Tabel Sintesis</h4> <span> <a href="<?=base_url('data_hitung/detail_sintesis/').$this->enkripsi->enc_dec('encrypt', $this->uri->segment(3)); ?>?kategori=1&kriteria=C1" target="_blank">Lihat Detail Sintesis</a></span>
+        <h4>Tabel Sintesis</h4> <span> <a href="<?=base_url('data_hitung/detail_sintesis/').$this->uri->segment(3); ?>" target="_blank">Lihat Proses Perhitungan Sintesis</a></span>
         <div class="col-lg-12 row table-responsive"> 
           <table class="table table-bordered table-hover">
             <thead>
@@ -127,7 +127,7 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
             </tbody>
           </table>    
         </div>
-      </div>      
+      </div>   
     </div>  
   </div>
 </div>

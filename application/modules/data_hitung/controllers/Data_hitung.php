@@ -48,6 +48,69 @@ class Data_hitung extends CI_Controller {
 		$this->template_view->load_view($content, $data);
 	}
 
+
+	public function list_detail_data($menu_enc)
+	{
+		$menu = $this->enkripsi->enc_dec('decrypt', $menu_enc);
+		if($menu == 'ahp') {
+			$table_html= $this->get_tabel_ahp();
+		}elseif ($menu == 'sintesis') {
+			$table_html = $this->get_tabel_ahp();
+		}
+
+		var_dump($table_html);exit;
+	}
+
+	public function get_tabel_ahp()
+	{
+		$join = [ 
+			['table' => 'm_proyek as p', 'on' => 'h.id_proyek = p.id']
+		];
+
+		$data_hitung = $this->m_global->multi_row('h.*, p.nama_proyek, p.tahun_proyek', ['h.deleted_at' => null], 't_hitung as h', $join, 'h.created_at desc');
+
+		$html = "<table class='table table-striped- table-bordered table-hover table-checkable' id='tabel_data'>
+			  	<thead>
+					<tr>
+						<th style='width: 5%;'>No</th>
+						<th>Proyek</th>
+						<th>Total lower</th>
+						<th>Total Medium</th>
+						<th>Total Upper</th>
+						<th style='width: 5%;'>Aksi</th>
+					</tr>
+			  	</thead>
+			  	<tbody>";
+				foreach ($data_hitung as $k => $v) 
+				{
+					$html .= "<tr>
+								<th>".++$k."</th>
+								<th>".$v->nama_proyek." [".$v->tahun_proyek."]</th>
+								<th>".$v->total_lower."</th>
+								<th>".$v->total_medium."</th>
+								<th>".$v->total_upper."</th>
+								<th>
+									<div class='btn-group'>
+									<button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Opsi</button>
+										<div class='dropdown-menu'>
+											<a class='dropdown-item' target='_blank' href='".base_url('data_hitung/detail_perhitungan/').$this->enkripsi->enc_dec('encrypt', $v->id)."'>
+												<i class='la la-bar-chart-o'></i> Lihat Data
+											</a>
+										</div>
+									</div>
+								</th>
+							</tr>"; 
+				}
+		$html .= "</tbody></table>";
+		
+		$data = array(
+			'title' => 'Data Perhitungan AHP',
+			'html' => $html
+		);
+
+		return $data;
+	}	
+
 	public function hasil_perhitungan($id)
 	{
 		$id_user = $this->session->userdata('id_user'); 
@@ -156,33 +219,22 @@ class Data_hitung extends CI_Controller {
 		$obj_date = new DateTime();
 		$id_user = $this->session->userdata('id_user'); 
 		$data_user = $this->m_user->get_detail_user($id_user);
-
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
 		$timestamp = $obj_date->format('Y-m-d H:i:s');
-		$id_kategori = $this->input->get('kategori');
-		$step_kriteria = $this->input->get('step_kriteria');
-		$kriteria = $this->m_global->multi_row('*', ['id_kategori' => $id_kategori, 'deleted_at' => null], 'm_kriteria', NULL, 'urut');		
-		$data_tot_himpunan = $this->t_hitung_det->get_nilai_total_himpunan($id_hitung);
-		$data_hitung = $this->t_hitung->get_by_id($id_hitung);
 
-		for ($i=1; $i <= count($kriteria); $i++) { 
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'hv.id_kategori_proses = k.id']
+		];
 
-			for ($z=1; $z <= $i; $z++) { 
-				
-				// if($kriteria[$z-1]->kode_kriteria == 'C1' && $i == 1) {
-				// 	continue;
-				// }
+		$data = $this->m_global->multi_row('hv.*, k.nama as nama_kategori', ['hv.id_hitung' => $id_hitung, 'hv.deleted_at' => null], 't_hitungan_vektor hv', $join, 'hv.id_kategori_proses asc, hv.kode_kategori asc');
 
-				if($i == $z) {
-					continue;
-				}
-
-				$step[$kriteria[$i-1]->kode_kriteria][] = [
-					'kode'=>$kriteria[$z-1]->kode_kriteria
-				];
-			}
+		if(!$data) {
+			return redirect('data_hitung');
 		}
 
-		if(!$data_tot_himpunan) {
+		$arr_data_sintesis = $this->t_sintesis->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
+	
+		if(!$arr_data_sintesis) {
 			return redirect('data_hitung');
 		}
 
@@ -190,19 +242,12 @@ class Data_hitung extends CI_Controller {
 		 * data passing ke halaman view content
 		 */
 		$data = array(
-			'title' => 'Detail Sintesis',
+			'title' => 'Detail Perhitungan Sintesis',
+			'data_sintesis' => $arr_data_sintesis,
 			'data_user' => $data_user,
-			'data_tot_himpunan' => $data_tot_himpunan,
-			'data_hitung' => $data_hitung,
-			'kriteria' => $kriteria,
-			'step' => $step
+			'data' => $data
 		);
 
-		
-		echo "<pre>";
-		print_r ($step);
-		echo "</pre>";
-		exit;
 
 		/**
 		 * content data untuk template
