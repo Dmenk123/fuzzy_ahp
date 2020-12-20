@@ -62,4 +62,16 @@ class T_sintesis extends CI_Model
 			return '1';
 		} 
 	}
+
+	public function get_data_transaksi_sintesis()
+	{
+		$this->db->select('t_sintesis.*, m_proyek.nama_proyek, m_proyek.tahun_proyek');
+		$this->db->from('t_sintesis');
+		$this->db->join('t_hitung', 't_sintesis.id_hitung = t_hitung.id', 'left');
+		$this->db->join('m_proyek', 't_sintesis.id_hitung = m_proyek.id', 'left');
+		$this->db->where('t_sintesis.deleted_at', null);
+		$this->db->group_by('t_sintesis.id_hitung');		
+		$query = $this->db->get();
+		return $query->result();
+	}
 }

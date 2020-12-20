@@ -51,14 +51,32 @@ class Data_hitung extends CI_Controller {
 
 	public function list_detail_data($menu_enc)
 	{
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+
 		$menu = $this->enkripsi->enc_dec('decrypt', $menu_enc);
 		if($menu == 'ahp') {
-			$table_html= $this->get_tabel_ahp();
-		}elseif ($menu == 'sintesis') {
 			$table_html = $this->get_tabel_ahp();
+		}elseif ($menu == 'sintesis') {
+			$table_html = $this->get_tabel_sintesis();
+		}else{
+			return redirect('data_hitung');
 		}
+		
+		$data = array(
+			'title' => 'Hasil Data Perhitungan',
+			'table_html' => $table_html,
+			'data_user' => $data_user
+		);
 
-		var_dump($table_html);exit;
+		$content = [
+			'css' 	=> null,
+			'modal' => null,
+			'js'	=> 'data_hitung.js',
+			'view'	=> 'view_list_data_hitung'
+		];
+
+		$this->template_view->load_view($content, $data);
 	}
 
 	public function get_tabel_ahp()
@@ -109,7 +127,46 @@ class Data_hitung extends CI_Controller {
 		);
 
 		return $data;
-	}	
+	}
+
+	public function get_tabel_sintesis()
+	{
+		$data = $this->t_sintesis->get_data_transaksi_sintesis();
+		$html = "<table class='table table-striped- table-bordered table-hover table-checkable' id='tabel_data'>
+			  	<thead>
+					<tr>
+						<th style='width: 5%;'>No</th>
+						<th>Proyek</th>
+						<th style='width: 5%;'>Aksi</th>
+					</tr>
+			  	</thead>
+			  	<tbody>";
+				foreach ($data as $k => $v) 
+				{
+					$html .= "<tr>
+								<th>".++$k."</th>
+								<th>".$v->nama_proyek." [".$v->tahun_proyek."]</th>
+								<th>
+									<div class='btn-group'>
+									<button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Opsi</button>
+										<div class='dropdown-menu'>
+											<a class='dropdown-item' target='_blank' href='".base_url('data_hitung/detail_sintesis/').$this->enkripsi->enc_dec('encrypt', $v->id_hitung)."'>
+												<i class='la la-bar-chart-o'></i> Lihat Data
+											</a>
+										</div>
+									</div>
+								</th>
+							</tr>"; 
+				}
+		$html .= "</tbody></table>";
+		
+		$data = array(
+			'title' => 'Data Perhitungan Sintesis Dan Vektor',
+			'html' => $html
+		);
+
+		return $data;
+	}
 
 	public function hasil_perhitungan($id)
 	{

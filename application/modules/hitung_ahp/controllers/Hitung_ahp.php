@@ -17,37 +17,9 @@ class Hitung_ahp extends CI_Controller {
 		$this->load->model('t_hitung_det');
 		$this->load->model('t_sintesis');
 		$this->load->model('t_hitungan_vektor');
+		$this->load->model('t_normalisasi');
 		$this->load->model('m_global');
 	}
-
-	// public function index()
-	// {
-	// 	$id_user = $this->session->userdata('id_user'); 
-	// 	$data_user = $this->m_user->get_detail_user($id_user);
-			
-	// 	/**
-	// 	 * data passing ke halaman view content
-	// 	 */
-	// 	$data = array(
-	// 		'title' => 'Formulir Perhitungan AHP',
-	// 		'data_user' => $data_user
-	// 	);
-
-	// 	/**
-	// 	 * content data untuk template
-	// 	 * param (css : link css pada direktori assets/css_module)
-	// 	 * param (modal : modal komponen pada modules/nama_modul/views/nama_modal)
-	// 	 * param (js : link js pada direktori assets/js_module)
-	// 	 */
-	// 	$content = [
-	// 		'css' 	=> null,
-	// 		'modal' => 'modal_hitung_ahp',
-	// 		'js'	=> 'hitung_ahp.js',
-	// 		'view'	=> 'view_hitung_ahp'
-	// 	];
-
-	// 	$this->template_view->load_view($content, $data);
-	// }
 
 	public function index()
 	{
@@ -462,7 +434,7 @@ class Hitung_ahp extends CI_Controller {
 		##cari himpunan 1 = 1
 		$q_himpunan_sama = $this->m_global->single_row('*', ['is_sama_penting' => 1, 'deleted_at' =>null], 'm_himpunan');
 		
-		for ($i=1; $i <= count($kategori); $i++) { 
+		for ($i=1; $i <= count($kategori); $i++) {
 			for ($z=1; $z <= $i; $z++) { 
 				if($i == $z) {
 					continue;
@@ -591,6 +563,8 @@ class Hitung_ahp extends CI_Controller {
 
 		$upd = $this->m_global->update('t_hitung', $data_upd, ['id' => $id_hitung]);
 
+		#########################################################################################################
+
 		##cek exist sintesis data
 		$arr_data_sintesis = $this->t_sintesis->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
 		
@@ -615,6 +589,8 @@ class Hitung_ahp extends CI_Controller {
 			$insert = $this->t_sintesis->save($data_sintesis);
 			$collection_sintesis[] = $data_sintesis;
 		}
+
+		#########################################################################################################
 		
 		##cek exist vektor data
 		$arr_data_vektor = $this->t_hitungan_vektor->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
@@ -645,6 +621,32 @@ class Hitung_ahp extends CI_Controller {
 			$insert = $this->t_hitungan_vektor->save($data_ins_vektor);
 		}
 
+		#########################################################################################################
+
+		##cek exist normalisasi data
+		$arr_data_norm = $this->t_normalisasi->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
+		
+		if($arr_data_norm) {
+			## delete
+			$del_norm = $this->m_global->delete(['id_hitung' => $id_hitung, 'deleted_at' => null], 't_normalisasi');
+		}
+
+		$data_normalisasi = $this->get_hitungan_normalisasi($data_vektor, $kategori);
+
+		foreach ($data_normalisasi as $k_nor => $v_nor) {
+			$data_ins_norm = [
+				'id_hitung' => $id_hitung,
+				'id_kategori' => $v_nor['id_kategori'],
+				'kode_kategori' => $v_nor['kode_kategori'],
+				'id_kategori_tujuan' => $v_nor['id_kategori_tujuan'],
+				'kode_kategori_tujuan' => $v_nor['kode_kategori_tujuan'],
+				'nilai' => $v_nor['nilai'],
+				'created_at' => $timestamp
+			];
+
+			$insert = $this->t_normalisasi->save($data_ins_norm);
+		}
+
 
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
@@ -659,6 +661,51 @@ class Hitung_ahp extends CI_Controller {
 		}
 
 		echo json_encode($retval);
+	}
+
+	public function get_hitungan_normalisasi($data_vektor, $kategori)
+	{
+		foreach ($kategori as $k_kat => $kat) {
+			$kode_kat_proses = $kat->kode_kategori;
+			$id_kat_proses = $kat->id;
+			$flag_is_sama = false; // c1 == c1, c2 == c2, etc
+			
+			for ($i=0; $i <count($data_vektor); $i++) { 
+				if($data_vektor[$i]['id_kategori_proses'] != $kat->id) {
+					continue;
+				}
+
+				if($flag_is_sama) {
+					$rs['nilai'] = $data_vektor[$i]['hasil'];
+					$rs['id_kategori'] = $kat->id;
+					$rs['kode_kategori'] = $kat->kode_kategori;
+					$rs['id_kategori_tujuan'] = $data_vektor[$i]['id_kategori'];
+					$rs['kode_kategori_tujuan'] =  $data_vektor[$i]['kode_kategori'];
+				}else{
+					if ($kat->id == $data_vektor[$i]['id_kategori_proses']) {
+						// set 1 == 1
+						$rs['nilai'] = 1.000;
+						$rs['id_kategori'] = $kat->id;
+						$rs['kode_kategori'] = $kat->kode_kategori;
+						$rs['id_kategori_tujuan'] = $data_vektor[$i]['id_kategori_proses'];
+						$rs['kode_kategori_tujuan'] =  $data_vektor[$i]['kode_kategori_proses'];
+						//flag dan decrement
+						$flag_is_sama = true;
+						$i--;
+					}else{
+						$rs['nilai'] = $data_vektor[$i]['hasil'];
+						$rs['id_kategori'] = $kat->id;
+						$rs['kode_kategori'] = $kat->kode_kategori;
+						$rs['id_kategori_tujuan'] = $data_vektor[$i]['id_kategori'];
+						$rs['kode_kategori_tujuan'] =  $data_vektor[$i]['kode_kategori'];
+					}
+				}
+
+				$retval[] = $rs;
+			}
+		}
+
+		return $retval;
 	}
 
 	public function get_hitungan_vektor($data_sintesis, $kategori)

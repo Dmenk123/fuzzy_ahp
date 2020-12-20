@@ -43,10 +43,10 @@ $obj_date = new DateTime();
                     </div>
                     <div class="kt-iconbox__desc">
                       <h5 class="kt-iconbox__title">
-                        Data Pehitungan AHP
+                        Pehitungan AHP
                       </h5>
                       <div class="kt-iconbox__content">
-                        Data Perhitungan AHP
+                        Perhitungan AHP
                       </div>
                     </div>
                   </div>
@@ -64,10 +64,31 @@ $obj_date = new DateTime();
                     </div>
                     <div class="kt-iconbox__desc">
                       <h5 class="kt-iconbox__title">
-                        Data Pehitungan Sintesis
+                        Pehitungan Sintesis & Vektor
                       </h5>
                       <div class="kt-iconbox__content">
-                        Data Perhitungan Sintesis & Vektor
+                        Perhitungan Sintesis & Vektor
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 div_menu" style="cursor:pointer" 
+            onclick="javascript:window.location.href='<?=base_url('data_hitung/list_detail_data/').$this->enkripsi->enc_dec('encrypt', 'vektor');?>'">
+              <div class="kt-portlet kt-iconbox kt-iconbox--wave">
+                <div class="kt-portlet__body">
+                  <div class="kt-iconbox__body">
+                    <div class="kt-iconbox__icon">
+                      <img src="<?= base_url('assets/svg_icons/tag.svg');?>" width="40px" height="40px"> 
+                    </div>
+                    <div class="kt-iconbox__desc">
+                      <h5 class="kt-iconbox__title">
+                        Pehitungan Vektor & Normalisasi
+                      </h5>
+                      <div class="kt-iconbox__content">
+                        Pehitungan Vektor & Normalisasi
                       </div>
                     </div>
                   </div>
