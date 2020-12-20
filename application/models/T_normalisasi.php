@@ -33,4 +33,16 @@ class T_normalisasi extends CI_Model
 		return $this->db->update($this->table, $data, $where);
 	}
 
+	public function get_data_transaksi_normalisasi()
+	{
+		$this->db->select('t_normalisasi.*, m_proyek.nama_proyek, m_proyek.tahun_proyek');
+		$this->db->from('t_normalisasi');
+		$this->db->join('t_hitung', 't_normalisasi.id_hitung = t_hitung.id', 'left');
+		$this->db->join('m_proyek', 't_normalisasi.id_hitung = m_proyek.id', 'left');
+		$this->db->where('t_normalisasi.deleted_at', null);
+		$this->db->group_by('t_normalisasi.id_hitung');		
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 }

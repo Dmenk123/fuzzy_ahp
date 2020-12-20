@@ -741,7 +741,12 @@ class Hitung_ahp extends CI_Controller {
 				if($total >= 1.000) {
 					$rs['hasil'] = round(1.000, 4);
 				}else{
-					$rs['hasil'] = $total;
+					if($total < 0.000) {
+						$rs['hasil'] = 0.000;
+					}else{
+						$rs['hasil'] = $total;
+					}
+					
 				}
 			
 				$retval[] = $rs;

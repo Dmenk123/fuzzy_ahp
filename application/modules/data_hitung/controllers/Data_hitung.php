@@ -16,6 +16,7 @@ class Data_hitung extends CI_Controller {
 		$this->load->model('t_hitung');
 		$this->load->model('t_hitung_det');
 		$this->load->model('t_sintesis');
+		$this->load->model('t_normalisasi');
 		$this->load->model('m_global');
 	}
 
@@ -59,10 +60,12 @@ class Data_hitung extends CI_Controller {
 			$table_html = $this->get_tabel_ahp();
 		}elseif ($menu == 'sintesis') {
 			$table_html = $this->get_tabel_sintesis();
+		}elseif ($menu == 'vektor') {
+			$table_html = $this->get_tabel_vektor();
 		}else{
 			return redirect('data_hitung');
 		}
-		
+
 		$data = array(
 			'title' => 'Hasil Data Perhitungan',
 			'table_html' => $table_html,
@@ -79,6 +82,7 @@ class Data_hitung extends CI_Controller {
 		$this->template_view->load_view($content, $data);
 	}
 
+	########################## get tabel data group ###########################
 	public function get_tabel_ahp()
 	{
 		$join = [ 
@@ -167,6 +171,47 @@ class Data_hitung extends CI_Controller {
 
 		return $data;
 	}
+
+	public function get_tabel_vektor()
+	{
+		$data = $this->t_normalisasi->get_data_transaksi_normalisasi();
+		$html = "<table class='table table-striped- table-bordered table-hover table-checkable' id='tabel_data'>
+			  	<thead>
+					<tr>
+						<th style='width: 5%;'>No</th>
+						<th>Proyek</th>
+						<th style='width: 5%;'>Aksi</th>
+					</tr>
+			  	</thead>
+			  	<tbody>";
+				foreach ($data as $k => $v) 
+				{
+					$html .= "<tr>
+								<th>".++$k."</th>
+								<th>".$v->nama_proyek." [".$v->tahun_proyek."]</th>
+								<th>
+									<div class='btn-group'>
+									<button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Opsi</button>
+										<div class='dropdown-menu'>
+											<a class='dropdown-item' target='_blank' href='".base_url('data_hitung/detail_vektor/').$this->enkripsi->enc_dec('encrypt', $v->id_hitung)."'>
+												<i class='la la-bar-chart-o'></i> Lihat Data
+											</a>
+										</div>
+									</div>
+								</th>
+							</tr>"; 
+				}
+		$html .= "</tbody></table>";
+		
+		$data = array(
+			'title' => 'Data Perhitungan Vektor Dan Normalisasi',
+			'html' => $html
+		);
+
+		return $data;
+	}
+	########################## get tabel data group ###########################
+
 
 	public function hasil_perhitungan($id)
 	{
@@ -321,6 +366,52 @@ class Data_hitung extends CI_Controller {
 
 		$this->template_view->load_view($content, $data);
 	}
+
+	public function detail_vektor($id_hitung)
+	{
+		$obj_date = new DateTime();
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'tn.id_kategori = k.id']
+		];
+
+		$data = $this->m_global->multi_row('tn.*, k.nama as nama_kategori', ['tn.id_hitung' => $id_hitung, 'tn.deleted_at' => null], 't_normalisasi tn', $join, 'tn.id_kategori asc, tn.kode_kategori_tujuan asc');
+		
+
+		if(!$data) {
+			return redirect('data_hitung');
+		}
+
+		/**
+		 * data passing ke halaman view content
+		 */
+		$data = array(
+			'title' => 'Detail Perhitungan Normalisasi',
+			'data_user' => $data_user,
+			'data' => $data
+		);
+
+		/**
+		 * content data untuk template
+		 * param (css : link css pada direktori assets/css_module)
+		 * param (modal : modal komponen pada modules/nama_modul/views/nama_modal)
+		 * param (js : link js pada direktori assets/js_module)
+		 */
+		$content = [
+			'css' 	=> null,
+			'modal' => null,
+			'js'	=> 'data_hitung.js',
+			'view'	=> 'view_detail_normalisasi'
+		];
+
+		$this->template_view->load_view($content, $data);
+	}
+
+	
 
 	/////////////////////////
 

@@ -36,6 +36,11 @@
         </div>
       </div>
     </div>
+
+    <div class="col-12">
+      <a href="<?=base_url('data_hitung');?>" class="btn btn-bold btn-label-brand btn-sm"><i class="la la-arrow-left"></i>Kembali Ke Menu Utama</a>
+    </div>
+
   </div>
   
 </div>
