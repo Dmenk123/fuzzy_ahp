@@ -36,6 +36,8 @@
             <tr>
               <th style="width: 5%;">No</th>
               <th>Nama</th>
+              <th>Kode</th>
+              <th>Urut</th>
               <th style="width: 5%;">Aksi</th>
             </tr>
           </thead>

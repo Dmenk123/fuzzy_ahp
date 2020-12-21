@@ -56,6 +56,8 @@ function edit_data(id)
         {
             $('[name="id_kat"]').val(data.old_data.id);
             $('[name="nama_kat"]').val(data.old_data.nama);
+            $('[name="kode"]').val(data.old_data.kode_kategori);
+            $('[name="urut"]').val(data.old_data.urut);
             $('#modal_kategori_form').modal('show');
 	        $('#modal_title').text('Edit Kategori'); 
         },

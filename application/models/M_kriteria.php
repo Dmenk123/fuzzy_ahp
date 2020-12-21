@@ -3,13 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class M_kriteria extends CI_Model
 {
 	var $table = 'm_kriteria';
-	var $column_search = ['m_kriteria.nama', 'm_kategori.nama', 'm_kriteria.kode_kriteria', 'm_kriteria.urut'];
+	var $column_search = ['m_kriteria.nama', 'm_kategori.nama', 'm_kriteria.urut'];
 	
 	var $column_order = [
 		null, 
 		'm_kriteria.nama',
 		'm_kategori.nama',
-		'm_kriteria.kode_kriteria', 
 		'm_kriteria.urut',
 		null
 	];

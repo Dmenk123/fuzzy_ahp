@@ -55,6 +55,8 @@ class Master_kategori extends CI_Controller {
 			//loop value tabel db
 			$row[] = $no;
 			$row[] = $val->nama;
+			$row[] = $val->kode_kategori;
+			$row[] = $val->urut;
 			
 			$str_aksi = '
 				<div class="btn-group">
@@ -108,15 +110,40 @@ class Master_kategori extends CI_Controller {
 		$arr_valid = $this->rule_validasi();
 		
 		$nama = trim(strtoupper(strtolower($this->input->post('nama_kat'))));
+		$kode = $this->input->post('kode');
+		$urut = $this->input->post('urut');
 
 		if ($arr_valid['status'] == FALSE) {
 			echo json_encode($arr_valid);
 			return;
 		}
 
+		## cek exist
+		$exist_kode = $this->m_kategori->get_by_condition(['kode_kategori' => $kode, 'deleted_at' => null], true);
+
+		if($exist_kode) {
+			$data['inputerror'][] = 'kode';
+            $data['error_string'][] = 'Kode sudah ada. Mohon pilih yang lain';
+			$data['status'] = FALSE;
+			echo json_encode($data);
+			return;
+		}
+
+		$exist_urut = $this->m_kategori->get_by_condition(['urut' => $urut, 'deleted_at' => null], true);
+		
+		if($exist_urut) {
+			$data['inputerror'][] = 'urut';
+            $data['error_string'][] = 'Urut sudah ada. Mohon pilih yang lain';
+			$data['status'] = FALSE;
+			echo json_encode($data);
+			return;
+		}
+
 		$data_ins = [
 			'id' => $this->m_kategori->get_max_id(),
 			'nama' => $nama,
+			'kode_kategori' => $kode,
+			'urut' => $urut,
 			'created_at' => $timestamp
 		];
 		
@@ -143,6 +170,8 @@ class Master_kategori extends CI_Controller {
 		
 		$arr_valid = $this->rule_validasi();
 		$nama = trim(strtoupper(strtolower($this->input->post('nama_kat'))));
+		$kode = $this->input->post('kode');
+		$urut = $this->input->post('urut');
 
 		if ($arr_valid['status'] == FALSE) {
 			echo json_encode($arr_valid);
@@ -153,6 +182,8 @@ class Master_kategori extends CI_Controller {
 		
 		$data_upd = [
 			'nama' => $nama,
+			'kode_kategori' => $kode,
+			'urut' => $urut,
 			'updated_at' => $timestamp
 		];
 
@@ -228,6 +259,18 @@ class Master_kategori extends CI_Controller {
 		if ($this->input->post('nama_kat') == '') {
 			$data['inputerror'][] = 'nama_kat';
             $data['error_string'][] = 'Wajib Memilih Nama';
+            $data['status'] = FALSE;
+		}
+
+		if ($this->input->post('kode') == '') {
+			$data['inputerror'][] = 'kode';
+            $data['error_string'][] = 'Wajib Memilih Kode Kategori';
+            $data['status'] = FALSE;
+		}
+
+		if ($this->input->post('urut') == '') {
+			$data['inputerror'][] = 'urut';
+            $data['error_string'][] = 'Wajib Memilih Urut Kategori';
             $data['status'] = FALSE;
 		}
 

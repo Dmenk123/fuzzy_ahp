@@ -15,6 +15,28 @@
             <input type="text" class="form-control" id="nama_kat" name="nama_kat" autocomplete="off">
             <span class="help-block"></span>
           </div>
+          <div class="form-group">
+            <label for="" class="form-control-label">Kode Kategori:</label>
+            <select name="kode" id="kode" class="form-control"> 
+              <?php 
+              echo '<option value="">Silahkan Pilih Kode Kategori</option>';
+              for ($i=1; $i <= 20; $i++) { 
+                echo '<option value="C'.$i.'">C'.$i.'</option>';
+              } ?>
+            </select>
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="" class="form-control-label">Urut:</label>
+            <select name="urut" id="urut" class="form-control"> 
+              <?php 
+              echo '<option value="">Silahkan Pilih Urutan Kategori</option>';
+              for ($i=1; $i <= 20; $i++) { 
+                echo '<option value="'.$i.'">'.$i.'</option>';
+              } ?>
+            </select>
+            <span class="help-block"></span>
+          </div>
         </form>
       </div>
       <div class="modal-footer">

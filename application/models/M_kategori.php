@@ -3,15 +3,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class M_kategori extends CI_Model
 {
 	var $table = 'm_kategori';
-	var $column_search = ['nama'];
+	var $column_search = ['nama','kode_kategori','urut'];
 	
 	var $column_order = [
 		null, 
 		'nama',
+		'kode_kategori',
+		'urut',
 		null
 	];
 
-	var $order = ['nama' => 'asc']; 
+	var $order = ['urut' => 'asc']; 
 
 	public function __construct()
 	{
