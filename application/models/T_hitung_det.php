@@ -65,7 +65,7 @@ class T_hitung_det extends CI_Model
 
 	public function get_nilai_total_himpunan($id_hitung)
 	{
-		$this->db->select('h_det.kode_kategori, Round(sum(hp.lower_val), 4) as total_lower, Round(sum(hp.medium_val), 4) as total_medium, Round(sum(hp.upper_val), 4) as total_upper');
+		$this->db->select('h_det.kode_kategori, sum(hp.lower_val) as total_lower, sum(hp.medium_val) as total_medium, sum(hp.upper_val) as total_upper');
 		$this->db->from($this->table.' as h_det');
 		$this->db->join('m_himpunan hp', 'h_det.id_himpunan = hp.id', 'left');
 		$this->db->where(['h_det.id_hitung' => $id_hitung, 'hp.deleted_at' => null]);

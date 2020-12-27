@@ -66,14 +66,14 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
                       echo '<th>'.$val->kode_kategori.'</th>';
                     }
 
-                    if($val->lower_val == '1.0000' && $val->medium_val == '1.0000' && $val->upper_val == '1.0000'){
-                      echo '<td style="color:red;">'.$val->lower_val.'</td>';
-                      echo '<td style="color:red;">'.$val->medium_val.'</td>';
-                      echo '<td style="color:red;">'.$val->upper_val.'</td>';
+                    if(number_format((float)$val->lower_val, 4) == '1.0000' && number_format((float)$val->medium_val, 4) == '1.0000' && number_format((float)$val->upper_val, 4) == '1.0000'){
+                      echo '<td style="color:red;">'.number_format((float)$val->lower_val, 4).'</td>';
+                      echo '<td style="color:red;">'.number_format((float)$val->medium_val, 4).'</td>';
+                      echo '<td style="color:red;">'.number_format((float)$val->upper_val, 4).'</td>';
                     }else{
-                      echo '<td>'.$val->lower_val.'</td>';
-                      echo '<td>'.$val->medium_val.'</td>';
-                      echo '<td>'.$val->upper_val.'</td>';
+                      echo '<td>'.number_format((float)$val->lower_val, 4).'</td>';
+                      echo '<td>'.number_format((float)$val->medium_val, 4).'</td>';
+                      echo '<td>'.number_format((float)$val->upper_val, 4).'</td>';
                     }
                     
                     ## increment biar ga kenek kondisi
@@ -85,17 +85,17 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
                   $idx = 0;
                 }
 
-                echo '<td>'.$data_tot_himpunan[$kk]->total_lower.'</td>';
-                echo '<td>'.$data_tot_himpunan[$kk]->total_medium.'</td>';
-                echo '<td>'.$data_tot_himpunan[$kk]->total_upper.'</td>';
+                echo '<td>'.number_format((float)$data_tot_himpunan[$kk]->total_lower, 4).'</td>';
+                echo '<td>'.number_format((float)$data_tot_himpunan[$kk]->total_medium, 4).'</td>';
+                echo '<td>'.number_format((float)$data_tot_himpunan[$kk]->total_upper, 4).'</td>';
                 echo '</tr>';
               } ?>
               
               <tr align="center">
                 <td colspan="<?=((int)$counter_kolom*3) + 1;?>">Grand Total</td>
-                <td><?= (float)$data_hitung->total_lower; ?></td>
-                <td><?= (float)$data_hitung->total_medium; ?></td>
-                <td><?= (float)$data_hitung->total_upper; ?></td>
+                <td><?= number_format((float)$data_hitung->total_lower, 4); ?></td>
+                <td><?= number_format((float)$data_hitung->total_medium, 4); ?></td>
+                <td><?= number_format((float)$data_hitung->total_upper, 4); ?></td>
               </tr>
             </tbody>
           </table>    

@@ -71,13 +71,13 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
                     }
 
                     if($val->kode_kategori_tujuan == $vv->kode_kategori){
-                      echo '<td style="color:red;">'.$val->nilai.'</td>';
+                      echo '<td style="color:red;">'.number_format((float)$val->nilai, 4).'</td>';
                     }else{
-                      echo '<td>'.$val->nilai.'</td>';
+                      echo '<td>'.number_format((float)$val->nilai, 4).'</td>';
                     }
 
                     if($val->kode_kategori_tujuan == 'C1') {
-                      $total_min += (float)$val->nilai;
+                      $total_min += number_format((float)$val->nilai, 4);
                     }
                     
                     ## increment biar ga kenek kondisi
@@ -116,7 +116,7 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
                       echo "<th rowspan='".$counter_kolom."'>MIN</th>";
                     }
 
-                    echo "<td>$vvv->nilai</td>";
+                    echo "<td>".number_format((float)$vvv->nilai, 4)."</td>";
                     echo "<td>".number_format((float)$vvv->nilai/(float)$total_min, 4)."</td>";
                   echo "</tr>";
                 }

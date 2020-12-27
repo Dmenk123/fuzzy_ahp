@@ -561,6 +561,12 @@ class Hitung_ahp extends CI_Controller {
 			'total_upper' => $grand_total_upper
 		];
 
+		
+		// echo "<pre>";
+		// print_r ($data_upd);
+		// echo "</pre>";
+		// exit;
+
 		$upd = $this->m_global->update('t_hitung', $data_upd, ['id' => $id_hitung]);
 
 		#########################################################################################################
@@ -580,9 +586,9 @@ class Hitung_ahp extends CI_Controller {
 				'id_hitung' => $id_hitung,
 				'id_kategori' => $vv->id,
 				'kode_kategori' => $vv->kode_kategori,
-				'sintesis_lower' => round((float)$data_tot_himpunan[$kk]->total_lower / (float)$grand_total_upper, 4),
-				'sintesis_medium' => round((float)$data_tot_himpunan[$kk]->total_medium / (float)$grand_total_medium, 4),
-				'sintesis_upper' => round((float)$data_tot_himpunan[$kk]->total_upper / (float)$grand_total_lower, 4),
+				'sintesis_lower' => (float)$data_tot_himpunan[$kk]->total_lower / (float)$grand_total_upper,
+				'sintesis_medium' => (float)$data_tot_himpunan[$kk]->total_medium / (float)$grand_total_medium,
+				'sintesis_upper' => (float)$data_tot_himpunan[$kk]->total_upper / (float)$grand_total_lower,
 				'created_at' => $timestamp
 			];
 
@@ -725,8 +731,8 @@ class Hitung_ahp extends CI_Controller {
 				$data_l = (float)$sin['sintesis_lower'] - (float)$data_sintesis[$k_kat]['sintesis_upper'];
 				$data_m = (float)$data_sintesis[$k_kat]['sintesis_medium'] - (float)$data_sintesis[$k_kat]['sintesis_upper'];
 				$data_u = (float)$sin['sintesis_medium'] - (float)$sin['sintesis_lower'];
-				$bawah = round((float)$data_m - (float)$data_u, 4);
-				$total = round((float)$data_l / $bawah, 4);
+				$bawah = (float)$data_m - (float)$data_u;
+				$total = (float)$data_l / $bawah;
 
 				$rs['id_kategori_proses'] = $id_kat_proses;
 				$rs['kode_kategori_proses'] = $kode_kat_proses;
@@ -739,7 +745,7 @@ class Hitung_ahp extends CI_Controller {
 				$rs['total'] = $total;
 
 				if($total >= 1.000) {
-					$rs['hasil'] = round(1.000, 4);
+					$rs['hasil'] = 1.000;
 				}else{
 					if($total < 0.000) {
 						$rs['hasil'] = 0.000;

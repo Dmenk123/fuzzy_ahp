@@ -58,9 +58,9 @@ class Master_Himpunan extends CI_Controller {
 			$row[] = $val->lower_txt;
 			$row[] = $val->medium_txt;
 			$row[] = $val->upper_txt;
-			$row[] = $val->lower_val;
-			$row[] = $val->medium_val;
-			$row[] = $val->upper_val;
+			$row[] = number_format((float)$val->lower_val, 4);
+			$row[] = number_format((float)$val->medium_val, 4);
+			$row[] = number_format((float)$val->upper_val, 4);
 			
 			$str_aksi = '
 				<div class="btn-group">
@@ -98,21 +98,21 @@ class Master_Himpunan extends CI_Controller {
 		
 		if( strpos( $upper, '/' ) !== false) {
 			$arr_up = explode('/', $upper);
-			$retval['upper'] = number_format(((int)$arr_up[0] / (int)$arr_up[1]), 4);
+			$retval['upper'] =(int)$arr_up[0] / (int)$arr_up[1];
 		}else{
 			$retval['upper'] = (int)$upper;
 		}
 
 		if( strpos( $medium, '/' ) !== false) {
 			$arr_med = explode('/', $medium);
-			$retval['medium'] = number_format(((int)$arr_med[0] / (int)$arr_med[1]), 4);
+			$retval['medium'] =(int)$arr_med[0] / (int)$arr_med[1];
 		}else{
 			$retval['medium'] = (int)$medium;
 		}
 
 		if( strpos( $lower, '/' ) !== false) {
 			$arr_low = explode('/', $lower);
-			$retval['lower'] = number_format(((int)$arr_low[0] / (int)$arr_low[1]), 4);
+			$retval['lower'] =(int)$arr_low[0] / (int)$arr_low[1];
 		}else{
 			$retval['lower'] = (int)$lower;
 		}
@@ -219,7 +219,7 @@ class Master_Himpunan extends CI_Controller {
 
 		$where = ['id' => $id];
 		$update = $this->m_himpunan->update($where, $data_himpunan);
-
+		
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			$data['status'] = false;

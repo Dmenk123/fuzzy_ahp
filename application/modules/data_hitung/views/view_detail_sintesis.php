@@ -84,12 +84,12 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
                 }
                 
                 echo '<td>'.$vv->kode_kategori.'</td>';
-                echo '<td>'.round((float)$vv->nilai_l, 4).'</td>';
-                echo '<td>'.round((float)$vv->nilai_m, 4).'</td>';
-                echo '<td>'.round((float)$vv->nilai_u, 4).'</td>';
-                echo '<td>'.round((float)$vv->bawah, 4).'</td>';
-                echo '<td>'.round((float)$vv->total, 4).'</td>';
-                echo '<td><strong>'.$vv->hasil.'</strong></td>';
+                echo '<td>'.number_format((float)$vv->nilai_l, 4).'</td>';
+                echo '<td>'.number_format((float)$vv->nilai_m, 4).'</td>';
+                echo '<td>'.number_format((float)$vv->nilai_u, 4).'</td>';
+                echo '<td>'.number_format((float)$vv->bawah, 4).'</td>';
+                echo '<td>'.number_format((float)$vv->total, 4).'</td>';
+                echo '<td><strong>'.number_format((float)$vv->hasil, 4).'</strong></td>';
                 echo '</tr>';
               } ?>
             </tbody>

@@ -49,9 +49,9 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
                   <th><?= ++$k; ?></th>
                   <th><?= $v->nama_proyek.' ['.$v->tahun_proyek.']'; ?></th>
                   <th><?= $v->nama_kategori; ?></th>
-                  <th><?= $v->total_lower; ?></th>
-                  <th><?= $v->total_medium; ?></th>
-                  <th><?= $v->total_upper; ?></th>
+                  <th><?= number_format((float)$v->total_lower, 4); ?></th>
+                  <th><?= number_format((float)$v->total_medium, 4); ?></th>
+                  <th><?= number_format((float)$v->total_upper, 4); ?></th>
                   <th>
                     <div class="btn-group">
                       <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Opsi</button>

@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 21/12/2020 01:01:51
+ Date: 27/12/2020 14:05:41
 */
 
 SET NAMES utf8mb4;
@@ -28,9 +28,9 @@ CREATE TABLE `m_himpunan`  (
   `medium_txt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `upper_txt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `is_sama_penting` int(1) NULL DEFAULT NULL,
-  `lower_val` float(20, 4) NULL DEFAULT NULL,
-  `medium_val` float(20, 4) NULL DEFAULT NULL,
-  `upper_val` float(20, 4) NULL DEFAULT NULL,
+  `lower_val` float(20, 9) NULL DEFAULT NULL,
+  `medium_val` float(20, 9) NULL DEFAULT NULL,
+  `upper_val` float(20, 9) NULL DEFAULT NULL,
   `created_at` datetime(0) NULL DEFAULT NULL,
   `updated_at` datetime(0) NULL DEFAULT NULL,
   `deleted_at` datetime(0) NULL DEFAULT NULL,
@@ -40,23 +40,23 @@ CREATE TABLE `m_himpunan`  (
 -- ----------------------------
 -- Records of m_himpunan
 -- ----------------------------
-INSERT INTO `m_himpunan` VALUES (1, '9 kali lebih penting', '4', '9/2', '9/2', NULL, 4.0000, 4.5000, 4.5000, '2020-12-01 23:21:04', '2020-12-01 23:51:56', NULL);
-INSERT INTO `m_himpunan` VALUES (2, '8 kali lebih penting', '7/2', '4', '9/2', NULL, 3.5000, 4.0000, 4.5000, '2020-12-01 23:22:27', '2020-12-01 23:52:08', NULL);
-INSERT INTO `m_himpunan` VALUES (3, '7 kali lebih penting', '3', '7/2', '4', NULL, 3.0000, 3.5000, 4.0000, '2020-12-01 23:43:29', '2020-12-01 23:52:46', NULL);
-INSERT INTO `m_himpunan` VALUES (4, '6 kali lebih penting', '5/2', '3', '7/2', NULL, 2.5000, 3.0000, 3.5000, '2020-12-01 23:44:14', '2020-12-01 23:52:57', NULL);
-INSERT INTO `m_himpunan` VALUES (5, '5 kali lebih penting', '2', '5/2', '3', NULL, 2.0000, 2.5000, 3.0000, '2020-12-01 23:45:05', '2020-12-01 23:53:49', NULL);
-INSERT INTO `m_himpunan` VALUES (6, '4 kali lebih penting', '3/2', '2', '5/2', NULL, 1.5000, 2.0000, 2.5000, '2020-12-01 23:46:03', '2020-12-01 23:53:57', NULL);
-INSERT INTO `m_himpunan` VALUES (7, '3 kali lebih penting', '1', '3/2', '2', NULL, 1.0000, 1.5000, 2.0000, '2020-12-01 23:47:24', '2020-12-01 23:54:08', NULL);
-INSERT INTO `m_himpunan` VALUES (8, '2 kali lebih penting', '1/2', '1', '3/2', NULL, 0.5000, 1.0000, 1.5000, '2020-12-01 23:47:50', '2020-12-01 23:54:16', NULL);
-INSERT INTO `m_himpunan` VALUES (9, 'Sama Penting', '1', '1', '1', 1, 1.0000, 1.0000, 1.0000, '2020-12-01 23:48:07', '2020-12-01 23:54:25', NULL);
-INSERT INTO `m_himpunan` VALUES (10, '2 kali kurang penting', '2/3', '1', '2', NULL, 0.6667, 1.0000, 2.0000, '2020-12-01 23:55:34', NULL, NULL);
-INSERT INTO `m_himpunan` VALUES (11, '3 kali kurang penting', '1/2', '2/3', '1', NULL, 0.5000, 0.6667, 1.0000, '2020-12-01 23:56:07', NULL, NULL);
-INSERT INTO `m_himpunan` VALUES (12, '4 kali kurang penting', '2/5', '1/2', '2/3', NULL, 0.4000, 0.5000, 0.6667, '2020-12-01 23:56:35', NULL, NULL);
-INSERT INTO `m_himpunan` VALUES (13, '5 kali kurang penting', '1/3', '2/5', '1/2', NULL, 0.3333, 0.4000, 0.5000, '2020-12-01 23:57:05', NULL, NULL);
-INSERT INTO `m_himpunan` VALUES (14, '6 kali kurang penting', '2/7', '1/3', '2/5', NULL, 0.2857, 0.3333, 0.4000, '2020-12-01 23:57:45', NULL, NULL);
-INSERT INTO `m_himpunan` VALUES (15, '7 kali kurang penting', '1/4', '2/7', '1/3', NULL, 0.2500, 0.2857, 0.3333, '2020-12-01 23:58:20', NULL, NULL);
-INSERT INTO `m_himpunan` VALUES (16, '8 kali kurang penting', '2/9', '1/4', '2/7', NULL, 0.2222, 0.2500, 0.2857, '2020-12-01 23:58:50', NULL, NULL);
-INSERT INTO `m_himpunan` VALUES (17, '9 kali kurang penting', '2/9', '2/9', '1/4', NULL, 0.2222, 0.2222, 0.2500, '2020-12-01 23:59:16', NULL, NULL);
+INSERT INTO `m_himpunan` VALUES (1, '9 kali lebih penting', '4', '9/2', '9/2', NULL, 4.000000000, 4.500000000, 4.500000000, '2020-12-01 23:21:04', '2020-12-27 13:16:50', NULL);
+INSERT INTO `m_himpunan` VALUES (2, '8 kali lebih penting', '7/2', '4', '9/2', NULL, 3.500000000, 4.000000000, 4.500000000, '2020-12-01 23:22:27', '2020-12-27 13:17:01', NULL);
+INSERT INTO `m_himpunan` VALUES (3, '7 kali lebih penting', '3', '7/2', '4', NULL, 3.000000000, 3.500000000, 4.000000000, '2020-12-01 23:43:29', '2020-12-27 13:17:11', NULL);
+INSERT INTO `m_himpunan` VALUES (4, '6 kali lebih penting', '5/2', '3', '7/2', NULL, 2.500000000, 3.000000000, 3.500000000, '2020-12-01 23:44:14', '2020-12-27 13:17:21', NULL);
+INSERT INTO `m_himpunan` VALUES (5, '5 kali lebih penting', '2', '5/2', '3', NULL, 2.000000000, 2.500000000, 3.000000000, '2020-12-01 23:45:05', '2020-12-27 13:17:36', NULL);
+INSERT INTO `m_himpunan` VALUES (6, '4 kali lebih penting', '3/2', '2', '5/2', NULL, 1.500000000, 2.000000000, 2.500000000, '2020-12-01 23:46:03', '2020-12-27 13:17:43', NULL);
+INSERT INTO `m_himpunan` VALUES (7, '3 kali lebih penting', '1', '3/2', '2', NULL, 1.000000000, 1.500000000, 2.000000000, '2020-12-01 23:47:24', '2020-12-27 13:18:08', NULL);
+INSERT INTO `m_himpunan` VALUES (8, '2 kali lebih penting', '1/2', '1', '3/2', NULL, 0.500000000, 1.000000000, 1.500000000, '2020-12-01 23:47:50', '2020-12-27 13:18:16', NULL);
+INSERT INTO `m_himpunan` VALUES (9, 'Sama Penting', '1', '1', '1', 1, 1.000000000, 1.000000000, 1.000000000, '2020-12-01 23:48:07', '2020-12-27 13:18:24', NULL);
+INSERT INTO `m_himpunan` VALUES (10, '2 kali kurang penting', '2/3', '1', '2', NULL, 0.666666687, 1.000000000, 2.000000000, '2020-12-01 23:55:34', '2020-12-27 13:18:34', NULL);
+INSERT INTO `m_himpunan` VALUES (11, '3 kali kurang penting', '1/2', '2/3', '1', NULL, 0.500000000, 0.666666687, 1.000000000, '2020-12-01 23:56:07', '2020-12-27 13:18:55', NULL);
+INSERT INTO `m_himpunan` VALUES (12, '4 kali kurang penting', '2/5', '1/2', '2/3', NULL, 0.400000006, 0.500000000, 0.666666687, '2020-12-01 23:56:35', '2020-12-27 13:19:03', NULL);
+INSERT INTO `m_himpunan` VALUES (13, '5 kali kurang penting', '1/3', '2/5', '1/2', NULL, 0.333333343, 0.400000006, 0.500000000, '2020-12-01 23:57:05', '2020-12-27 13:19:20', NULL);
+INSERT INTO `m_himpunan` VALUES (14, '6 kali kurang penting', '2/7', '1/3', '2/5', NULL, 0.285714298, 0.333333343, 0.400000006, '2020-12-01 23:57:45', '2020-12-27 13:19:28', NULL);
+INSERT INTO `m_himpunan` VALUES (15, '7 kali kurang penting', '1/4', '2/7', '1/3', NULL, 0.250000000, 0.285714298, 0.333333343, '2020-12-01 23:58:20', '2020-12-27 13:19:35', NULL);
+INSERT INTO `m_himpunan` VALUES (16, '8 kali kurang penting', '2/9', '1/4', '2/7', NULL, 0.222222224, 0.250000000, 0.285714298, '2020-12-01 23:58:50', '2020-12-27 13:19:43', NULL);
+INSERT INTO `m_himpunan` VALUES (17, '9 kali kurang penting', '2/9', '2/9', '1/4', NULL, 0.222222224, 0.222222224, 0.250000000, '2020-12-01 23:59:16', '2020-12-27 13:19:51', NULL);
 
 -- ----------------------------
 -- Table structure for m_kategori
@@ -76,7 +76,7 @@ CREATE TABLE `m_kategori`  (
 -- ----------------------------
 -- Records of m_kategori
 -- ----------------------------
-INSERT INTO `m_kategori` VALUES (1, 'UMUM', 'C1', 1, '2020-12-02 22:58:05', NULL, NULL);
+INSERT INTO `m_kategori` VALUES (1, 'UMUM', 'C1', 1, '2020-12-02 22:58:05', '2020-12-21 23:10:18', NULL);
 INSERT INTO `m_kategori` VALUES (2, 'DRAINASE', 'C2', 2, '2020-12-02 22:58:15', NULL, NULL);
 INSERT INTO `m_kategori` VALUES (3, 'PEKERJAAN TANAH', 'C3', 3, '2020-12-02 22:58:27', NULL, NULL);
 INSERT INTO `m_kategori` VALUES (4, 'PERKERASAN BERBUTIR DAN BETON SEMEN', 'C4', 4, '2020-12-02 22:58:44', NULL, NULL);
@@ -102,7 +102,7 @@ CREATE TABLE `m_kriteria`  (
 -- ----------------------------
 -- Records of m_kriteria
 -- ----------------------------
-INSERT INTO `m_kriteria` VALUES (1, 1, 'PENGUKURAN', 1, '2020-12-03 08:24:39', NULL, NULL);
+INSERT INTO `m_kriteria` VALUES (1, 1, 'PENGUKURAN', 1, '2020-12-03 08:24:39', '2020-12-21 23:15:29', NULL);
 INSERT INTO `m_kriteria` VALUES (2, 1, 'PAS. PAPAN NAMA PROYEK', 2, '2020-12-03 08:24:57', '2020-12-03 20:46:31', NULL);
 INSERT INTO `m_kriteria` VALUES (3, 1, 'PENGAMANAN LALU LINTAS', 3, '2020-12-03 08:25:09', '2020-12-13 23:25:59', NULL);
 INSERT INTO `m_kriteria` VALUES (4, 1, 'PASANG RAMBU LALU LINTAS', 4, '2020-12-03 08:25:20', NULL, NULL);
@@ -152,6 +152,7 @@ INSERT INTO `m_menu` VALUES (10, 6, 'Master Kriteria', 'Master Kriteria', 'maste
 INSERT INTO `m_menu` VALUES (11, 0, 'Perhitungan', 'Perhitungan', '', 'flaticon-list', 1, 1, 3, 0, 0, 0);
 INSERT INTO `m_menu` VALUES (12, 11, 'Perhitungan AHP', 'Perhitungan AHP', 'hitung_ahp', 'flaticon-list-2', 1, 2, 1, 1, 1, 1);
 INSERT INTO `m_menu` VALUES (13, 11, 'Data Perhitungan', 'Data Perhitungan', 'data_hitung', 'flaticon-statistics', 1, 2, 2, 1, 1, 1);
+INSERT INTO `m_menu` VALUES (14, 6, 'Master Proyek', 'Master Proyek', 'master_proyek', 'flaticon2-start-up', 1, 2, 5, 1, 1, 1);
 
 -- ----------------------------
 -- Table structure for m_proyek
@@ -214,7 +215,7 @@ CREATE TABLE `m_user`  (
 -- ----------------------------
 -- Records of m_user
 -- ----------------------------
-INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-20 22:48:13', 'USR-00001', NULL, NULL, NULL, NULL);
+INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2020-12-27 10:34:47', 'USR-00001', NULL, NULL, NULL, NULL);
 INSERT INTO `m_user` VALUES (2, 1, 'coba', 'Tzg1eTllUlU2a2xNQk5yYktIM1pwUT09', NULL, NULL, 'USR-00002', 'coba-1602775328.jpg', '2020-10-15 22:22:08', '2020-10-15 22:43:54', '2020-10-15 22:58:50');
 
 -- ----------------------------
@@ -225,9 +226,9 @@ CREATE TABLE `t_hitung`  (
   `id` int(11) NOT NULL,
   `id_proyek` int(11) NULL DEFAULT NULL,
   `id_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `total_lower` float(20, 4) NULL DEFAULT NULL,
-  `total_medium` float(20, 4) NULL DEFAULT NULL,
-  `total_upper` float(20, 4) NULL DEFAULT NULL,
+  `total_lower` float(20, 9) NULL DEFAULT NULL,
+  `total_medium` float(20, 9) NULL DEFAULT NULL,
+  `total_upper` float(20, 9) NULL DEFAULT NULL,
   `created_at` datetime(0) NULL DEFAULT NULL,
   `updated_at` datetime(0) NULL DEFAULT NULL,
   `deleted_at` datetime(0) NULL DEFAULT NULL,
@@ -237,7 +238,7 @@ CREATE TABLE `t_hitung`  (
 -- ----------------------------
 -- Records of t_hitung
 -- ----------------------------
-INSERT INTO `t_hitung` VALUES (1, 2, '1', 51.7515, 64.9580, 81.0691, '2020-12-18 19:43:01', NULL, NULL);
+INSERT INTO `t_hitung` VALUES (1, 2, '1', 51.751586914, 64.957939148, 81.069046021, '2020-12-18 19:43:01', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_hitung_det
@@ -307,10 +308,10 @@ INSERT INTO `t_hitung_det` VALUES (95, 1, 5, 'C5', 4, 6, 'C6', 5, 'C5', '2020-12
 INSERT INTO `t_hitung_det` VALUES (96, 1, 6, 'C6', 14, 5, 'C5', 5, 'C5', '2020-12-19 00:04:22', NULL, NULL);
 INSERT INTO `t_hitung_det` VALUES (97, 1, 5, 'C5', 7, 7, 'C7', 5, 'C5', '2020-12-19 00:04:22', NULL, NULL);
 INSERT INTO `t_hitung_det` VALUES (98, 1, 7, 'C7', 11, 5, 'C5', 5, 'C5', '2020-12-19 00:04:22', NULL, NULL);
-INSERT INTO `t_hitung_det` VALUES (99, 1, 6, 'C6', 9, 6, 'C6', 6, 'C6', '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitung_det` VALUES (100, 1, 6, 'C6', 7, 7, 'C7', 6, 'C6', '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitung_det` VALUES (101, 1, 7, 'C7', 11, 6, 'C6', 6, 'C6', '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitung_det` VALUES (102, 1, 7, 'C7', 9, 7, 'C7', 6, 'C6', '2020-12-21 00:59:31', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (99, 1, 6, 'C6', 9, 6, 'C6', 6, 'C6', '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (100, 1, 6, 'C6', 7, 7, 'C7', 6, 'C6', '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (101, 1, 7, 'C7', 11, 6, 'C6', 6, 'C6', '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitung_det` VALUES (102, 1, 7, 'C7', 9, 7, 'C7', 6, 'C6', '2020-12-27 13:20:06', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_hitungan_vektor
@@ -322,12 +323,12 @@ CREATE TABLE `t_hitungan_vektor`  (
   `kode_kategori_proses` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `id_kategori` int(11) NULL DEFAULT NULL,
   `kode_kategori` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `nilai_l` float(20, 4) NULL DEFAULT NULL,
-  `nilai_m` float(20, 4) NULL DEFAULT NULL,
-  `nilai_u` float(20, 4) NULL DEFAULT NULL,
-  `bawah` float(20, 4) NULL DEFAULT NULL,
-  `total` float(20, 4) NULL DEFAULT NULL,
-  `hasil` float(20, 4) NULL DEFAULT NULL,
+  `nilai_l` float(20, 9) NULL DEFAULT NULL,
+  `nilai_m` float(20, 9) NULL DEFAULT NULL,
+  `nilai_u` float(20, 9) NULL DEFAULT NULL,
+  `bawah` float(20, 9) NULL DEFAULT NULL,
+  `total` float(20, 9) NULL DEFAULT NULL,
+  `hasil` float(20, 9) NULL DEFAULT NULL,
   `created_at` datetime(0) NULL DEFAULT NULL,
   `updated_at` datetime(0) NULL DEFAULT NULL,
   `deleted_at` datetime(0) NULL DEFAULT NULL
@@ -336,48 +337,48 @@ CREATE TABLE `t_hitungan_vektor`  (
 -- ----------------------------
 -- Records of t_hitungan_vektor
 -- ----------------------------
-INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 2, 'C2', -0.2086, -0.1092, 0.0738, -0.1830, 1.1399, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 3, 'C3', -0.2647, -0.1092, 0.0539, -0.1631, 1.6229, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 4, 'C4', -0.2612, -0.1092, 0.0478, -0.1570, 1.6637, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 5, 'C5', -0.2689, -0.1092, 0.0443, -0.1535, 1.7518, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 6, 'C6', -0.3069, -0.1092, 0.0205, -0.1297, 2.3662, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 7, 'C7', -0.2923, -0.1092, 0.0369, -0.1461, 2.0007, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 1, 'C1', -0.1627, -0.1039, 0.0844, -0.1883, 0.8640, 0.8640, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 3, 'C3', -0.2338, -0.1039, 0.0539, -0.1578, 1.4816, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 4, 'C4', -0.2303, -0.1039, 0.0478, -0.1517, 1.5181, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 5, 'C5', -0.2380, -0.1039, 0.0443, -0.1482, 1.6059, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 6, 'C6', -0.2760, -0.1039, 0.0205, -0.1244, 2.2186, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 7, 'C7', -0.2614, -0.1039, 0.0369, -0.1408, 1.8565, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 1, 'C1', -0.0616, -0.0788, 0.0844, -0.1632, 0.3775, 0.3775, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 2, 'C2', -0.0766, -0.0788, 0.0738, -0.1526, 0.5020, 0.5020, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 4, 'C4', -0.1292, -0.0788, 0.0478, -0.1266, 1.0205, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 5, 'C5', -0.1369, -0.0788, 0.0443, -0.1231, 1.1121, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 6, 'C6', -0.1749, -0.0788, 0.0205, -0.0993, 1.7613, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 7, 'C7', -0.1603, -0.0788, 0.0369, -0.1157, 1.3855, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 1, 'C1', -0.0500, -0.0698, 0.0844, -0.1542, 0.3243, 0.3243, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 2, 'C2', -0.0650, -0.0698, 0.0738, -0.1436, 0.4526, 0.4526, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 3, 'C3', -0.1211, -0.0698, 0.0539, -0.1237, 0.9790, 0.9790, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 5, 'C5', -0.1253, -0.0698, 0.0443, -0.1141, 1.0982, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 6, 'C6', -0.1633, -0.0698, 0.0205, -0.0903, 1.8084, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 7, 'C7', -0.1487, -0.0698, 0.0369, -0.1067, 1.3936, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 1, 'C1', -0.0423, -0.0733, 0.0844, -0.1577, 0.2682, 0.2682, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 2, 'C2', -0.0573, -0.0733, 0.0738, -0.1471, 0.3895, 0.3895, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 3, 'C3', -0.1134, -0.0733, 0.0539, -0.1272, 0.8915, 0.8915, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 4, 'C4', -0.1099, -0.0733, 0.0478, -0.1211, 0.9075, 0.9075, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 6, 'C6', -0.1556, -0.0733, 0.0205, -0.0938, 1.6588, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 7, 'C7', -0.1410, -0.0733, 0.0369, -0.1102, 1.2795, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 1, 'C1', 0.0620, -0.0308, 0.0844, -0.1152, -0.5382, 0.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 2, 'C2', 0.0470, -0.0308, 0.0738, -0.1046, -0.4493, 0.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 3, 'C3', -0.0091, -0.0308, 0.0539, -0.0847, 0.1074, 0.1074, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 4, 'C4', -0.0056, -0.0308, 0.0478, -0.0786, 0.0712, 0.0712, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 5, 'C5', -0.0133, -0.0308, 0.0443, -0.0751, 0.1771, 0.1771, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 7, 'C7', -0.0367, -0.0308, 0.0369, -0.0677, 0.5421, 0.5421, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 1, 'C1', -0.0390, -0.1008, 0.0844, -0.1852, 0.2106, 0.2106, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 2, 'C2', -0.0540, -0.1008, 0.0738, -0.1746, 0.3093, 0.3093, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 3, 'C3', -0.1101, -0.1008, 0.0539, -0.1547, 0.7117, 0.7117, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 4, 'C4', -0.1066, -0.1008, 0.0478, -0.1486, 0.7174, 0.7174, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 5, 'C5', -0.1143, -0.1008, 0.0443, -0.1451, 0.7877, 0.7877, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 6, 'C6', -0.1523, -0.1008, 0.0205, -0.1213, 1.2556, 1.0000, '2020-12-21 00:59:31', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 2, 'C2', -0.208604276, -0.109199464, 0.073747188, -0.182946652, 1.140246511, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 3, 'C3', -0.264758646, -0.109199464, 0.053954970, -0.163154438, 1.622748733, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 4, 'C4', -0.261234313, -0.109199464, 0.047864873, -0.157064334, 1.663231254, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 5, 'C5', -0.268870354, -0.109199464, 0.044211570, -0.153411031, 1.752614260, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 6, 'C6', -0.306942940, -0.109199464, 0.020571446, -0.129770905, 2.365267754, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 1, 'C1', 7, 'C7', -0.292307168, -0.109199464, 0.036859229, -0.146058694, 2.001299381, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 1, 'C1', -0.162708938, -0.103940167, 0.084426403, -0.188366577, 0.863788843, 0.863788843, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 3, 'C3', -0.233841717, -0.103940167, 0.053954970, -0.157895133, 1.480993748, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 4, 'C4', -0.230317384, -0.103940167, 0.047864873, -0.151805043, 1.517192006, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 5, 'C5', -0.237953439, -0.103940167, 0.044211570, -0.148151740, 1.606146812, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 6, 'C6', -0.276026011, -0.103940167, 0.020571446, -0.124511614, 2.216869593, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 2, 'C2', 7, 'C7', -0.261390239, -0.103940167, 0.036859229, -0.140799388, 1.856472850, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 1, 'C1', -0.061584830, -0.078762636, 0.084426403, -0.163189039, 0.377383351, 0.377383351, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 2, 'C2', -0.076563247, -0.078762636, 0.073747188, -0.152509823, 0.502021730, 0.502021730, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 4, 'C4', -0.129193276, -0.078762636, 0.047864873, -0.126627520, 1.020262241, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 5, 'C5', -0.136829332, -0.078762636, 0.044211570, -0.122974209, 1.112666845, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 6, 'C6', -0.174901918, -0.078762636, 0.020571446, -0.099334083, 1.760744214, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 3, 'C3', 7, 'C7', -0.160266146, -0.078762636, 0.036859229, -0.115621865, 1.386123061, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 1, 'C1', -0.049990982, -0.069734551, 0.084426403, -0.154160962, 0.324277848, 0.324277848, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 2, 'C2', -0.064969398, -0.069734551, 0.073747188, -0.143481746, 0.452806026, 0.452806026, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 3, 'C3', -0.121123761, -0.069734551, 0.053954970, -0.123689525, 0.979256451, 0.979256451, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 5, 'C5', -0.125235483, -0.069734551, 0.044211570, -0.113946125, 1.099076271, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 6, 'C6', -0.163308069, -0.069734551, 0.020571446, -0.090305999, 1.808385491, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 4, 'C4', 7, 'C7', -0.148672298, -0.069734551, 0.036859229, -0.106593780, 1.394755721, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 1, 'C1', -0.042261750, -0.073294677, 0.084426403, -0.157721087, 0.267952442, 0.267952442, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 2, 'C2', -0.057240166, -0.073294677, 0.073747188, -0.147041872, 0.389277995, 0.389277995, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 3, 'C3', -0.113394529, -0.073294677, 0.053954970, -0.127249643, 0.891118586, 0.891118586, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 4, 'C4', -0.109870195, -0.073294677, 0.047864873, -0.121159554, 0.906822383, 0.906822383, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 6, 'C6', -0.155578837, -0.073294677, 0.020571446, -0.093866125, 1.657454491, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 5, 'C5', 7, 'C7', -0.140943065, -0.073294677, 0.036859229, -0.110153906, 1.279510379, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 1, 'C1', 0.062036868, -0.030708769, 0.084426403, -0.115135171, -0.538817704, 0.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 2, 'C2', 0.047058456, -0.030708769, 0.073747188, -0.104455955, -0.450509995, 0.000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 3, 'C3', -0.009095912, -0.030708769, 0.053954970, -0.084663741, 0.107435748, 0.107435748, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 4, 'C4', -0.005571579, -0.030708769, 0.047864873, -0.078573644, 0.070909008, 0.070909008, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 5, 'C5', -0.013207634, -0.030708769, 0.044211570, -0.074920341, 0.176289022, 0.176289022, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 6, 'C6', 7, 'C7', -0.036644444, -0.030708769, 0.036859229, -0.067567997, 0.542334318, 0.542334318, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 1, 'C1', -0.039041236, -0.100863323, 0.084426403, -0.185289726, 0.210703731, 0.210703731, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 2, 'C2', -0.054019652, -0.100863323, 0.073747188, -0.174610510, 0.309372276, 0.309372276, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 3, 'C3', -0.110174015, -0.100863323, 0.053954970, -0.154818296, 0.711634338, 0.711634338, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 4, 'C4', -0.106649682, -0.100863323, 0.047864873, -0.148728192, 0.717077792, 0.717077792, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 5, 'C5', -0.114285737, -0.100863323, 0.044211570, -0.145074889, 0.787770629, 0.787770629, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_hitungan_vektor` VALUES (1, 7, 'C7', 6, 'C6', -0.152358323, -0.100863323, 0.020571446, -0.121434763, 1.254651546, 1.000000000, '2020-12-27 13:20:06', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_normalisasi
@@ -389,7 +390,7 @@ CREATE TABLE `t_normalisasi`  (
   `kode_kategori` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `id_kategori_tujuan` int(11) NULL DEFAULT NULL,
   `kode_kategori_tujuan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `nilai` float(20, 4) NULL DEFAULT NULL,
+  `nilai` float(20, 20) NULL DEFAULT NULL,
   `created_at` datetime(0) NULL DEFAULT NULL,
   `updated_at` datetime(0) NULL DEFAULT NULL,
   `deleted_at` datetime(0) NULL DEFAULT NULL
@@ -398,55 +399,55 @@ CREATE TABLE `t_normalisasi`  (
 -- ----------------------------
 -- Records of t_normalisasi
 -- ----------------------------
-INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 1, 'C1', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 2, 'C2', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 3, 'C3', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 4, 'C4', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 5, 'C5', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 6, 'C6', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 7, 'C7', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 2, 'C2', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 1, 'C1', 0.8640, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 3, 'C3', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 4, 'C4', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 5, 'C5', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 6, 'C6', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 7, 'C7', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 3, 'C3', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 1, 'C1', 0.3775, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 2, 'C2', 0.5020, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 4, 'C4', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 5, 'C5', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 6, 'C6', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 7, 'C7', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 4, 'C4', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 1, 'C1', 0.3243, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 2, 'C2', 0.4526, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 3, 'C3', 0.9790, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 5, 'C5', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 6, 'C6', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 7, 'C7', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 5, 'C5', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 1, 'C1', 0.2682, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 2, 'C2', 0.3895, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 3, 'C3', 0.8915, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 4, 'C4', 0.9075, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 6, 'C6', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 7, 'C7', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 6, 'C6', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 1, 'C1', 0.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 2, 'C2', 0.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 3, 'C3', 0.1074, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 4, 'C4', 0.0712, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 5, 'C5', 0.1771, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 7, 'C7', 0.5421, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 7, 'C7', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 1, 'C1', 0.2106, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 2, 'C2', 0.3093, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 3, 'C3', 0.7117, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 4, 'C4', 0.7174, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 5, 'C5', 0.7877, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 6, 'C6', 1.0000, '2020-12-21 00:59:31', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 1, 'C1', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 2, 'C2', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 3, 'C3', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 4, 'C4', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 5, 'C5', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 6, 'C6', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 1, 'C1', 7, 'C7', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 2, 'C2', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 1, 'C1', 0.86378884315490720000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 3, 'C3', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 4, 'C4', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 5, 'C5', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 6, 'C6', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 2, 'C2', 7, 'C7', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 3, 'C3', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 1, 'C1', 0.37738335132598877000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 2, 'C2', 0.50202172994613650000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 4, 'C4', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 5, 'C5', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 6, 'C6', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 3, 'C3', 7, 'C7', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 4, 'C4', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 1, 'C1', 0.32427784800529480000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 2, 'C2', 0.45280602574348450000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 3, 'C3', 0.97925645112991330000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 5, 'C5', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 6, 'C6', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 4, 'C4', 7, 'C7', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 5, 'C5', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 1, 'C1', 0.26795244216918945000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 2, 'C2', 0.38927799463272095000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 3, 'C3', 0.89111858606338500000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 4, 'C4', 0.90682238340377810000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 6, 'C6', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 5, 'C5', 7, 'C7', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 6, 'C6', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 1, 'C1', 0.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 2, 'C2', 0.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 3, 'C3', 0.10743574798107147000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 4, 'C4', 0.07090900838375092000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 5, 'C5', 0.17628902196884155000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 6, 'C6', 7, 'C7', 0.54233431816101070000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 7, 'C7', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 1, 'C1', 0.21070373058319092000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 2, 'C2', 0.30937227606773376000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 3, 'C3', 0.71163433790206910000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 4, 'C4', 0.71707779169082640000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 5, 'C5', 0.78777062892913820000, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_normalisasi` VALUES (1, 7, 'C7', 6, 'C6', 1.00000000000000000000, '2020-12-27 13:20:06', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_pasangan_himpunan
@@ -508,6 +509,7 @@ INSERT INTO `t_role_menu` VALUES (7, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (8, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (9, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (10, 1, 1, 1, 1);
+INSERT INTO `t_role_menu` VALUES (14, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (11, 1, 0, 0, 0);
 INSERT INTO `t_role_menu` VALUES (12, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (13, 1, 1, 1, 1);
@@ -524,9 +526,9 @@ CREATE TABLE `t_sintesis`  (
   `id_hitung` int(11) NULL DEFAULT NULL,
   `id_kategori` int(11) NULL DEFAULT NULL,
   `kode_kategori` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `sintesis_lower` float(20, 4) NULL DEFAULT NULL,
-  `sintesis_medium` float(20, 4) NULL DEFAULT NULL,
-  `sintesis_upper` float(20, 4) NULL DEFAULT NULL,
+  `sintesis_lower` float(20, 9) NULL DEFAULT NULL,
+  `sintesis_medium` float(20, 9) NULL DEFAULT NULL,
+  `sintesis_upper` float(20, 9) NULL DEFAULT NULL,
   `created_at` datetime(0) NULL DEFAULT NULL,
   `updated_at` datetime(0) NULL DEFAULT NULL,
   `deleted_at` datetime(0) NULL DEFAULT NULL,
@@ -536,12 +538,12 @@ CREATE TABLE `t_sintesis`  (
 -- ----------------------------
 -- Records of t_sintesis
 -- ----------------------------
-INSERT INTO `t_sintesis` VALUES (1, 1, 1, 'C1', 0.1542, 0.2386, 0.3478, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_sintesis` VALUES (2, 1, 2, 'C2', 0.1392, 0.2130, 0.3169, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_sintesis` VALUES (3, 1, 3, 'C3', 0.0831, 0.1370, 0.2158, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_sintesis` VALUES (4, 1, 4, 'C4', 0.0866, 0.1344, 0.2042, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_sintesis` VALUES (5, 1, 5, 'C5', 0.0789, 0.1232, 0.1965, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_sintesis` VALUES (6, 1, 6, 'C6', 0.0409, 0.0614, 0.0922, '2020-12-21 00:59:31', NULL, NULL);
-INSERT INTO `t_sintesis` VALUES (7, 1, 7, 'C7', 0.0555, 0.0924, 0.1932, '2020-12-21 00:59:31', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (1, 1, 1, 'C1', 0.154189557, 0.238615960, 0.347815424, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (2, 1, 2, 'C2', 0.139211133, 0.212958321, 0.316898495, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (3, 1, 3, 'C3', 0.083056770, 0.137011737, 0.215774387, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (4, 1, 4, 'C4', 0.086581104, 0.134445980, 0.204180539, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (5, 1, 5, 'C5', 0.078945048, 0.123156622, 0.196451306, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (6, 1, 6, 'C6', 0.040872470, 0.061443914, 0.092152685, '2020-12-27 13:20:06', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (7, 1, 7, 'C7', 0.055508237, 0.092367470, 0.193230793, '2020-12-27 13:20:06', NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
