@@ -602,6 +602,77 @@ class Data_hitung extends CI_Controller {
 		
 	}
 
+	public function download_excel_sintesis($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		$arr_data_sintesis = $this->t_sintesis->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
+	
+		if(!$arr_data_sintesis) {
+			return redirect('data_hitung');
+		}
+		
+		$spreadsheet = $this->excel->spreadsheet_obj();
+		$writer = $this->excel->xlsx_obj($spreadsheet);
+		$number_format_obj = $this->excel->number_format_obj();
+
+		$spreadsheet
+			->getActiveSheet()
+			->getStyle('A1:AA100')
+			->getNumberFormat()
+			->setFormatCode($number_format_obj::FORMAT_TEXT);
+		
+		$sheet = $spreadsheet->getActiveSheet();
+		
+		//set cell A1
+		$sheet->getCell('A1')->setValue('');
+		$sheet->getCell('B1')->setValue('l');
+		$sheet->getCell('C1')->setValue('m');
+		$sheet->getCell('D1')->setValue('u');		
+
+		$startRow = 2;
+		$row = $startRow;
+		$idx_tbl = 0;
+		//$counter_kolom = 0;
+
+		foreach ($arr_data_sintesis as $k => $v) {
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl);
+			$sheet->getCell($cellnya.''.$row)->setValue($v->kode_kategori);
+			
+			$cellnya = $this->angka_ke_huruf($idx_tbl+1);
+			$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.$row, number_format((float)$v->sintesis_lower, 4));
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl+2);
+			$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.$row, number_format((float)$v->sintesis_medium, 4));
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl+3);
+			$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.$row, number_format((float)$v->sintesis_upper, 4));
+
+			$row++;
+		}	
+		
+		$filename = 'tabel-sintesis'.time();
+		
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"'); 
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+		
+	}
+
 	public function cetak_data_ahp($id_hitung = false)
 	{
 		$obj_date = new DateTime();
@@ -635,6 +706,35 @@ class Data_hitung extends CI_Controller {
 		$this->load->view('view_pdf_ahp', $retval);
 		$html = $this->load->view('view_pdf_ahp', $retval, true);
 	    $filename = 'tabel-ahp-'.time();
+	    $this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
+	}
+
+	public function cetak_data_sintesis($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		$arr_data_sintesis = $this->t_sintesis->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
+
+		if(!$arr_data_sintesis) {
+			return redirect('data_hitung');
+		}
+
+		$retval = [
+			'arr_data_sintesis' => $arr_data_sintesis,
+			'title' => 'Perhitungan Sintesis'
+		];
+		
+		$this->load->view('view_pdf_sintesis', $retval);
+		$html = $this->load->view('view_pdf_sintesis', $retval, true);
+	    $filename = 'tabel-sintesis-'.time();
 	    $this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
 	}
 
