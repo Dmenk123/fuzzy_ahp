@@ -411,8 +411,240 @@ class Data_hitung extends CI_Controller {
 		$this->template_view->load_view($content, $data);
 	}
 
-	
+	///////////////////////// excel pdf
+	public function download_excel_ahp($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
 
-	/////////////////////////
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		$data_himpunan_hitung = $this->t_hitung_det->get_data_himpunan_hitung($id_hitung);
+		$data_hitung = $this->t_hitung->get_by_id($id_hitung);
+
+		if(!$data_himpunan_hitung) {
+			return redirect('data_hitung');
+		}
+		
+		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');	
+		$data_tot_himpunan = $this->t_hitung_det->get_nilai_total_himpunan($id_hitung);
+
+		$spreadsheet = $this->excel->spreadsheet_obj();
+		$writer = $this->excel->xlsx_obj($spreadsheet);
+		$number_format_obj = $this->excel->number_format_obj();
+
+		$spreadsheet
+			->getActiveSheet()
+			->getStyle('A1:AA100')
+			->getNumberFormat()
+			->setFormatCode($number_format_obj::FORMAT_TEXT);
+		
+		$sheet = $spreadsheet->getActiveSheet();
+		
+		//set cell A1
+		$sheet->getCell('A1')->setValue('');		
+		
+		$idx = 1;
+		foreach ($kategori as $k => $v) {
+			$cellAwal = $this->angka_ke_huruf($idx);
+			$cellAkhir = $this->angka_ke_huruf($idx+2);
+
+			$spreadsheet->setActiveSheetIndex(0)->mergeCells($cellAwal.'1:'.$cellAkhir.'1');
+			$sheet->getCell($cellAwal.'1')->setValue($v->nama.' '.$v->kode_kategori);
+			
+			$idx += 3;
+		}
+		
+		//merging by kategori
+		$cellAwal = $this->angka_ke_huruf($idx);
+		$cellAkhir = $this->angka_ke_huruf($idx+2);
+		$spreadsheet->setActiveSheetIndex(0)->mergeCells($cellAwal.'1:'.$cellAkhir.'1');
+		$sheet->getCell($cellAwal.'1')->setValue('Total');
+
+		//set cell A2
+		$sheet->getCell('A2')->setValue('');
+
+		$idx = 1;
+		foreach ($kategori as $kk => $vv) {
+			$cellnya = $this->angka_ke_huruf($idx);
+			$sheet->setCellValue($cellnya.'2', 'l');
+
+			$cellnya = $this->angka_ke_huruf($idx+1);
+			$sheet->setCellValue($cellnya.'2', 'm');
+
+			$cellnya = $this->angka_ke_huruf($idx+2);
+			$sheet->setCellValue($cellnya.'2', 'u');
+
+			$idx += 3;
+		}
+
+		//kolom total
+		$cellnya = $this->angka_ke_huruf($idx);
+		$sheet->setCellValue($cellnya.'2', 'l');
+
+		$cellnya = $this->angka_ke_huruf($idx+1);
+		$sheet->setCellValue($cellnya.'2', 'm');
+
+		$cellnya = $this->angka_ke_huruf($idx+2);
+		$sheet->setCellValue($cellnya.'2', 'u');
+		
+		$startRow = 3;
+		$row = $startRow;
+		$idx_tbl = 0;
+		//$counter_kolom = 0;
+
+		foreach ($kategori as $kkk => $vvv) {
+			
+			//$counter_kolom = 0;
+			foreach ($data_himpunan_hitung as $key => $val) {
+				if($val->kode_kategori == $vvv->kode_kategori) {
+					//$yoyok[] = $val->kode_kategori;
+					//$yahya[] = $vvv->kode_kategori;
+					if($idx_tbl == 0){
+						$cellnya = $this->angka_ke_huruf($idx_tbl);
+						$sheet->setCellValue($cellnya.''.($row+$kkk), $vvv->kode_kategori);
+					
+						//$counter_kolom++;
+						$idx_tbl += 1;
+					}
+
+					if(number_format((float)$val->lower_val, 4) == '1.0000' && number_format((float)$val->medium_val, 4) == '1.0000' && number_format((float)$val->upper_val, 4) == '1.0000'){
+						## color red
+						$cellnya = $this->angka_ke_huruf($idx_tbl);
+						$sheet->getStyle($cellnya.''.($row+$kkk))->getNumberFormat()->setFormatCode('0.0000');
+						$sheet->getStyle($cellnya.''.($row+$kkk))->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+						$sheet->setCellValue($cellnya.''.($row+$kkk), number_format((float)$val->lower_val, 4));
+
+						$cellnya = $this->angka_ke_huruf($idx_tbl+1);
+						$sheet->getStyle($cellnya.''.($row+$kkk))->getNumberFormat()->setFormatCode('0.0000');
+						$sheet->getStyle($cellnya.''.($row+$kkk))->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+						$sheet->setCellValue($cellnya.''.($row+$kkk), number_format((float)$val->medium_val, 4));
+
+						$cellnya = $this->angka_ke_huruf($idx_tbl+2);
+						$sheet->getStyle($cellnya.''.($row+$kkk))->getNumberFormat()->setFormatCode('0.0000');
+						$sheet->getStyle($cellnya.''.($row+$kkk))->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+						$sheet->setCellValue($cellnya.''.($row+$kkk), number_format((float)$val->upper_val, 4));
+
+						}else{
+						$cellnya = $this->angka_ke_huruf($idx_tbl);
+						$sheet->getStyle($cellnya.''.($row+$kkk))->getNumberFormat()->setFormatCode('0.0000');
+						$sheet->setCellValue($cellnya.''.($row+$kkk), number_format((float)$val->lower_val, 4));
+
+						$cellnya = $this->angka_ke_huruf($idx_tbl+1);
+						$sheet->getStyle($cellnya.''.($row+$kkk))->getNumberFormat()->setFormatCode('0.0000');
+						$sheet->setCellValue($cellnya.''.($row+$kkk), number_format((float)$val->medium_val, 4));
+
+						$cellnya = $this->angka_ke_huruf($idx_tbl+2);
+						$sheet->getStyle($cellnya.''.($row+$kkk))->getNumberFormat()->setFormatCode('0.0000');
+						$sheet->setCellValue($cellnya.''.($row+$kkk), number_format((float)$val->upper_val, 4));
+					}
+
+					//$yahya[] = $row;
+			
+					## increment biar ga kenek kondisi
+					$idx_tbl += 3;
+					continue;
+				}
+				## reset
+				$idx_tbl = 0;
+			}
+			
+			//total
+			$cellnya = $this->angka_ke_huruf((count($kategori)*3)+1);
+			$sheet->getStyle($cellnya.''.($row+$kkk))->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.($row+$kkk), number_format((float)$data_tot_himpunan[$kkk]->total_lower, 4));
+			
+			//total
+			$cellnya = $this->angka_ke_huruf((count($kategori)*3)+2);
+			$sheet->getStyle($cellnya.''.($row+$kkk))->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.($row+$kkk), number_format((float)$data_tot_himpunan[$kkk]->total_medium, 4));
+
+			//total
+			$cellnya = $this->angka_ke_huruf((count($kategori)*3)+3);
+			$sheet->getStyle($cellnya.''.($row+$kkk))->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.($row+$kkk), number_format((float)$data_tot_himpunan[$kkk]->total_upper, 4));
+		}
+
+		//grand total merge
+		$cellAkhir = $this->angka_ke_huruf((count($kategori)*3));
+		$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.(count($kategori)+3).':'.$cellAkhir.''.(count($kategori)+3));
+		$sheet->getCell('A'.(count($kategori)+3))->setValue('Grand Total');
+
+		//grand total value
+		//total
+		$cellnya = $this->angka_ke_huruf((count($kategori)*3)+1);
+		$sheet->getStyle($cellnya.''.(count($kategori)+3))->getNumberFormat()->setFormatCode('0.0000');
+		$sheet->setCellValue($cellnya.''.(count($kategori)+3), number_format((float)$data_hitung->total_lower, 4));
+		
+		//total
+		$cellnya = $this->angka_ke_huruf((count($kategori)*3)+2);
+		$sheet->getStyle($cellnya.''.(count($kategori)+3))->getNumberFormat()->setFormatCode('0.0000');
+		$sheet->setCellValue($cellnya.''.(count($kategori)+3), number_format((float)$data_hitung->total_medium, 4));
+
+		//total
+		$cellnya = $this->angka_ke_huruf((count($kategori)*3)+3);
+		$sheet->getStyle($cellnya.''.(count($kategori)+3))->getNumberFormat()->setFormatCode('0.0000');
+		$sheet->setCellValue($cellnya.''.(count($kategori)+3), number_format((float)$data_hitung->total_upper, 4));
+		
+		
+		$filename = 'tabel-ahp'.time();
+		
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"'); 
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+		
+	}
+
+	public function cetak_data_ahp($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		$data_himpunan_hitung = $this->t_hitung_det->get_data_himpunan_hitung($id_hitung);
+		$data_hitung = $this->t_hitung->get_by_id($id_hitung);
+
+		if(!$data_himpunan_hitung) {
+			return redirect('data_hitung');
+		}
+		
+		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');	
+		$data_tot_himpunan = $this->t_hitung_det->get_nilai_total_himpunan($id_hitung);
+
+		$retval = [
+			'data_tot_himpunan' => $data_tot_himpunan,
+			'kategori' => $kategori,
+			'data_hitung' => $data_hitung,
+			'data_himpunan_hitung' => $data_himpunan_hitung,
+			'title' => 'Perhitungan AHP'
+		];
+		
+		$this->load->view('view_pdf_ahp', $retval);
+		$html = $this->load->view('view_pdf_ahp', $retval, true);
+	    $filename = 'tabel-ahp-'.time();
+	    $this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
+	}
+
+	public function angka_ke_huruf($angka)
+	{
+		foreach (range('A', 'Z') as $char) {
+			$arr[] =  $char;
+		}
+
+		return $arr[$angka];
+	}
 
 }
