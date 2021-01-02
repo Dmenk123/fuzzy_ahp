@@ -26,6 +26,30 @@ $data_kat = $this->db->get_Where('m_kategori', ['deleted_at' => null])->result()
             <?= $title; ?>
           </h3>
         </div>
+
+        <div class="kt-portlet__head-toolbar">
+          <div class="kt-portlet__head-wrapper">
+            <div class="kt-portlet__head-actions">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Download / Cetak</button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/download_excel_sintesis/'.$this->uri->segment(3);?>">
+                    <i class="la la-arrow-circle-o-down"></i> Excel Sintesis
+                  </a>
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/download_excel_hitung_vektor/'.$this->uri->segment(3);?>">
+                    <i class="la la-arrow-circle-o-down"></i> Excel Hitung Vektor
+                  </a>
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/cetak_data_sintesis/'.$this->uri->segment(3);?>">
+                    <i class="la la-print"></i> Cetak Sintesis
+                  </a>
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/cetak_data_hitung_vektor/'.$this->uri->segment(3);?>">
+                    <i class="la la-print"></i> Cetak Hitung Vektor
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="kt-portlet__body" id="sintesis_area">

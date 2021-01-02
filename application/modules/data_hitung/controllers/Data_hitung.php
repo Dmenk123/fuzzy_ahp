@@ -673,6 +673,97 @@ class Data_hitung extends CI_Controller {
 		
 	}
 
+	public function download_excel_hitung_vektor($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'hv.id_kategori_proses = k.id']
+		];
+
+		$data = $this->m_global->multi_row('hv.*, k.nama as nama_kategori', ['hv.id_hitung' => $id_hitung, 'hv.deleted_at' => null], 't_hitungan_vektor hv', $join, 'hv.id_kategori_proses asc, hv.kode_kategori asc');
+
+		if(!$data) {
+			return redirect('data_hitung');
+		}
+
+		$spreadsheet = $this->excel->spreadsheet_obj();
+		$writer = $this->excel->xlsx_obj($spreadsheet);
+		$number_format_obj = $this->excel->number_format_obj();
+
+		$spreadsheet
+			->getActiveSheet()
+			->getStyle('A1:AA100')
+			->getNumberFormat()
+			->setFormatCode($number_format_obj::FORMAT_TEXT);
+		
+		$sheet = $spreadsheet->getActiveSheet();
+		$spreadsheet->setActiveSheetIndex(0)->mergeCells('A1:E1');
+		$sheet->getCell('A1')->setValue('');
+
+		$sheet->getCell('F1')->setValue('Bawah');
+		$sheet->getCell('G1')->setValue('Total');
+		$sheet->getCell('h1')->setValue('');	
+
+		$startRow = 2;
+		$row = $startRow;
+		$idx_tbl = 0;
+		$flag_kode_kat = 'XXX'; 
+		foreach ($data as $k => $v) {
+			if($v->kode_kategori_proses != $flag_kode_kat) {
+				$flag_kode_kat = $v->kode_kategori_proses;
+				$cellnya = $this->angka_ke_huruf($idx_tbl);
+				$sheet->getCell($cellnya.''.$row)->setValue($v->kode_kategori_proses);
+			}else{
+				$cellnya = $this->angka_ke_huruf($idx_tbl);
+				$sheet->getCell($cellnya.''.$row)->setValue('');
+			}
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl+1);
+			$sheet->getCell($cellnya.''.$row)->setValue($v->kode_kategori);
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl+2);
+			$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.$row, number_format((float)$v->nilai_l, 4));
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl+3);
+			$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.$row, number_format((float)$v->nilai_m, 4));
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl+4);
+			$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.$row, number_format((float)$v->nilai_u, 4));
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl+5);
+			$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.$row, number_format((float)$v->bawah, 4));
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl+6);
+			$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.0000');
+			$sheet->setCellValue($cellnya.''.$row, number_format((float)$v->hasil, 4));
+
+			$row++;
+		}
+
+		$filename = 'tabel-proses-vektor'.time();
+		
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"'); 
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+
+	}
+
 	public function cetak_data_ahp($id_hitung = false)
 	{
 		$obj_date = new DateTime();
@@ -735,6 +826,39 @@ class Data_hitung extends CI_Controller {
 		$this->load->view('view_pdf_sintesis', $retval);
 		$html = $this->load->view('view_pdf_sintesis', $retval, true);
 	    $filename = 'tabel-sintesis-'.time();
+	    $this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
+	}
+
+	public function cetak_data_hitung_vektor($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'hv.id_kategori_proses = k.id']
+		];
+
+		$data = $this->m_global->multi_row('hv.*, k.nama as nama_kategori', ['hv.id_hitung' => $id_hitung, 'hv.deleted_at' => null], 't_hitungan_vektor hv', $join, 'hv.id_kategori_proses asc, hv.kode_kategori asc');
+
+		if(!$data) {
+			return redirect('data_hitung');
+		}
+
+		$retval = [
+			'data' => $data,
+			'title' => 'Proses Perhitungan Vektor'
+		];
+		
+		$this->load->view('view_pdf_hitung_vektor', $retval);
+		$html = $this->load->view('view_pdf_hitung_vektor', $retval, true);
+	    $filename = 'tabel-hitung-vektor-'.time();
 	    $this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
 	}
 
