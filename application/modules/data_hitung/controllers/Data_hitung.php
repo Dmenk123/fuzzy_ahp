@@ -764,6 +764,189 @@ class Data_hitung extends CI_Controller {
 
 	}
 
+	public function download_excel_vektor($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'tn.id_kategori = k.id']
+		];
+
+		$data = $this->m_global->multi_row('tn.*, k.nama as nama_kategori', ['tn.id_hitung' => $id_hitung, 'tn.deleted_at' => null], 't_normalisasi tn', $join, 'tn.id_kategori asc, tn.kode_kategori_tujuan asc');
+
+		$data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_by('urut', 'ASC')->get()->result();
+
+		if(!$data) {
+			return redirect('data_hitung');
+		}
+		
+		$spreadsheet = $this->excel->spreadsheet_obj();
+		$writer = $this->excel->xlsx_obj($spreadsheet);
+		$number_format_obj = $this->excel->number_format_obj();
+
+		$spreadsheet
+			->getActiveSheet()
+			->getStyle('A1:AA100')
+			->getNumberFormat()
+			->setFormatCode($number_format_obj::FORMAT_TEXT);
+		
+		$sheet = $spreadsheet->getActiveSheet();
+
+		//set cell A1
+		$sheet->getCell('A1')->setValue('');
+		
+		foreach ($data_kat as $key => $value) {
+			$cellnya = $this->angka_ke_huruf($key+1);
+			$sheet->getCell($cellnya.'1')->setValue($value->nama.' '.$value->kode_kategori);
+		}
+
+		$startRow = 2;
+		$row = $startRow;
+		$idx_tbl = 0;
+		$total_min = 0;
+		foreach ($data_kat as $kk => $vv) {
+
+			foreach ($data as $keys => $val) {
+				if($val->kode_kategori == $vv->kode_kategori) {
+					if($idx_tbl == 0){
+						$cellnya = $this->angka_ke_huruf($idx_tbl);
+						$sheet->getCell($cellnya.''.$row)->setValue($val->kode_kategori);
+						$idx_tbl++;
+					}
+
+					if($val->kode_kategori_tujuan == $vv->kode_kategori){
+						## color red
+						$cellnya = $this->angka_ke_huruf($idx_tbl);
+						$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.0000');
+						$sheet->getStyle($cellnya.''.$row)->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+						$sheet->setCellValue($cellnya.''.$row, number_format((float)$val->nilai, 4));
+					}else{
+						$cellnya = $this->angka_ke_huruf($idx_tbl);
+						$sheet->getStyle($cellnya.''.($row))->getNumberFormat()->setFormatCode('0.0000');
+						$sheet->setCellValue($cellnya.''.($row), number_format((float)$val->nilai, 4));
+					}
+
+					if($val->kode_kategori_tujuan == 'C1') {
+						$total_min += number_format((float)$val->nilai, 4);
+					}
+
+					## increment biar ga kenek kondisi
+                    $idx_tbl++;
+                    continue;
+				}
+
+				## reset
+				$idx_tbl = 0;
+			}
+
+			$row++;
+		}
+
+		$filename = 'tabel-vektor'.time();
+		
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"'); 
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+	}
+
+	public function download_excel_fuzzy($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'tn.id_kategori = k.id']
+		];
+
+		$data = $this->m_global->multi_row('tn.*, k.nama as nama_kategori', ['tn.id_hitung' => $id_hitung, 'tn.deleted_at' => null], 't_normalisasi tn', $join, 'tn.id_kategori asc, tn.kode_kategori_tujuan asc');
+
+		$data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_by('urut', 'ASC')->get()->result();
+
+		if(!$data) {
+			return redirect('data_hitung');
+		}
+
+		$spreadsheet = $this->excel->spreadsheet_obj();
+		$writer = $this->excel->xlsx_obj($spreadsheet);
+		$number_format_obj = $this->excel->number_format_obj();
+
+		$spreadsheet
+			->getActiveSheet()
+			->getStyle('A1:AA100')
+			->getNumberFormat()
+			->setFormatCode($number_format_obj::FORMAT_TEXT);
+		
+		$sheet = $spreadsheet->getActiveSheet();
+		
+		//set cell A1
+		$sheet->getCell('A1')->setValue('');
+		$sheet->getCell('B1')->setValue('DEFUZZIFIKASI');
+		$sheet->getCell('C1')->setValue('W=NORMALISASI');
+
+		$total_min = 0;
+		foreach ($data_kat as $kk => $vv) {
+			foreach ($data as $key => $val) {
+				if($val->kode_kategori == $vv->kode_kategori) {
+				 	if($val->kode_kategori_tujuan == 'C1') {
+						$total_min += number_format((float)$val->nilai, 4);
+					}
+				  
+				  	continue;
+				}
+			}
+		}
+
+		$startRow = 2;
+		$row = $startRow;
+		$idx_tbl = 0;
+
+		foreach ($data as $kkk => $vvv) {
+			if($vvv->kode_kategori_tujuan == 'C1') {
+				if($kkk == 0) {
+					$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.$row.':A'.(count($data_kat)+1));
+					$sheet->getCell('A'.$row)->setValue('MIN');
+				}
+
+				$cellnya = $this->angka_ke_huruf($idx_tbl+1);
+				$sheet->getStyle($cellnya.''.($row))->getNumberFormat()->setFormatCode('0.0000');
+				$sheet->setCellValue($cellnya.''.($row), number_format((float)$vvv->nilai, 4));
+
+				$cellnya = $this->angka_ke_huruf($idx_tbl+2);
+				$sheet->getStyle($cellnya.''.($row))->getNumberFormat()->setFormatCode('0.0000');
+				$sheet->setCellValue($cellnya.''.($row), number_format((float)$vvv->nilai/(float)$total_min, 4));
+
+				$row++;
+			}
+		} 
+
+		$filename = 'tabel-fuzzy'.time();
+		
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"'); 
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+	}
+
 	public function cetak_data_ahp($id_hitung = false)
 	{
 		$obj_date = new DateTime();
@@ -862,6 +1045,92 @@ class Data_hitung extends CI_Controller {
 	    $this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
 	}
 
+	public function cetak_data_vektor($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'tn.id_kategori = k.id']
+		];
+
+		$data = $this->m_global->multi_row('tn.*, k.nama as nama_kategori', ['tn.id_hitung' => $id_hitung, 'tn.deleted_at' => null], 't_normalisasi tn', $join, 'tn.id_kategori asc, tn.kode_kategori_tujuan asc');
+
+		$data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_by('urut', 'ASC')->get()->result();
+
+		if(!$data) {
+			return redirect('data_hitung');
+		}
+
+		$retval = [
+			'data' => $data,
+			'data_kat' => $data_kat,
+			'title' => 'Data Vektor'
+		];
+		
+		$this->load->view('view_pdf_vektor', $retval);
+		$html = $this->load->view('view_pdf_vektor', $retval, true);
+	    $filename = 'tabel-hitung-vektor-'.time();
+	    $this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
+	}
+
+	public function cetak_data_fuzzy($id_hitung = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+				
+		if($id_hitung == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_hitung = $this->enkripsi->enc_dec('decrypt', $id_hitung);
+		
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'tn.id_kategori = k.id']
+		];
+
+		$data = $this->m_global->multi_row('tn.*, k.nama as nama_kategori', ['tn.id_hitung' => $id_hitung, 'tn.deleted_at' => null], 't_normalisasi tn', $join, 'tn.id_kategori asc, tn.kode_kategori_tujuan asc');
+
+		$data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_by('urut', 'ASC')->get()->result();
+
+		$total_min = 0;
+		foreach ($data_kat as $kk => $vv) {
+			foreach ($data as $key => $val) {
+				if($val->kode_kategori == $vv->kode_kategori) {
+				 	if($val->kode_kategori_tujuan == 'C1') {
+						$total_min += number_format((float)$val->nilai, 4);
+					}
+				  
+				  	continue;
+				}
+			}
+		}
+
+		if(!$data) {
+			return redirect('data_hitung');
+		}
+
+		$retval = [
+			'data' => $data,
+			'data_kat' => $data_kat,
+			'total_min' => $total_min,
+			'title' => 'Data Defuzzifikasi'
+		];
+		
+		$this->load->view('view_pdf_fuzzy', $retval);
+		$html = $this->load->view('view_pdf_fuzzy', $retval, true);
+	    $filename = 'tabel-defuzzifikasi-'.time();
+	    $this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
+	}
 	public function angka_ke_huruf($angka)
 	{
 		foreach (range('A', 'Z') as $char) {
