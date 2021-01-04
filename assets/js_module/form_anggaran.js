@@ -98,7 +98,7 @@ $(document).ready(function() {
                                 response.pesan, 
                                 'success'
                             ).then(function() {
-                                window.location.href = base_url+"form_anggaran/formulir_anggaran/"+response.id_anggaran+'?kategori='+response.id_kategori;
+                                window.location.href = base_url+"form_anggaran/formulir_anggaran/"+response.id_anggaran+'?kategori='+response.id_kategori+'&tahun='+response.tahun_proyek;
                             });
                         }else{
                             for (var i = 0; i < response.inputerror.length; i++) 

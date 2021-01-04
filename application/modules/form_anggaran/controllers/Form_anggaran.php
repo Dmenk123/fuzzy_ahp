@@ -97,6 +97,7 @@ class Form_anggaran extends CI_Controller {
 		$timestamp = $obj_date->format('Y-m-d H:i:s');
 		$id = $this->t_anggaran->get_max_id();
 		$kat = $this->m_global->single_row('*', ['deleted_at' =>null], 'm_kategori', null, 'urut');
+		
 
 		if ($this->input->post('proyek') == '') {
 			$data['inputerror'][] = 'proyek';
@@ -106,6 +107,8 @@ class Form_anggaran extends CI_Controller {
 			return;
 		}
 		
+		$proyek = $this->m_global->single_row('*', ['id' =>$this->input->post('proyek'), 'deleted_at' =>null], 'm_proyek', null);
+
 		$this->db->trans_begin();
 		
 		## insert data header
@@ -124,12 +127,14 @@ class Form_anggaran extends CI_Controller {
 			$this->db->trans_rollback();
 			$retval['status'] = false;
 			$retval['id_anggaran'] = $this->enkripsi->enc_dec('encrypt', $id);
+			$retval['tahun_proyek'] = $proyek->tahun_proyek;
 			$retval['id_kategori'] = $this->enkripsi->enc_dec('encrypt', $kat->id);
 			$retval['pesan'] = 'Proses Hitung Anggaran Gagal';
 		}else{
 			$this->db->trans_commit();
 			$retval['status'] = true;
 			$retval['id_anggaran'] = $this->enkripsi->enc_dec('encrypt', $id);
+			$retval['tahun_proyek'] = $proyek->tahun_proyek;
 			$retval['id_kategori'] = $this->enkripsi->enc_dec('encrypt', $kat->id);
 			$retval['pesan'] = 'Proses Hitung Anggaran Sukses';
 		}
@@ -155,7 +160,7 @@ class Form_anggaran extends CI_Controller {
 			$data_anggaran = [];
 		}else{
 			$id = $this->enkripsi->enc_dec('decrypt', $id);
-			$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek', ['t_anggaran.id' => $id, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+			$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
 
 			if(!$data_anggaran) {
 				return redirect('form_anggaran');
@@ -179,14 +184,14 @@ class Form_anggaran extends CI_Controller {
 
 		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
 		
-		for ($i=1; $i <= count($kategori); $i++) { 
-			for ($z=1; $z <= $i; $z++) { 
-				if($i == $z) {
-					continue;
-				}
-				$retval[$kategori[$z-1]->kode_kategori][] = ['kode'=>$kategori[$i-1]->kode_kategori, 'nama' => $kategori[$i-1]->nama, 'id' => $kategori[$i-1]->id];
-			}
-		}
+		// for ($i=1; $i <= count($kategori); $i++) { 
+		// 	for ($z=1; $z <= $i; $z++) { 
+		// 		if($i == $z) {
+		// 			continue;
+		// 		}
+		// 		$retval[$kategori[$z-1]->kode_kategori][] = ['kode'=>$kategori[$i-1]->kode_kategori, 'nama' => $kategori[$i-1]->nama, 'id' => $kategori[$i-1]->id];
+		// 	}
+		// }
 		
 		/**
 		 * data passing ke halaman view content
@@ -195,7 +200,7 @@ class Form_anggaran extends CI_Controller {
 			'title' => 'Perhitungan Anggaran : ( Proyek '.$data_anggaran->nama_proyek.' )',
 			'data_user' => $data_user,
 			'kategori' => $kategori,
-			'step' => $retval,
+			'anggaran' => $data_anggaran,
 			'kriteria' => $kriteria,
 			'old_data' => $old_data,
 			'kat' => $kat
