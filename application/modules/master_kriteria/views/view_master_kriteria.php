@@ -38,6 +38,7 @@
               <th>Nama Kriteria</th>
               <th>Nama Kategori</th>
               <th>Urut</th>
+              <th>Satuan</th>
               <th style="width: 5%;">Aksi</th>
             </tr>
           </thead>

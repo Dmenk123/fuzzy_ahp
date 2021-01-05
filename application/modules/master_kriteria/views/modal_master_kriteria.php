@@ -38,6 +38,18 @@
             </select>
             <span class="help-block"></span>
           </div>
+          <div class="form-group">
+            <label for="" class="form-control-label">Satuan:</label>
+            <select name="satuan" id="satuan" class="form-control"> 
+              <?php 
+              $data_sat = $this->db->get_Where('m_satuan', ['deleted_at' => null])->result();
+              echo '<option value="">Silahkan Pilih Satuan</option>';
+              foreach ($data_sat as $k => $v) {
+                echo '<option value="'.$v->id.'">'.$v->nama.'</option>';
+              } ?>
+            </select>
+            <span class="help-block"></span>
+          </div>
         </form>
       </div>
       <div class="modal-footer">

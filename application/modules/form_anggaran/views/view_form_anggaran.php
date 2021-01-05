@@ -39,7 +39,7 @@
         <div class="kt-grid__item kt-grid__item--fluid kt-wizard-v2__wrapper">
 
           <!--begin: Form Wizard Form-->
-          <form class="kt-form" id="form_hitung_kategori">
+          <form class="kt-form" id="form_hitung_kategori" style="padding-right: 0px;">
             <input type="hidden" class="form-control" id="id_kategori" name="id_kategori" value="<?= $kat->id; ?>">
             <input type="hidden" class="form-control" id="id_hitung" name="id_hitung" value="<?= $this->enkripsi->enc_dec('decrypt',$this->uri->segment(3)); ?>">
             <!--begin: Form Wizard Step 1-->
@@ -63,10 +63,38 @@
                       <div class="col-xl-12">
                         <div class="form-group">
                           <?php foreach ($kategori as $k => $v) { ?>
-                            <!-- <label><?= $row['nama'].' ('.$row['kode'].')'; ?>:</label> -->
-                            <div class="form-group">
-                              <label><?=$v->nama;?></label>
-                              <input type="text" class="form-control form-control-sm" aria-describedby="" placeholder="">
+                            <?php $no = 1; ?>
+                            <h4><?= $v->nama; ?></h4>
+                            <hr>
+                            <div class="kt-section">
+                              <div class="kt-section__content">
+                                <table class="table table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th>Uraian</th>
+                                      <th>Satuan</th>
+                                      <th>qty</th>
+                                      <th>Harga Satuan</th>
+                                      <th>Harga Total</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <?php foreach ($kriteria as $kk => $vv) { ?>
+                                      <?php if($v->id == $vv->id_kategori) { ?>
+                                        <tr>
+                                          <th scope="row"><?=$no++;?></th>
+                                          <td width="30%"><?=$vv->nama;?></td>
+                                          <td width="10%"><input type="text" name="f_satuan[]" class="form-control form-control-sm"></td>
+                                          <td width="15%"><input type="text" name="f_qty[]" class="form-control form-control-sm"></td>
+                                          <td width="20%"><input type="text" name="f_harga[]" class="form-control form-control-sm"></td>
+                                          <td width="25%"><input type="text" name="f_harga_tot[]" class="form-control form-control-sm" readonly></td>
+                                        </tr>
+                                      <?php } ?>
+                                    <?php } ?>
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           <?php } ?>
                         </div>

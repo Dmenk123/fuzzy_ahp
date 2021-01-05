@@ -3,13 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class M_kriteria extends CI_Model
 {
 	var $table = 'm_kriteria';
-	var $column_search = ['m_kriteria.nama', 'm_kategori.nama', 'm_kriteria.urut'];
+	var $column_search = ['m_kriteria.nama', 'm_kategori.nama', 'm_kriteria.urut', 'm_satuan.nama'];
 	
 	var $column_order = [
 		null, 
 		'm_kriteria.nama',
 		'm_kategori.nama',
 		'm_kriteria.urut',
+		'm_satuan.nama',
 		null
 	];
 
@@ -24,9 +25,10 @@ class M_kriteria extends CI_Model
 
 	private function _get_datatables_query($term='')
 	{
-		$this->db->select('m_kriteria.*, m_kategori.nama as nama_kategori');
+		$this->db->select('m_kriteria.*, m_kategori.nama as nama_kategori, m_satuan.nama as nama_satuan');
 		$this->db->from($this->table);
 		$this->db->join('m_kategori', 'm_kriteria.id_kategori = m_kategori.id', 'left');
+		$this->db->join('m_satuan', 'm_kriteria.id_satuan = m_satuan.id', 'left');
 		$this->db->where('m_kriteria.deleted_at is null');
 		
 		$i = 0;

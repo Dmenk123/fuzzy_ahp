@@ -57,6 +57,7 @@ class Master_kriteria extends CI_Controller {
 			$row[] = $val->nama;
 			$row[] = $val->nama_kategori;
 			$row[] = $val->urut;
+			$row[] = $val->nama_satuan;
 			$str_aksi = '
 				<div class="btn-group">
 					<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Opsi</button>
@@ -111,6 +112,7 @@ class Master_kriteria extends CI_Controller {
 		$nama = trim(strtoupper(strtolower($this->input->post('nama'))));
 		$id_kategori = $this->input->post('kategori');
 		$urut_kriteria = $this->input->post('urut');
+		$id_satuan = $this->input->post('satuan');
 		
 		if ($arr_valid['status'] == FALSE) {
 			echo json_encode($arr_valid);
@@ -132,6 +134,7 @@ class Master_kriteria extends CI_Controller {
 			'id_kategori' => $id_kategori,
 			'nama' => $nama,
 			'urut' => $urut_kriteria,
+			'id_satuan' => $id_satuan,
 			'created_at' => $timestamp
 		];
 		
@@ -161,6 +164,7 @@ class Master_kriteria extends CI_Controller {
 		$nama = trim(strtoupper(strtolower($this->input->post('nama'))));
 		$id_kategori = $this->input->post('kategori');
 		$urut_kriteria = $this->input->post('urut');
+		$id_satuan = $this->input->post('satuan');
 
 		if ($arr_valid['status'] == FALSE) {
 			echo json_encode($arr_valid);
@@ -173,6 +177,7 @@ class Master_kriteria extends CI_Controller {
 			'nama' => $nama,
 			'id_kategori' => $id_kategori,
 			'urut' => $urut_kriteria,
+			'id_satuan' => $id_satuan,
 			'updated_at' => $timestamp
 		];
 

@@ -148,7 +148,7 @@ class Form_anggaran extends CI_Controller {
 		$data_user = $this->m_user->get_detail_user($id_user);
 		$id_kat = $this->enkripsi->enc_dec('decrypt', $this->input->get('kategori'));
 		$kat = $this->m_kategori->get_by_condition(['id' => $id_kat, 'deleted_at' => null], true);
-		$kriteria = $this->m_kriteria->get_by_condition(['id_kategori' => $id_kat, 'deleted_at' => null]);
+		$kriteria = $this->m_kriteria->get_by_condition(['deleted_at' => null]);
 
 		if(!$kat) {
 			return redirect('form_anggaran');
