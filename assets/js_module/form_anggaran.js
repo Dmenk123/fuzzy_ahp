@@ -7,6 +7,7 @@ $(document).ready(function() {
     $('input.numberinput').bind('keypress', function (e) {
         return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;
     });
+    
 
     $('#btn_next').click(function (e) { 
         e.preventDefault();
@@ -190,13 +191,14 @@ $(document).ready(function() {
 
     $('.step_kategori').click(function (e) { 
         e.preventDefault();
+        let id_anggaran = $(this).data('idanggaran');
         let id_kategori = $(this).data('kategori');
-        let id_hitung = $(this).data('idhitung');
+        let tahun = $(this).data('tahun');
        
-        if(id_hitung != false){
-            window.location.href = base_url+"hitung_ahp/formulir_hitung/"+id_hitung+"?kategori="+id_kategori;
+        if(id_anggaran != false){
+            window.location.href = base_url+"form_anggaran/formulir_anggaran/"+id_anggaran+"?kategori="+id_kategori+"&tahun="+tahun;
         }else{
-            window.location.href = base_url+"hitung_ahp/formulir_hitung?kategori="+id_kategori;
+            window.location.href = base_url+"form_anggaran/formulir_anggaran";
         }
         
     });
@@ -221,6 +223,18 @@ $(document).ready(function() {
         reset_modal_form();
     });
 });
+
+function hitungTotal(index){
+    let qty = $('#f_qty_'+index).maskMoney('unmasked')[0];
+    let harga = $('#f_harga_'+index).maskMoney('unmasked')[0];
+    let total = qty * harga;
+
+    $('#f_harga_tot_'+index).maskMoney('mask', total);
+    $('#f_qtyraw_'+index).val(qty);
+    $('#f_hargaraw_'+index).val(harga);
+    $('#f_harga_totraw_'+index).val(total);
+    // console.log(qty);
+}
 
 function add_menu()
 {

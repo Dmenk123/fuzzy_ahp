@@ -183,6 +183,7 @@ class Form_anggaran extends CI_Controller {
 		}
 
 		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
+		$satuan = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_satuan');
 		
 		// for ($i=1; $i <= count($kategori); $i++) { 
 		// 	for ($z=1; $z <= $i; $z++) { 
@@ -203,6 +204,7 @@ class Form_anggaran extends CI_Controller {
 			'anggaran' => $data_anggaran,
 			'kriteria' => $kriteria,
 			'old_data' => $old_data,
+			'satuan' => $satuan,
 			'kat' => $kat
 		);
 

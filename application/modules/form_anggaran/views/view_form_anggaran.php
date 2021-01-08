@@ -1,3 +1,9 @@
+<style>
+.kt-wizard-v2 .kt-wizard-v2__wrapper .kt-form {
+    width: 100%;
+    padding: 4rem 2rem 2rem;
+}
+</style>
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
   <div class="kt-portlet">
     
@@ -14,7 +20,7 @@
               <?php 
               // foreach ($kategori as $key => $value) {
               for ($i=(int)$anggaran->tahun_proyek; $i <= (int)$anggaran->tahun_akhir_proyek; $i++) { ?>
-                <div class="kt-wizard-v2__nav-item step_kategori" data-ktwizard-type="step" <?php if($_GET['tahun'] == $i) { echo 'data-ktwizard-state="current"'; }?> data-idhitung = "<?= $this->uri->segment(3); ?>">
+                <div class="kt-wizard-v2__nav-item step_kategori" data-ktwizard-type="step" <?php if($_GET['tahun'] == $i) { echo 'data-ktwizard-state="current"'; }?> data-idanggaran = "<?= $this->uri->segment(3); ?>" data-kategori = "<?= $_GET['kategori']; ?>" data-tahun = "<?= $i; ?>">
                   <div class="kt-wizard-v2__nav-body">
                     <div class="kt-wizard-v2__nav-icon">
                       <i class="flaticon-clipboard"></i>
@@ -39,7 +45,7 @@
         <div class="kt-grid__item kt-grid__item--fluid kt-wizard-v2__wrapper">
 
           <!--begin: Form Wizard Form-->
-          <form class="kt-form" id="form_hitung_kategori" style="padding-right: 0px;">
+          <form class="kt-form" id="form_hitung_kategori" style="">
             <input type="hidden" class="form-control" id="id_kategori" name="id_kategori" value="<?= $kat->id; ?>">
             <input type="hidden" class="form-control" id="id_hitung" name="id_hitung" value="<?= $this->enkripsi->enc_dec('decrypt',$this->uri->segment(3)); ?>">
             <!--begin: Form Wizard Step 1-->
@@ -67,34 +73,51 @@
                             <h4><?= $v->nama; ?></h4>
                             <hr>
                             <div class="kt-section">
-                              <div class="kt-section__content">
-                                <table class="table table-bordered">
-                                  <thead>
-                                    <tr>
-                                      <th>#</th>
-                                      <th>Uraian</th>
-                                      <th>Satuan</th>
-                                      <th>qty</th>
-                                      <th>Harga Satuan</th>
-                                      <th>Harga Total</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <?php foreach ($kriteria as $kk => $vv) { ?>
-                                      <?php if($v->id == $vv->id_kategori) { ?>
-                                        <tr>
-                                          <th scope="row"><?=$no++;?></th>
-                                          <td width="30%"><?=$vv->nama;?></td>
-                                          <td width="10%"><input type="text" name="f_satuan[]" class="form-control form-control-sm"></td>
-                                          <td width="15%"><input type="text" name="f_qty[]" class="form-control form-control-sm"></td>
-                                          <td width="20%"><input type="text" name="f_harga[]" class="form-control form-control-sm"></td>
-                                          <td width="25%"><input type="text" name="f_harga_tot[]" class="form-control form-control-sm" readonly></td>
-                                        </tr>
+                              
+                                <div class="kt-section__content table-responsive">
+                                  <table class="table table-bordered">
+                                    <thead>
+                                      <tr>
+                                        <th>#</th>
+                                        <th>Uraian</th>
+                                        <th>Satuan</th>
+                                        <th>qty</th>
+                                        <th>Harga Satuan</th>
+                                        <th>Harga Total</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <?php foreach ($kriteria as $kk => $vv) { ?>
+                                        <?php if($v->id == $vv->id_kategori) { ?>
+                                          <tr>
+                                            <th scope="row"><?=$no++;?></th>
+                                            <td width="30%"><?=$vv->nama;?></td>
+                                            <td width="13%">
+                                              <select name="f_satuan[]" class="form-control form-control-sm">
+                                                <?php foreach ($satuan as $key => $value) { ?>
+                                                  <option value="<?= $value->id; ?>" <?php if($vv->id_satuan == $value->id){echo 'selected'; }?>><?= $value->kode; ?></option>
+                                                <?php } ?>
+                                              </select>
+                                            </td>
+                                            <td width="15%">
+                                              <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)">
+                                              <input type="hidden" id="f_qtyraw_<?=$kk;?>" name="f_qtyraw[]" class="form-control form-control-sm">
+                                            </td>
+                                            <td width="20%">
+                                              <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)">
+                                              <input type="hidden" id="f_hargaraw_<?=$kk;?>" name="f_hargaraw[]" class="form-control form-control-sm">
+                                            </td>
+                                            <td width="25%">
+                                              <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney" disabled value="0">
+                                              <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm">
+                                            </td>
+                                          </tr>
+                                        <?php } ?>
                                       <?php } ?>
-                                    <?php } ?>
-                                  </tbody>
-                                </table>
-                              </div>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              
                             </div>
                           <?php } ?>
                         </div>

@@ -49,7 +49,7 @@
         <script src="<?= base_url('assets/template/'); ?>assets/plugins/custom/datatables/datatables.bundle.js" type="text/javascript"></script>
         <script src="<?= base_url('assets/'); ?>plugins/ckeditor/ckeditor.js" type="text/javascript"></script>
         <script src="<?= base_url('assets/'); ?>plugins/ckeditor/adapters/jquery.js" type="text/javascript"></script>
-        <script src="<?= base_url('assets/'); ?>plugins/jquery-mask/jquery.mask.min.js" type="text/javascript"></script>
+        <script src="<?= base_url('assets/'); ?>plugins/jquery-mask-money/dist/jquery.maskMoney.min.js" type="text/javascript"></script>
         <!--end::Global Theme Bundle -->
         
         <!-- begin::Global Config(global config for global JS sciprts) -->
@@ -125,6 +125,35 @@
                 $('input.numberinput').bind('keypress', function (e) {
                     return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;
                 });
+
+                // var options =  {
+                //     // onComplete: function(cep) {
+                //     //     alert('CEP Completed!:' + cep);
+                //     // },
+                    
+                //     onKeyPress: function(cep, event, currentField, options){
+                //         // console.log('A key was pressed!:', cep, ' event: ', event, 'currentField: ', currentField, ' options: ', options);
+
+                //         //ambil data index attribute value
+                //         let idx = event.currentTarget.attributes[1].nodeValue;
+                //         // console.log(idx);
+                //         let val_exist = $('#f_harga_tot_'+idx).val();
+                //         console.log(parseInt(cep) * parseInt(val_exist));
+                //         // $('#f_harga_tot_'+idx).val(parseInt(cep) * parseInt(val_exist));
+                //         $('#f_harga_tot_'+idx).val(cep);
+                //     },
+
+                //     // onChange: function(cep){
+                //     //     console.log('cep changed! ', cep);
+                //     // },
+
+                //     // onInvalid: function(val, e, f, invalid, options){
+                //     //     var error = invalid[0];
+                //     //     console.log ("Digit: ", error.v, " is invalid for the position: ", error.p, ". We expect something like: ", error.e);
+                //     // }
+                // };
+
+                $('.maskmoney').maskMoney();
             });
         </script>
         <?php if(isset($link_js)) { ?>
