@@ -47,7 +47,8 @@
           <!--begin: Form Wizard Form-->
           <form class="kt-form" id="form_hitung_kategori" style="">
             <input type="hidden" class="form-control" id="id_kategori" name="id_kategori" value="<?= $kat->id; ?>">
-            <input type="hidden" class="form-control" id="id_hitung" name="id_hitung" value="<?= $this->enkripsi->enc_dec('decrypt',$this->uri->segment(3)); ?>">
+            <input type="hidden" class="form-control" id="id_anggaran" name="id_anggaran" value="<?= $this->enkripsi->enc_dec('decrypt',$this->uri->segment(3)); ?>">
+            <input type="hidden" class="form-control" id="tahun_anggaran" name="tahun_anggaran" value="<?= $anggaran->tahun_proyek; ?>">
             <!--begin: Form Wizard Step 1-->
             <div class="kt-wizard-v2__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
               <?php 
@@ -87,31 +88,72 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      <?php foreach ($kriteria as $kk => $vv) { ?>
-                                        <?php if($v->id == $vv->id_kategori) { ?>
-                                          <tr>
-                                            <th scope="row"><?=$no++;?></th>
-                                            <td width="30%"><?=$vv->nama;?></td>
-                                            <td width="13%">
-                                              <select name="f_satuan[]" class="form-control form-control-sm">
-                                                <?php foreach ($satuan as $key => $value) { ?>
-                                                  <option value="<?= $value->id; ?>" <?php if($vv->id_satuan == $value->id){echo 'selected'; }?>><?= $value->kode; ?></option>
-                                                <?php } ?>
-                                              </select>
-                                            </td>
-                                            <td width="15%">
-                                              <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)">
-                                              <input type="hidden" id="f_qtyraw_<?=$kk;?>" name="f_qtyraw[]" class="form-control form-control-sm">
-                                            </td>
-                                            <td width="20%">
-                                              <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)">
-                                              <input type="hidden" id="f_hargaraw_<?=$kk;?>" name="f_hargaraw[]" class="form-control form-control-sm">
-                                            </td>
-                                            <td width="25%">
-                                              <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney" disabled value="0">
-                                              <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm">
-                                            </td>
-                                          </tr>
+                                      <?php if(!$old_data) { ?>
+                                        <?php foreach ($kriteria as $kk => $vv) { ?>
+                                          <?php if($v->id == $vv->id_kategori) { ?>
+                                            <tr>
+                                              <th scope="row">
+                                                <input type="hidden" name="f_id_kategori[]" class="form-control form-control-sm" value="<?=$vv->id_kategori;?>">
+                                                <input type="hidden" name="f_kode_kategori[]" class="form-control form-control-sm" value="<?=$v->kode_kategori;?>">
+                                                <input type="hidden" name="f_id_kriteria[]" class="form-control form-control-sm" value="<?=$vv->id;?>">
+                                                <?=$no++;?>
+                                              </th>
+                                              <td width="30%"><?=$vv->nama;?></td>
+                                              <td width="13%">
+                                                <select name="f_satuan[]" class="form-control form-control-sm">
+                                                  <?php foreach ($satuan as $key => $value) { ?>
+                                                    <option value="<?= $value->id; ?>" <?php if($vv->id_satuan == $value->id){echo 'selected'; }?>><?= $value->kode; ?></option>
+                                                  <?php } ?>
+                                                </select>
+                                              </td>
+                                              <td width="15%">
+                                                <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)">
+                                                <input type="hidden" id="f_qtyraw_<?=$kk;?>" name="f_qtyraw[]" class="form-control form-control-sm">
+                                              </td>
+                                              <td width="20%">
+                                                <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)">
+                                                <input type="hidden" id="f_hargaraw_<?=$kk;?>" name="f_hargaraw[]" class="form-control form-control-sm">
+                                              </td>
+                                              <td width="25%">
+                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney" disabled value="0">
+                                                <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm">
+                                              </td>
+                                            </tr>
+                                          <?php } ?>
+                                        <?php } ?>
+                                      <?php }else{ ?> 
+                                        <!-- jika data exist !! -->
+                                        <?php foreach ($old_data as $kk => $vv) { ?>
+                                          <?php if($v->id == $vv->id_kategori) { ?>
+                                            <tr>
+                                              <th scope="row">
+                                                <input type="hidden" name="f_id_kategori[]" class="form-control form-control-sm" value="<?=$vv->id_kategori;?>">
+                                                <input type="hidden" name="f_kode_kategori[]" class="form-control form-control-sm" value="<?=$vv->kode_kategori;?>">
+                                                <input type="hidden" name="f_id_kriteria[]" class="form-control form-control-sm" value="<?=$vv->id_kriteria;?>">
+                                                <?=$no++;?>
+                                              </th>
+                                              <td width="30%"><?=$vv->nama_kriteria;?></td>
+                                              <td width="13%">
+                                                <select name="f_satuan[]" class="form-control form-control-sm">
+                                                  <?php foreach ($satuan as $key => $value) { ?>
+                                                    <option value="<?= $value->id; ?>" <?php if($vv->id_satuan == $value->id){echo 'selected'; }?>><?= $value->kode; ?></option>
+                                                  <?php } ?>
+                                                </select>
+                                              </td>
+                                              <td width="15%">
+                                                <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',(float)$vv->qty); ?>">
+                                                <input type="hidden" id="f_qtyraw_<?=$kk;?>" name="f_qtyraw[]" class="form-control form-control-sm" value="<?= $vv->qty; ?>">
+                                              </td>
+                                              <td width="20%">
+                                                <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',(float)$vv->harga_satuan); ?>">
+                                                <input type="hidden" id="f_hargaraw_<?=$kk;?>" name="f_hargaraw[]" class="form-control form-control-sm" value="<?= $vv->harga_satuan; ?>">
+                                              </td>
+                                              <td width="25%">
+                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney" disabled value="<?= str_ireplace('.',',',(float)$vv->harga_total); ?>">
+                                                <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm" value="<?= $vv->harga_total; ?>">
+                                              </td>
+                                            </tr>
+                                          <?php } ?>
                                         <?php } ?>
                                       <?php } ?>
                                     </tbody>
@@ -130,24 +172,6 @@
             </div>
             <!--end: Form Wizard Step 1-->
 
-            <!--begin: Form Actions -->
-            <!-- <div class="kt-form__actions">
-              <button class="btn btn-secondary btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" data-ktwizard-type="action-prev">
-                Sebelumnya
-              </button>
-              <button class="btn btn-success btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" data-ktwizard-type="action-submit">
-                Selesai
-              </button>
-              <button class="btn btn-brand btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" data-ktwizard-type="action-next">
-                Selanjutnya
-              </button>
-            </div> -->
-
-            <?php 
-              $arr_key = count($step);
-              $last_index_kategori = $arr_key;
-            ?>
-
             <div class="kt-form__actions">
               <?php if ($kat->kode_kategori != 'C1') { ?>
               <button type="button" class="btn btn-secondary btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" id="btn_prev">
@@ -155,7 +179,7 @@
               </button>
               <?php } ?>
 
-              <?php if ($this->enkripsi->enc_dec('decrypt', $this->input->get('kategori')) == $last_index_kategori) { ?>
+              <?php if ($this->input->get('tahun') == $anggaran->tahun_akhir_proyek) { ?>
               <button type="button" class="btn btn-success btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" id="btn_finish">
                 Selesai
               </button>

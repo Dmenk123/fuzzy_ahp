@@ -2,7 +2,7 @@ var save_method;
 var table;
 
 $(document).ready(function() {
-
+    $('.maskmoney').maskMoney('mask')
     //force integer input in textfield
     $('input.numberinput').bind('keypress', function (e) {
         return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;
@@ -28,7 +28,7 @@ $(document).ready(function() {
                 $.ajax({
                     type: "POST",
                     enctype: 'multipart/form-data',
-                    url: base_url+'hitung_ahp/next_step',
+                    url: base_url+'form_anggaran/next_step',
                     data: data,
                     dataType: "JSON",
                     processData: false,
@@ -43,7 +43,7 @@ $(document).ready(function() {
                                     response.pesan, 
                                     'success'
                                 ).then(function() {
-                                    window.location.href = base_url+"hitung_ahp/formulir_hitung/"+response.data_step.id_hitung+'?kategori='+response.data_step.next_step;
+                                    window.location.href = base_url+"form_anggaran/formulir_anggaran/"+response.data_step.id_anggaran+'?kategori='+response.data_step.id_kategori+"&tahun="+response.data_step.tahun;
                                 });
                             }
                         }
@@ -228,12 +228,13 @@ function hitungTotal(index){
     let qty = $('#f_qty_'+index).maskMoney('unmasked')[0];
     let harga = $('#f_harga_'+index).maskMoney('unmasked')[0];
     let total = qty * harga;
-
-    $('#f_harga_tot_'+index).maskMoney('mask', total);
+    let total_new = Number(total.toFixed(2));
+    
+    $('#f_harga_tot_'+index).maskMoney('mask', total_new);
     $('#f_qtyraw_'+index).val(qty);
     $('#f_hargaraw_'+index).val(harga);
-    $('#f_harga_totraw_'+index).val(total);
-    // console.log(qty);
+
+    $('#f_harga_totraw_'+index).val(total_new);
 }
 
 function add_menu()

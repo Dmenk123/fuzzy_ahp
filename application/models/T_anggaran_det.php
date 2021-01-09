@@ -63,28 +63,14 @@ class T_anggaran_det extends CI_Model
 		} 
 	}
 
-	public function get_nilai_total_himpunan($id_hitung)
+	public function ambil_data_tot_harga($id_anggaran, $tahun_anggaran)
 	{
-		$this->db->select('h_det.kode_kategori, sum(hp.lower_val) as total_lower, sum(hp.medium_val) as total_medium, sum(hp.upper_val) as total_upper');
-		$this->db->from($this->table.' as h_det');
-		$this->db->join('m_himpunan hp', 'h_det.id_himpunan = hp.id', 'left');
-		$this->db->where(['h_det.id_hitung' => $id_hitung, 'hp.deleted_at' => null]);
-		$this->db->group_by('h_det.kode_kategori');
-		$this->db->order_by('h_det.kode_kategori', 'asc');
+		$this->db->select('sum(harga_total) as total, kode_kategori, id_kategori, id_anggaran, tahun');
+		$this->db->from($this->table.' as det');
+		$this->db->where(['id_anggaran' => $id_anggaran, 'tahun' => $tahun_anggaran]);
+		$this->db->group_by('id_kategori');
 		$query = $this->db->get();
 		return $query->result();
 	}
 
-	public function get_data_himpunan_hitung($id_hitung)
-	{
-		$this->db->select('h_det.id, h_det.id_himpunan, h_det.kode_kategori, hp.lower_val, hp.medium_val, hp.upper_val, h_det.kode_kategori_tujuan, h_det.flag_proses_kode_kategori, hp.nama, hp.lower_txt, hp.medium_txt, hp.upper_txt, ka.nama as nama_kategori');
-		$this->db->from($this->table.' as h_det');
-		$this->db->join('m_himpunan hp', 'h_det.id_himpunan = hp.id', 'left');
-		$this->db->join('t_hitung h', 'h_det.id_hitung = h.id', 'left');
-		$this->db->join('m_kategori ka', 'h_det.id_kategori = ka.id', 'left');
-		$this->db->where(['h_det.id_hitung' => $id_hitung, 'hp.deleted_at' => null]);
-		$this->db->order_by('h_det.kode_kategori ASC, h_det.kode_kategori_tujuan ASC');
-		$query = $this->db->get();
-		return $query->result();
-	}
 }
