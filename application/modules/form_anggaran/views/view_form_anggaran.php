@@ -48,7 +48,7 @@
           <form class="kt-form" id="form_hitung_kategori" style="">
             <input type="hidden" class="form-control" id="id_kategori" name="id_kategori" value="<?= $kat->id; ?>">
             <input type="hidden" class="form-control" id="id_anggaran" name="id_anggaran" value="<?= $this->enkripsi->enc_dec('decrypt',$this->uri->segment(3)); ?>">
-            <input type="hidden" class="form-control" id="tahun_anggaran" name="tahun_anggaran" value="<?= $anggaran->tahun_proyek; ?>">
+            <input type="hidden" class="form-control" id="tahun_anggaran" name="tahun_anggaran" value="<?= $this->input->get('tahun'); ?>">
             <!--begin: Form Wizard Step 1-->
             <div class="kt-wizard-v2__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
               <?php 
@@ -70,7 +70,10 @@
                       <div class="col-xl-12">
                         <div class="form-group">
                           <?php foreach ($kategori as $k => $v) { ?>
-                            <?php $no = 1; ?>
+                            <?php 
+                              $no = 1; 
+                              $grand_total_kat = 0;
+                            ?>
                             <h4><?= $v->nama; ?></h4>
                             <hr>
                             <div class="kt-section">
@@ -90,11 +93,32 @@
                                     <tbody>
                                       <?php if(!$old_data) { ?>
                                         <?php foreach ($kriteria as $kk => $vv) { ?>
+                                          <?php 
+                                            $kat_ini = $kriteria[$kk]->id_kategori;
+                                            
+                                            if(count($kriteria)-1 == $kk) {
+                                              $kat_next = $kriteria[$kk]->id_kategori;
+                                            }else{
+                                              $kat_next = $kriteria[$kk+1]->id_kategori;
+                                            }
+
+                                            if($kat_ini != $kat_next) {
+                                              $is_kolom_total = true;
+                                            }else{
+                                              if(count($kriteria)-1 == $kk) {
+                                                $is_kolom_total = true;
+                                              }else{
+                                                $is_kolom_total = false;
+                                              }
+                                            }
+                                          ?>
+
                                           <?php if($v->id == $vv->id_kategori) { ?>
+                                            <?php $grand_total_kat += 0;?>
                                             <tr>
                                               <th scope="row">
                                                 <input type="hidden" name="f_id_kategori[]" class="form-control form-control-sm" value="<?=$vv->id_kategori;?>">
-                                                <input type="hidden" name="f_kode_kategori[]" class="form-control form-control-sm" value="<?=$v->kode_kategori;?>">
+                                                <input type="hidden" name ="f_kode_kategori[]" class="form-control form-control-sm" value="<?=$v->kode_kategori;?>">
                                                 <input type="hidden" name="f_id_kriteria[]" class="form-control form-control-sm" value="<?=$vv->id;?>">
                                                 <?=$no++;?>
                                               </th>
@@ -115,16 +139,46 @@
                                                 <input type="hidden" id="f_hargaraw_<?=$kk;?>" name="f_hargaraw[]" class="form-control form-control-sm">
                                               </td>
                                               <td width="25%">
-                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney" disabled value="0">
+                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney <?='totale_mbah'.$k?>" data-id="<?=$k;?>" disabled value="0">
                                                 <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm">
                                               </td>
                                             </tr>
+                                            <?php if($is_kolom_total) { ?>
+                                              <tr>
+                                                <th scope="row" colspan="5">Total </th>
+                                                <td>
+                                                  <input type="text" name="f_grand_tot[]" id="f_grand_tot_<?=$k;?>" class="form-control form-control-sm maskmoney" disabled value="<?= $grand_total_kat; ?>">
+                                                  <input type="hidden" id="f_grand_totraw_<?=$k;?>" name="f_grand_totraw[]" class="form-control form-control-sm" value="0">
+                                                </td>
+                                              </tr>
+                                            <?php } ?>
                                           <?php } ?>
                                         <?php } ?>
                                       <?php }else{ ?> 
                                         <!-- jika data exist !! -->
                                         <?php foreach ($old_data as $kk => $vv) { ?>
+                                          <?php 
+                                            $kat_ini = $old_data[$kk]->id_kategori;
+                                            
+                                            if(count($old_data)-1 == $kk) {
+                                              $kat_next = $old_data[$kk]->id_kategori;
+                                            }else{
+                                              $kat_next = $old_data[$kk+1]->id_kategori;
+                                            }
+
+                                            if($kat_ini != $kat_next) {
+                                              $is_kolom_total = true;
+                                            }else{
+                                              if(count($old_data)-1 == $kk) {
+                                                $is_kolom_total = true;
+                                              }else{
+                                                $is_kolom_total = false;
+                                              }
+                                            }
+                                          ?>
+                                          
                                           <?php if($v->id == $vv->id_kategori) { ?>
+                                            <?php $grand_total_kat += $vv->harga_total;?>
                                             <tr>
                                               <th scope="row">
                                                 <input type="hidden" name="f_id_kategori[]" class="form-control form-control-sm" value="<?=$vv->id_kategori;?>">
@@ -141,18 +195,27 @@
                                                 </select>
                                               </td>
                                               <td width="15%">
-                                                <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',(float)$vv->qty); ?>">
+                                                <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',$vv->qty); ?>">
                                                 <input type="hidden" id="f_qtyraw_<?=$kk;?>" name="f_qtyraw[]" class="form-control form-control-sm" value="<?= $vv->qty; ?>">
                                               </td>
                                               <td width="20%">
-                                                <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',(float)$vv->harga_satuan); ?>">
+                                                <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',$vv->harga_satuan); ?>">
                                                 <input type="hidden" id="f_hargaraw_<?=$kk;?>" name="f_hargaraw[]" class="form-control form-control-sm" value="<?= $vv->harga_satuan; ?>">
                                               </td>
                                               <td width="25%">
-                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney" disabled value="<?= str_ireplace('.',',',(float)$vv->harga_total); ?>">
+                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney <?='totale_mbah'.$k?>" disabled value="<?= $vv->harga_total; ?>" data-id="<?=$k;?>">
                                                 <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm" value="<?= $vv->harga_total; ?>">
                                               </td>
                                             </tr>
+                                            <?php if($is_kolom_total) { ?>
+                                              <tr>
+                                                <th scope="row" colspan="5">Total </th>
+                                                <td>
+                                                  <input type="text" name="f_grand_tot[]" id="f_grand_tot_<?=$k;?>" class="form-control form-control-sm maskmoney" disabled value="<?= $grand_total_kat; ?>">
+                                                  <input type="hidden" id="f_grand_totraw_<?=$k;?>" name="f_grand_totraw[]" class="form-control form-control-sm" value="<?= $vv->harga_total; ?>">
+                                                </td>
+                                              </tr>
+                                            <?php } ?>
                                           <?php } ?>
                                         <?php } ?>
                                       <?php } ?>

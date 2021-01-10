@@ -95,6 +95,27 @@ $obj_date = new DateTime();
                 </div>
               </div>
             </div>
+
+            <div class="col-lg-6 div_menu" style="cursor:pointer" 
+            onclick="javascript:window.location.href='<?=base_url('data_hitung/list_detail_data/').$this->enkripsi->enc_dec('encrypt', 'tabel_anggaran');?>'">
+              <div class="kt-portlet kt-iconbox kt-iconbox--wave">
+                <div class="kt-portlet__body">
+                  <div class="kt-iconbox__body">
+                    <div class="kt-iconbox__icon">
+                      <img src="<?= base_url('assets/svg_icons/tag.svg');?>" width="40px" height="40px"> 
+                    </div>
+                    <div class="kt-iconbox__desc">
+                      <h5 class="kt-iconbox__title">
+                        Tabel Anggaran
+                      </h5>
+                      <div class="kt-iconbox__content">
+                        Tabel Anggaran
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             
           </div>
         </div>

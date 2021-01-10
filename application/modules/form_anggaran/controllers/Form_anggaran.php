@@ -278,22 +278,22 @@ class Form_anggaran extends CI_Controller {
 				'id_kriteria' => $this->input->post('f_id_kriteria')[$value],
 				'urut' => $key+1,
 				'id_satuan' => $this->input->post('f_satuan')[$value],
-				'qty' => $this->input->post('f_qtyraw')[$value],
-				'harga_satuan' => $this->input->post('f_hargaraw')[$value],
-				'harga_total' => $this->input->post('f_harga_totraw')[$value],
+				'qty' => (float)$this->input->post('f_qtyraw')[$value],
+				'harga_satuan' => (float)$this->input->post('f_hargaraw')[$value],
+				'harga_total' => (float)$this->input->post('f_harga_totraw')[$value],
 				'created_at' => $timestamp
 			];
-			
+
 			$insert = $this->t_anggaran_det->save($data_ins);
+
+			$kampes[] = $data_ins;
 		}
 
-		## ambil data det, sum harga_total by kategori
-		$total_harga_kat = $this->t_anggaran_det->ambil_data_tot_harga($id_anggaran, $tahun_anggaran);
 		
-		## update ke anggaran
-		// $json_data_anggaran = json_encode($total_harga_kat);
-		// $data_upd = ['data_json' => $json_data_anggaran];
-		// $upd = $this->m_global->update('t_anggaran', $data_upd, ['id' => $id_anggaran]);
+		// echo "<pre>";
+		// print_r ($kampes);
+		// echo "</pre>";
+		// exit;
 		
 
 		$data_step = [
@@ -321,347 +321,76 @@ class Form_anggaran extends CI_Controller {
 	{
 		$obj_date = new DateTime();
 		$timestamp = $obj_date->format('Y-m-d H:i:s');
-		$id_hitung = $this->input->post('id_hitung');
+		$id_anggaran = $this->input->post('id_anggaran');
 		$id_kategori = $this->input->post('id_kategori');
+		$tahun_anggaran = $this->input->post('tahun_anggaran');
 
-		## id kategori terpilih
-		$data_kategori_row = $this->m_global->single_row('*', ['id' => $id_kategori, 'deleted_at' => null], 'm_kategori');
+		$jumlah_form = count($this->input->post('f_qty')); 
 
-		$id_kategori = $data_kategori_row->id;
-		$step_kategori = $data_kategori_row->kode_kategori;
-
-		## data kategori
-		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
-
-		##cari himpunan 1 = 1
-		$q_himpunan_sama = $this->m_global->single_row('*', ['is_sama_penting' => 1, 'deleted_at' =>null], 'm_himpunan');
-		
-		for ($i=1; $i <= count($kategori); $i++) {
-			for ($z=1; $z <= $i; $z++) { 
-				if($i == $z) {
-					continue;
-				}
-
-				$step[$kategori[$z-1]->kode_kategori][] = [
-					'kode'=>$kategori[$i-1]->kode_kategori, 
-					'nama' => $kategori[$i-1]->nama,
-					'id' => $kategori[$i-1]->id
-				];
+		//loop filter yg ada value
+		for ($i=0; $i < $jumlah_form; $i++) {
+			if($this->input->post('f_qty')[$i] != '') {
+				$arr_kolom[] = $i;
 			}
 		}
 
-		$old_data = $this->m_global->multi_row('*', [
-			'id_hitung' => $id_hitung,
-			'kode_kategori' => $step_kategori, 
-			'id_himpunan !=' => $q_himpunan_sama->id,
-			'flag_proses_kode_kategori' => $step_kategori
-		], 't_hitung_det', NULL, 'id');
+		$old_data = $this->m_global->multi_row('*', ['id_anggaran' => $id_anggaran,'tahun =' => $tahun_anggaran], 't_anggaran_det');
 
-		
-		// echo "<pre>";
-		// print_r ($step);
-		// echo "</pre>";
-		// exit;
 		$this->db->trans_begin();
 		
 		if($old_data) {
 			## delete
-			$del = $this->m_global->delete(['id_hitung' => $id_hitung, 'flag_proses_id_kategori' => $id_kategori], 't_hitung_det');
+			$del = $this->m_global->delete(['id_anggaran' => $id_anggaran, 'tahun' => $tahun_anggaran], 't_anggaran_det');
 		}
 
-		## insert awalan misal ci -> ci, c2 -> c2 berdasarkan kriterianya
-		$ins_awal = [
-			'id' => $this->t_hitung_det->get_max_id(),
-			'id_hitung' => $id_hitung,
-			'id_kategori' => $id_kategori,
-			'kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
-			'id_himpunan' => $q_himpunan_sama->id,
-			'id_kategori_tujuan' => $id_kategori,
-			'kode_kategori_tujuan' => trim(strtoupper(strtolower($step_kategori))),
-			'flag_proses_id_kategori' => $id_kategori,
-			'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
-			'created_at' => $timestamp
-		];
-		
-		$insert = $this->t_hitung_det->save($ins_awal);
-
-		foreach ($step[$step_kategori] as $key => $value) {
+		foreach ($arr_kolom as $key => $value) {
 			### insert
 			$data_ins = [
-				'id' => $this->t_hitung_det->get_max_id(),
-				'id_hitung' => $id_hitung,
-				'id_kategori' => $id_kategori,
-				'kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
-				'id_himpunan' => $this->input->post('himpunan')[$key],
-				'id_kategori_tujuan' => $value['id'],
-				'kode_kategori_tujuan' => $value['kode'],
-				'flag_proses_id_kategori' => $id_kategori,
-				'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
-				'created_at' => $timestamp
-			];
-			
-			$insert = $this->t_hitung_det->save($data_ins);
-
-			### insert reverse
-			/**
-			 * todo : 
-			 * 1 .cari reversenya dulu berdasarkan himpunan terpilih 
-			 * 2. jika ketemu gunakan reverse tersebut.
-			 */
-
-			$q_reverse = $this->m_global->single_row('*', ['id_himpunan_use' => $this->input->post('himpunan')[$key], 'deleted_at' =>null], 't_pasangan_himpunan');
-
-			$data_reverse_ins = [
-				'id' => $this->t_hitung_det->get_max_id(),
-				'id_hitung' => $id_hitung,
-				'id_kategori' => $value['id'],
-				'kode_kategori' => $value['kode'],
-				'id_himpunan' => $q_reverse->id_himpunan_reverse,
-				'id_kategori_tujuan' => $id_kategori,
-				'kode_kategori_tujuan' => trim(strtoupper(strtolower($step_kategori))),
-				'flag_proses_id_kategori' => $id_kategori,
-				'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
+				'id' => $this->t_anggaran_det->get_max_id(),
+				'id_anggaran' => $id_anggaran,
+				'tahun' => $tahun_anggaran,
+				'id_kategori' => $this->input->post('f_id_kategori')[$value],
+				'kode_kategori' => $this->input->post('f_kode_kategori')[$value],
+				'id_kriteria' => $this->input->post('f_id_kriteria')[$value],
+				'urut' => $key+1,
+				'id_satuan' => $this->input->post('f_satuan')[$value],
+				'qty' => (float)$this->input->post('f_qtyraw')[$value],
+				'harga_satuan' => (float)$this->input->post('f_hargaraw')[$value],
+				'harga_total' => (float)$this->input->post('f_harga_totraw')[$value],
 				'created_at' => $timestamp
 			];
 
-			$insert = $this->t_hitung_det->save($data_reverse_ins);
+			$insert = $this->t_anggaran_det->save($data_ins);
 
-			## insert awalan kategori+1 (1=1)
-			$ins_awal_2 = [
-				'id' => $this->t_hitung_det->get_max_id(),
-				'id_hitung' => $id_hitung,
-				'id_kategori' => $value['id'],
-				'kode_kategori' => $value['kode'],
-				'id_himpunan' => $q_himpunan_sama->id,
-				'id_kategori_tujuan' => $value['id'],
-				'kode_kategori_tujuan' => $value['kode'],
-				'flag_proses_id_kategori' => $id_kategori,
-				'flag_proses_kode_kategori' => trim(strtoupper(strtolower($step_kategori))),
-				'created_at' => $timestamp
-			];
-			
-			$insert = $this->t_hitung_det->save($ins_awal_2);
+			$kampes[] = $data_ins;
 		}
 
-		// ## hitung jumlah grand total l,m,u
-		$data_tot_himpunan = $this->t_hitung_det->get_nilai_total_himpunan($id_hitung);
-		
-		$grand_total_lower = 0;
-		$grand_total_medium = 0;
-		$grand_total_upper = 0;
-
-		foreach ($data_tot_himpunan as $kkk => $vvv) {
-			$grand_total_lower += (float)$vvv->total_lower;
-			$grand_total_medium += (float)$vvv->total_medium;
-			$grand_total_upper += (float)$vvv->total_upper;
-		}
-
-		## update
-		$data_upd = [
-			'total_lower' => $grand_total_lower,
-			'total_medium' => $grand_total_medium,
-			'total_upper' => $grand_total_upper
-		];
-
-		
 		// echo "<pre>";
-		// print_r ($data_upd);
+		// print_r ($kampes);
 		// echo "</pre>";
 		// exit;
 
-		$upd = $this->m_global->update('t_hitung', $data_upd, ['id' => $id_hitung]);
+		## ambil data det, sum harga_total by kategori
+		$total_harga_kat = $this->t_anggaran_det->ambil_data_tot_harga($id_anggaran, $tahun_anggaran);
 
-		#########################################################################################################
-
-		##cek exist sintesis data
-		$arr_data_sintesis = $this->t_sintesis->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
-		
-		if($arr_data_sintesis) {
-			## delete
-			$del_sintesis = $this->m_global->delete(['id_hitung' => $id_hitung, 'deleted_at' => null], 't_sintesis');
-		}
-
-		## hitung sintesis dan input data
-		foreach ($kategori as $kk => $vv) {
-			$data_sintesis = [
-				'id' => $this->t_sintesis->get_max_id(),
-				'id_hitung' => $id_hitung,
-				'id_kategori' => $vv->id,
-				'kode_kategori' => $vv->kode_kategori,
-				'sintesis_lower' => (float)$data_tot_himpunan[$kk]->total_lower / (float)$grand_total_upper,
-				'sintesis_medium' => (float)$data_tot_himpunan[$kk]->total_medium / (float)$grand_total_medium,
-				'sintesis_upper' => (float)$data_tot_himpunan[$kk]->total_upper / (float)$grand_total_lower,
-				'created_at' => $timestamp
-			];
-
-			$insert = $this->t_sintesis->save($data_sintesis);
-			$collection_sintesis[] = $data_sintesis;
-		}
-
-		#########################################################################################################
-		
-		##cek exist vektor data
-		$arr_data_vektor = $this->t_hitungan_vektor->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
-		
-		if($arr_data_vektor) {
-			## delete
-			$del_vektor = $this->m_global->delete(['id_hitung' => $id_hitung, 'deleted_at' => null], 't_hitungan_vektor');
-		}
-
-		$data_vektor = $this->get_hitungan_vektor($collection_sintesis, $kategori);
-
-		foreach ($data_vektor as $k_vtr => $v_vtr) {
-			$data_ins_vektor = [
-				'id_hitung' => $id_hitung,
-				'id_kategori_proses' => $v_vtr['id_kategori_proses'],
-				'kode_kategori_proses' => $v_vtr['kode_kategori_proses'],
-				'id_kategori' => $v_vtr['id_kategori'],
-				'kode_kategori' => $v_vtr['kode_kategori'],
-				'nilai_l' => $v_vtr['l'],
-				'nilai_m' => $v_vtr['m'],
-				'nilai_u' => $v_vtr['u'],
-				'bawah' => $v_vtr['bawah'],
-				'total' => $v_vtr['total'],
-				'hasil' => $v_vtr['hasil'],
-				'created_at' => $timestamp
-			];
-
-			$insert = $this->t_hitungan_vektor->save($data_ins_vektor);
-		}
-
-		#########################################################################################################
-
-		##cek exist normalisasi data
-		$arr_data_norm = $this->t_normalisasi->get_by_condition(['id_hitung' => $id_hitung, 'deleted_at' => null]);
-		
-		if($arr_data_norm) {
-			## delete
-			$del_norm = $this->m_global->delete(['id_hitung' => $id_hitung, 'deleted_at' => null], 't_normalisasi');
-		}
-
-		$data_normalisasi = $this->get_hitungan_normalisasi($data_vektor, $kategori);
-
-		foreach ($data_normalisasi as $k_nor => $v_nor) {
-			$data_ins_norm = [
-				'id_hitung' => $id_hitung,
-				'id_kategori' => $v_nor['id_kategori'],
-				'kode_kategori' => $v_nor['kode_kategori'],
-				'id_kategori_tujuan' => $v_nor['id_kategori_tujuan'],
-				'kode_kategori_tujuan' => $v_nor['kode_kategori_tujuan'],
-				'nilai' => $v_nor['nilai'],
-				'created_at' => $timestamp
-			];
-
-			$insert = $this->t_normalisasi->save($data_ins_norm);
-		}
-
+		## update ke anggaran
+		$json_data_anggaran = json_encode($total_harga_kat);
+		$data_upd = ['data_json' => $json_data_anggaran];
+		$upd = $this->m_global->update('t_anggaran', $data_upd, ['id' => $id_anggaran]);
 
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			$retval['status'] = false;
-			$retval['id_hitung'] = $this->enkripsi->enc_dec('encrypt', $id_hitung);
-			$retval['pesan'] = 'Proses Perhitungan Gagal';
+			$retval['id_anggaran'] = $this->enkripsi->enc_dec('encrypt', $id_anggaran);
+			$retval['pesan'] = 'Proses Pencatatan Anggaran Gagal';
 		}else{
 			$this->db->trans_commit();
 			$retval['status'] = true;
-			$retval['id_hitung'] = $this->enkripsi->enc_dec('encrypt', $id_hitung);
-			$retval['pesan'] = 'Proses Perhitungan Sukses';
+			$retval['id_anggaran'] = $this->enkripsi->enc_dec('encrypt', $id_anggaran);
+			$retval['pesan'] = 'Proses Pencatatan Anggaran Sukses';
 		}
 
 		echo json_encode($retval);
-	}
-
-	public function get_hitungan_normalisasi($data_vektor, $kategori)
-	{
-		foreach ($kategori as $k_kat => $kat) {
-			$kode_kat_proses = $kat->kode_kategori;
-			$id_kat_proses = $kat->id;
-			$flag_is_sama = false; // c1 == c1, c2 == c2, etc
-			
-			for ($i=0; $i <count($data_vektor); $i++) { 
-				if($data_vektor[$i]['id_kategori_proses'] != $kat->id) {
-					continue;
-				}
-
-				if($flag_is_sama) {
-					$rs['nilai'] = $data_vektor[$i]['hasil'];
-					$rs['id_kategori'] = $kat->id;
-					$rs['kode_kategori'] = $kat->kode_kategori;
-					$rs['id_kategori_tujuan'] = $data_vektor[$i]['id_kategori'];
-					$rs['kode_kategori_tujuan'] =  $data_vektor[$i]['kode_kategori'];
-				}else{
-					if ($kat->id == $data_vektor[$i]['id_kategori_proses']) {
-						// set 1 == 1
-						$rs['nilai'] = 1.000;
-						$rs['id_kategori'] = $kat->id;
-						$rs['kode_kategori'] = $kat->kode_kategori;
-						$rs['id_kategori_tujuan'] = $data_vektor[$i]['id_kategori_proses'];
-						$rs['kode_kategori_tujuan'] =  $data_vektor[$i]['kode_kategori_proses'];
-						//flag dan decrement
-						$flag_is_sama = true;
-						$i--;
-					}else{
-						$rs['nilai'] = $data_vektor[$i]['hasil'];
-						$rs['id_kategori'] = $kat->id;
-						$rs['kode_kategori'] = $kat->kode_kategori;
-						$rs['id_kategori_tujuan'] = $data_vektor[$i]['id_kategori'];
-						$rs['kode_kategori_tujuan'] =  $data_vektor[$i]['kode_kategori'];
-					}
-				}
-
-				$retval[] = $rs;
-			}
-		}
-
-		return $retval;
-	}
-
-	public function get_hitungan_vektor($data_sintesis, $kategori)
-	{
-		// $data_sintesis = $this->m_global->multi_row('*', ['id_hitung' => 1, 'deleted_at' => null], 't_sintesis', null, 'id');
-		// $kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
-		
-		foreach ($kategori as $k_kat => $kat) {
-			$kode_kat_proses = $kat->kode_kategori;
-			$id_kat_proses = $kat->id;
-
-			foreach ($data_sintesis as $k_sin => $sin) {
-				if ($kat->id == $sin['id_kategori']) {
-					continue;
-				}
-				
-				$data_l = (float)$sin['sintesis_lower'] - (float)$data_sintesis[$k_kat]['sintesis_upper'];
-				$data_m = (float)$data_sintesis[$k_kat]['sintesis_medium'] - (float)$data_sintesis[$k_kat]['sintesis_upper'];
-				$data_u = (float)$sin['sintesis_medium'] - (float)$sin['sintesis_lower'];
-				$bawah = (float)$data_m - (float)$data_u;
-				$total = (float)$data_l / $bawah;
-
-				$rs['id_kategori_proses'] = $id_kat_proses;
-				$rs['kode_kategori_proses'] = $kode_kat_proses;
-				$rs['id_kategori'] = $sin['id_kategori'];
-				$rs['kode_kategori'] = $sin['kode_kategori'];
-				$rs['l'] = $data_l;
-				$rs['m'] = $data_m;
-				$rs['u'] = $data_u;
-				$rs['bawah'] = $bawah;
-				$rs['total'] = $total;
-
-				if($total >= 1.000) {
-					$rs['hasil'] = 1.000;
-				}else{
-					if($total < 0.000) {
-						$rs['hasil'] = 0.000;
-					}else{
-						$rs['hasil'] = $total;
-					}
-					
-				}
-			
-				$retval[] = $rs;
-			}
-		}
-
-		return $retval;
 	}
 
 	///////////////////////////////////////////////////////////////////

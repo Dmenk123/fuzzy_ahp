@@ -53,10 +53,10 @@
                       <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Opsi</button>
                       <div class="dropdown-menu">
                         <?php if($v->data_json) { ?>
-                          <a class="dropdown-item" target="_blank" href="<?=base_url('data_hitung/detail_perhitungan/').$this->enkripsi->enc_dec('encrypt', $v->id);?>">
+                          <a class="dropdown-item" target="_blank" href="<?=base_url('data_hitung/detail_tabel_anggaran/').$this->enkripsi->enc_dec('encrypt', $v->id);?>">
                             <i class="la la-bar-chart-o"></i> Lihat Data
                           </a>
-                          <a class="dropdown-item" href="<?=base_url('hitung_ahp/formulir_hitung/').$this->enkripsi->enc_dec('encrypt', $v->id).'?kategori='.$this->enkripsi->enc_dec('encrypt', 1);?>">
+                          <a class="dropdown-item" href="<?=base_url('form_anggaran/formulir_anggaran/').$this->enkripsi->enc_dec('encrypt', $v->id).'?kategori='.$this->enkripsi->enc_dec('encrypt', 1).'&tahun='.$v->tahun_proyek;?>">
                             <i class="la la-pencil"></i> Edit
                           </a>
                         <?php } ?>

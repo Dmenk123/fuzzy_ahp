@@ -67,8 +67,8 @@ class T_anggaran_det extends CI_Model
 	{
 		$this->db->select('sum(harga_total) as total, kode_kategori, id_kategori, id_anggaran, tahun');
 		$this->db->from($this->table.' as det');
-		$this->db->where(['id_anggaran' => $id_anggaran, 'tahun' => $tahun_anggaran]);
-		$this->db->group_by('id_kategori');
+		$this->db->where(['id_anggaran' => $id_anggaran]);
+		$this->db->group_by('tahun, id_kategori');
 		$query = $this->db->get();
 		return $query->result();
 	}

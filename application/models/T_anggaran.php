@@ -62,4 +62,15 @@ class T_anggaran extends CI_Model
 			return '1';
 		} 
 	}
+
+	public function get_data_transaksi_anggaran()
+	{
+		$this->db->select('ta.*, p.nama_proyek, p.tahun_proyek, p.tahun_akhir_proyek, p.durasi_tahun');
+		$this->db->from($this->table.' ta');
+		$this->db->join('m_proyek p', 'ta.id_proyek = p.id', 'left');
+		$this->db->where('ta.deleted_at', null);
+		$this->db->order_by('ta.created_at', 'desc');
+		$query = $this->db->get();
+		return $query->result();
+	}
 }

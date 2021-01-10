@@ -17,6 +17,8 @@ class Data_hitung extends CI_Controller {
 		$this->load->model('t_hitung_det');
 		$this->load->model('t_sintesis');
 		$this->load->model('t_normalisasi');
+		$this->load->model('t_anggaran');
+		$this->load->model('t_anggaran_det');
 		$this->load->model('m_global');
 	}
 
@@ -62,6 +64,8 @@ class Data_hitung extends CI_Controller {
 			$table_html = $this->get_tabel_sintesis();
 		}elseif ($menu == 'vektor') {
 			$table_html = $this->get_tabel_vektor();
+		}elseif ($menu == 'tabel_anggaran') {
+			$table_html = $this->get_tabel_anggaran();
 		}else{
 			return redirect('data_hitung');
 		}
@@ -205,6 +209,45 @@ class Data_hitung extends CI_Controller {
 		
 		$data = array(
 			'title' => 'Data Perhitungan Vektor Dan Normalisasi',
+			'html' => $html
+		);
+
+		return $data;
+	}
+
+	public function get_tabel_anggaran()
+	{
+		$data = $this->t_anggaran->get_data_transaksi_anggaran();
+		$html = "<table class='table table-striped- table-bordered table-hover table-checkable' id='tabel_data'>
+			  	<thead>
+					<tr>
+						<th style='width: 5%;'>No</th>
+						<th>Proyek</th>
+						<th style='width: 5%;'>Aksi</th>
+					</tr>
+			  	</thead>
+			  	<tbody>";
+				foreach ($data as $k => $v) 
+				{
+					$html .= "<tr>
+								<th>".++$k."</th>
+								<th>".$v->nama_proyek." [".$v->tahun_proyek.' s/d '.$v->tahun_akhir_proyek."]</th>
+								<th>
+									<div class='btn-group'>
+									<button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Opsi</button>
+										<div class='dropdown-menu'>
+											<a class='dropdown-item' target='_blank' href='".base_url('data_hitung/detail_tabel_anggaran/').$this->enkripsi->enc_dec('encrypt', $v->id)."'>
+												<i class='la la-bar-chart-o'></i> Lihat Data
+											</a>
+										</div>
+									</div>
+								</th>
+							</tr>"; 
+				}
+		$html .= "</tbody></table>";
+		
+		$data = array(
+			'title' => 'Data Tabel Anggaran',
 			'html' => $html
 		);
 
@@ -406,6 +449,75 @@ class Data_hitung extends CI_Controller {
 			'modal' => null,
 			'js'	=> 'data_hitung.js',
 			'view'	=> 'view_detail_normalisasi'
+		];
+
+		$this->template_view->load_view($content, $data);
+	}
+
+	public function detail_tabel_anggaran($id_anggaran, $tahun="")
+	{
+		$obj_date = new DateTime();
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+	
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+
+		//cek di tabel child nya ada apa tidak
+		$data_child  = $this->m_global->multi_row('*', ['id_anggaran' => $id_anggaran], 't_anggaran_det');
+		
+		if($tahun == "") {
+			$tahun =  $data_anggaran->tahun_proyek;
+		}
+
+		if($data_child) {
+			## cari data lawas (edit) 
+			$where = [
+				'id_anggaran' => $id_anggaran,
+				'tahun' => $tahun
+			];
+
+			$join = [ 
+				[
+					'table' => 'm_kriteria', 'on' => 't_anggaran_det.id_kriteria = m_kriteria.id'
+				],
+				[
+					'table' => 'm_satuan', 'on' => 't_anggaran_det.id_satuan = m_satuan.id'
+				],
+			];
+
+			$old_data = $this->m_global->multi_row('t_anggaran_det.*, m_kriteria.nama as nama_kriteria, m_satuan.nama as nama_satuan', $where, 't_anggaran_det', $join, 'urut');
+			// echo $this->db->last_query();
+			// exit;
+			
+		}
+
+		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
+
+		$data = array(
+			'title' => 'Detail Tabel Anggaran : ( Proyek '.$data_anggaran->nama_proyek.' )',
+			'data_user' => $data_user,
+			'kategori' => $kategori,
+			'data' => $old_data,
+			'tahun' => $tahun
+		);
+
+		/**
+		 * content data untuk template
+		 * param (css : link css pada direktori assets/css_module)
+		 * param (modal : modal komponen pada modules/nama_modul/views/nama_modal)
+		 * param (js : link js pada direktori assets/js_module)
+		 */
+		$content = [
+			'css' 	=> null,
+			'modal' => null,
+			'js'	=> 'data_hitung.js',
+			'view'	=> 'view_detail_tabel_anggaran'
 		];
 
 		$this->template_view->load_view($content, $data);

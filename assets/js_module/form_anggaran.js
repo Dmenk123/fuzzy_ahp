@@ -8,7 +8,6 @@ $(document).ready(function() {
         return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;
     });
     
-
     $('#btn_next').click(function (e) { 
         e.preventDefault();
         //let step_kriteria = $('#step_kriteria').val();
@@ -152,7 +151,7 @@ $(document).ready(function() {
                 $.ajax({
                     type: "POST",
                     enctype: 'multipart/form-data',
-                    url: base_url+'hitung_ahp/finish_step',
+                    url: base_url+'form_anggaran/finish_step',
                     data: data,
                     dataType: "JSON",
                     processData: false,
@@ -166,7 +165,7 @@ $(document).ready(function() {
                                 response.pesan, 
                                 'success'
                             ).then(function() {
-                                window.location.href = base_url+"hitung_ahp";
+                                window.location.href = base_url+"form_anggaran";
                             });
                             
                         }
@@ -229,12 +228,29 @@ function hitungTotal(index){
     let harga = $('#f_harga_'+index).maskMoney('unmasked')[0];
     let total = qty * harga;
     let total_new = Number(total.toFixed(2));
-    
+    let idx = $('#f_harga_tot_'+index).data("id");
+
     $('#f_harga_tot_'+index).maskMoney('mask', total_new);
     $('#f_qtyraw_'+index).val(qty);
     $('#f_hargaraw_'+index).val(harga);
 
     $('#f_harga_totraw_'+index).val(total_new);
+
+    hitungGrandTotal(idx)
+}
+
+function hitungGrandTotal(index){
+    let grandTotal = 0;
+    $(".totale_mbah"+index).each(function() {
+        //alert($(this).val());
+        let harga = $(this).maskMoney('unmasked')[0];
+        grandTotal = grandTotal + harga;
+    });
+
+    console.log(grandTotal);
+    let grandTotalNew = Number(grandTotal.toFixed(2));
+    $('#f_grand_tot_'+index).maskMoney('mask', grandTotalNew);
+    $('#f_grand_totraw_'+index).val(grandTotalNew);
 }
 
 function add_menu()

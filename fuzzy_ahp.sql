@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 10/01/2021 01:47:27
+ Date: 10/01/2021 18:12:29
 */
 
 SET NAMES utf8mb4;
@@ -271,7 +271,7 @@ CREATE TABLE `m_user`  (
 -- ----------------------------
 -- Records of m_user
 -- ----------------------------
-INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2021-01-09 22:07:14', 'USR-00001', NULL, NULL, NULL, NULL);
+INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2021-01-10 16:59:31', 'USR-00001', NULL, NULL, NULL, NULL);
 INSERT INTO `m_user` VALUES (2, 1, 'coba', 'Tzg1eTllUlU2a2xNQk5yYktIM1pwUT09', NULL, NULL, 'USR-00002', 'coba-1602775328.jpg', '2020-10-15 22:22:08', '2020-10-15 22:43:54', '2020-10-15 22:58:50');
 
 -- ----------------------------
@@ -292,7 +292,7 @@ CREATE TABLE `t_anggaran`  (
 -- ----------------------------
 -- Records of t_anggaran
 -- ----------------------------
-INSERT INTO `t_anggaran` VALUES (1, 1, '2021-01-09 23:59:46', NULL, NULL, NULL, 1);
+INSERT INTO `t_anggaran` VALUES (1, 1, '2021-01-09 23:59:46', NULL, NULL, '[{\"total\":\"44410000.00\",\"kode_kategori\":\"C1\",\"id_kategori\":\"1\",\"id_anggaran\":\"1\",\"tahun\":\"2020\"},{\"total\":\"4343118188.83\",\"kode_kategori\":\"C2\",\"id_kategori\":\"2\",\"id_anggaran\":\"1\",\"tahun\":\"2020\"},{\"total\":\"533318015.20\",\"kode_kategori\":\"C3\",\"id_kategori\":\"3\",\"id_anggaran\":\"1\",\"tahun\":\"2020\"},{\"total\":\"591054097.45\",\"kode_kategori\":\"C4\",\"id_kategori\":\"4\",\"id_anggaran\":\"1\",\"tahun\":\"2020\"},{\"total\":\"3816153.22\",\"kode_kategori\":\"C5\",\"id_kategori\":\"5\",\"id_anggaran\":\"1\",\"tahun\":\"2020\"},{\"total\":\"8229747239.58\",\"kode_kategori\":\"C6\",\"id_kategori\":\"6\",\"id_anggaran\":\"1\",\"tahun\":\"2020\"},{\"total\":\"84836006.40\",\"kode_kategori\":\"C7\",\"id_kategori\":\"7\",\"id_anggaran\":\"1\",\"tahun\":\"2020\"},{\"total\":\"28227250.00\",\"kode_kategori\":\"C1\",\"id_kategori\":\"1\",\"id_anggaran\":\"1\",\"tahun\":\"2021\"},{\"total\":\"1014312313.14\",\"kode_kategori\":\"C2\",\"id_kategori\":\"2\",\"id_anggaran\":\"1\",\"tahun\":\"2021\"},{\"total\":\"193510897.29\",\"kode_kategori\":\"C3\",\"id_kategori\":\"3\",\"id_anggaran\":\"1\",\"tahun\":\"2021\"},{\"total\":\"161309515.53\",\"kode_kategori\":\"C4\",\"id_kategori\":\"4\",\"id_anggaran\":\"1\",\"tahun\":\"2021\"},{\"total\":\"8674099.01\",\"kode_kategori\":\"C5\",\"id_kategori\":\"5\",\"id_anggaran\":\"1\",\"tahun\":\"2021\"},{\"total\":\"1296078173.51\",\"kode_kategori\":\"C6\",\"id_kategori\":\"6\",\"id_anggaran\":\"1\",\"tahun\":\"2021\"},{\"total\":\"14515091.08\",\"kode_kategori\":\"C7\",\"id_kategori\":\"7\",\"id_anggaran\":\"1\",\"tahun\":\"2021\"}]', 1);
 
 -- ----------------------------
 -- Table structure for t_anggaran_det
@@ -307,9 +307,9 @@ CREATE TABLE `t_anggaran_det`  (
   `id_kriteria` int(11) NULL DEFAULT NULL,
   `urut` int(11) NULL DEFAULT NULL COMMENT 'urut per kategori',
   `id_satuan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `qty` float(20, 2) NULL DEFAULT 0,
-  `harga_satuan` float(20, 2) NULL DEFAULT 0,
-  `harga_total` float(20, 2) NULL DEFAULT 0,
+  `qty` decimal(20, 2) NULL DEFAULT 0,
+  `harga_satuan` decimal(20, 2) NULL DEFAULT 0,
+  `harga_total` decimal(40, 2) NULL DEFAULT 0,
   `created_at` datetime(0) NULL DEFAULT NULL,
   `updated_at` datetime(0) NULL DEFAULT NULL,
   `deleted_at` datetime(0) NULL DEFAULT NULL,
@@ -319,45 +319,84 @@ CREATE TABLE `t_anggaran_det`  (
 -- ----------------------------
 -- Records of t_anggaran_det
 -- ----------------------------
-INSERT INTO `t_anggaran_det` VALUES (1, 1, 2020, 1, 'C1', 1, 1, '1', 1.00, 25000000.00, 25000000.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (2, 1, 2020, 1, 'C1', 2, 2, '2', 2.00, 60000000.00, 120000000.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (3, 1, 2020, 1, 'C1', 3, 3, '1', 1.00, 3000000.00, 3000000.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (4, 1, 2020, 1, 'C1', 4, 4, '2', 2.00, 2000000.00, 4000000.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (5, 1, 2020, 1, 'C1', 5, 5, '1', 1.00, 2611000.00, 2611000.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (6, 1, 2020, 1, 'C1', 6, 6, '1', 1.00, 8000000.00, 8000000.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (7, 1, 2020, 1, 'C1', 7, 7, '2', 1.00, 3863750.00, 3863750.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (8, 1, 2020, 1, 'C1', 9, 8, '2', 5.00, 610500.00, 3052500.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (9, 1, 2020, 2, 'C2', 10, 9, '3', 279.07, 3399766.00, 948772672.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (10, 1, 2020, 2, 'C2', 11, 10, '4', 510.00, 1161000.00, 592110016.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (11, 1, 2020, 2, 'C2', 12, 11, '4', 510.00, 107250.55, 54697780.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (12, 1, 2020, 2, 'C2', 13, 12, '5', 2.72, 364049440.00, 990214464.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (13, 1, 2020, 2, 'C2', 14, 13, '4', 7.00, 6060094.50, 42420660.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (14, 1, 2020, 3, 'C3', 15, 14, '3', 386.69, 6377879.00, 2466262016.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (15, 1, 2020, 3, 'C3', 16, 15, '3', 46.51, 347611.00, 16167388.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (16, 1, 2020, 3, 'C3', 17, 16, '3', 154.13, 31768348.00, 4896455168.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (17, 1, 2020, 3, 'C3', 18, 17, '5', 918.00, 4268.86, 3918813.50, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (18, 1, 2020, 3, 'C3', 19, 18, '5', 1652.40, 603955.00, 997975232.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (19, 1, 2020, 4, 'C4', 20, 19, '3', 119.34, 33337388.00, 3978483968.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (20, 1, 2020, 4, 'C4', 21, 20, '3', 378.00, 321493.88, 121524680.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (21, 1, 2020, 5, 'C5', 22, 21, '6', 38.40, 1046277.00, 40177036.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (22, 1, 2020, 5, 'C5', 23, 22, '5', 48.00, 172340.19, 8272328.50, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (23, 1, 2020, 6, 'C6', 24, 23, '3', 0.51, 88111688.00, 44936960.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (24, 1, 2020, 6, 'C6', 25, 24, '5', 3.28, 8449155.00, 27713228.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (25, 1, 2020, 6, 'C6', 26, 25, '3', 277.19, 85625872.00, 23734636544.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (26, 1, 2020, 6, 'C6', 27, 26, '3', 550.80, 112425936.00, 61924208640.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (27, 1, 2020, 6, 'C6', 28, 27, '7', 8163.47, 1361855.00, 11117462528.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (28, 1, 2020, 6, 'C6', 29, 28, '7', 682.40, 1416305.00, 966486528.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (29, 1, 2020, 6, 'C6', 30, 29, '7', 16033.92, 180048.00, 2886875136.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (30, 1, 2020, 6, 'C6', 31, 30, '5', 1836.00, 4000.00, 7344000.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (31, 1, 2020, 6, 'C6', 32, 31, '6', 321.00, 1046277.00, 335854912.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (32, 1, 2020, 6, 'C6', 33, 32, '5', 1836.00, 1870.00, 3433320.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (33, 1, 2020, 6, 'C6', 34, 33, '5', 10.60, 11291907.00, 119694216.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (34, 1, 2020, 6, 'C6', 35, 34, '4', 554.40, 14322.00, 7940117.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (35, 1, 2020, 6, 'C6', 36, 35, '4', 642.00, 4867.50, 3124935.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (36, 1, 2020, 6, 'C6', 37, 36, '5', 33.60, 62500.00, 2100000.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (37, 1, 2020, 6, 'C6', 38, 37, '5', 0.88, 225401.00, 198352.88, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (38, 1, 2020, 6, 'C6', 39, 38, '2', 30.00, 18000.00, 540000.00, '2021-01-10 01:41:48', NULL, NULL);
-INSERT INTO `t_anggaran_det` VALUES (39, 1, 2020, 7, 'C7', 40, 39, '5', 87.12, 16661031.00, 1451508992.00, '2021-01-10 01:41:48', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (1, 1, 2020, 1, 'C1', 1, 1, '1', 1.00, 170000.00, 170000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (2, 1, 2020, 1, 'C1', 2, 2, '2', 2.00, 250000.00, 500000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (3, 1, 2020, 1, 'C1', 3, 3, '1', 1.00, 1500000.00, 1500000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (4, 1, 2020, 1, 'C1', 4, 4, '2', 2.00, 120000.00, 240000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (5, 1, 2020, 1, 'C1', 5, 5, '1', 1.00, 1000000.00, 1000000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (6, 1, 2020, 1, 'C1', 6, 6, '1', 1.00, 6500000.00, 6500000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (7, 1, 2020, 1, 'C1', 7, 7, '2', 1.00, 4500000.00, 4500000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (8, 1, 2020, 1, 'C1', 9, 8, '2', 20.00, 1500000.00, 30000000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (9, 1, 2020, 2, 'C2', 10, 9, '3', 1687.20, 14107.11, 23801515.99, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (10, 1, 2020, 2, 'C2', 11, 10, '4', 3083.00, 1000000.00, 3083000000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (11, 1, 2020, 2, 'C2', 12, 11, '4', 3083.00, 370000.00, 1140710000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (12, 1, 2020, 2, 'C2', 13, 12, '5', 6.80, 1000981.30, 6806672.84, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (13, 1, 2020, 2, 'C2', 14, 13, '4', 24.00, 3700000.00, 88800000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (14, 1, 2020, 3, 'C3', 15, 14, '3', 3038.94, 26383.32, 80177326.48, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (15, 1, 2020, 3, 'C3', 16, 15, '3', 438.22, 217389.70, 95264514.33, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (16, 1, 2020, 3, 'C3', 17, 16, '3', 2279.73, 155922.07, 355460220.64, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (17, 1, 2020, 3, 'C3', 18, 17, '5', 5075.00, 476.05, 2415953.75, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (18, 1, 2020, 3, 'C3', 19, 18, '5', 0.00, 0.00, 0.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (19, 1, 2020, 4, 'C4', 20, 19, '3', 721.50, 216545.05, 156237253.57, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (20, 1, 2020, 4, 'C4', 21, 20, '3', 2085.50, 208495.25, 434816843.88, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (21, 1, 2020, 5, 'C5', 22, 21, '6', 19.20, 9466.88, 181764.10, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (22, 1, 2020, 5, 'C5', 23, 22, '5', 24.00, 151432.88, 3634389.12, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (23, 1, 2020, 6, 'C6', 24, 23, '3', 2439.43, 658230.40, 1605706984.67, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (24, 1, 2020, 6, 'C6', 25, 24, '5', 1196.42, 39616.93, 47398487.39, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (25, 1, 2020, 6, 'C6', 26, 25, '3', 1669.84, 719954.31, 1202208505.01, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (26, 1, 2020, 6, 'C6', 27, 26, '3', 3330.00, 1005954.31, 3349827852.30, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (27, 1, 2020, 6, 'C6', 28, 27, '7', 49070.29, 11026.26, 541061775.82, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (28, 1, 2020, 6, 'C6', 29, 28, '7', 6177.65, 12236.26, 75591331.59, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (29, 1, 2020, 6, 'C6', 30, 29, '7', 96483.20, 12478.26, 1203942455.23, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (30, 1, 2020, 6, 'C6', 31, 30, '5', 11100.00, 3500.00, 38850000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (31, 1, 2020, 6, 'C6', 32, 31, '6', 1933.00, 24000.00, 46392000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (32, 1, 2020, 6, 'C6', 33, 32, '5', 11100.00, 958.65, 10641015.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (33, 1, 2020, 6, 'C6', 34, 33, '5', 63.65, 83406.13, 5308800.17, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (34, 1, 2020, 6, 'C6', 35, 34, '4', 3326.40, 14159.75, 47100992.40, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (35, 1, 2020, 6, 'C6', 36, 35, '4', 3866.00, 3740.00, 14458840.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (36, 1, 2020, 6, 'C6', 37, 36, '5', 201.60, 19500.00, 3931200.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (37, 1, 2020, 6, 'C6', 38, 37, '5', 3.52, 325000.00, 1144000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (38, 1, 2020, 6, 'C6', 39, 38, '2', 1723.00, 21000.00, 36183000.00, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (39, 1, 2020, 7, 'C7', 40, 39, '5', 527.16, 160930.28, 84836006.40, '2021-01-10 14:06:17', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (40, 1, 2021, 1, 'C1', 1, 1, '1', 1.00, 2500000.00, 2500000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (41, 1, 2021, 1, 'C1', 2, 2, '2', 2.00, 600000.00, 1200000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (42, 1, 2021, 1, 'C1', 3, 3, '1', 1.00, 3000000.00, 3000000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (43, 1, 2021, 1, 'C1', 4, 4, '2', 2.00, 2000000.00, 4000000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (44, 1, 2021, 1, 'C1', 5, 5, '1', 1.00, 2611000.00, 2611000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (45, 1, 2021, 1, 'C1', 6, 6, '1', 1.00, 8000000.00, 8000000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (46, 1, 2021, 1, 'C1', 7, 7, '2', 1.00, 3863750.00, 3863750.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (47, 1, 2021, 1, 'C1', 9, 8, '2', 5.00, 610500.00, 3052500.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (48, 1, 2021, 2, 'C2', 10, 9, '3', 279.07, 33997.66, 9487726.98, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (49, 1, 2021, 2, 'C2', 11, 10, '4', 510.00, 1161000.00, 592110000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (50, 1, 2021, 2, 'C2', 12, 11, '4', 510.00, 706650.55, 360391780.50, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (51, 1, 2021, 2, 'C2', 13, 12, '5', 2.72, 3640494.33, 9902144.58, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (52, 1, 2021, 2, 'C2', 14, 13, '4', 7.00, 6060094.44, 42420661.08, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (53, 1, 2021, 3, 'C3', 15, 14, '3', 386.69, 63778.79, 24662620.31, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (54, 1, 2021, 3, 'C3', 16, 15, '3', 46.51, 347611.00, 16167387.61, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (55, 1, 2021, 3, 'C3', 17, 16, '3', 154.13, 317683.46, 48964551.69, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (56, 1, 2021, 3, 'C3', 18, 17, '5', 918.00, 4268.86, 3918813.48, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (57, 1, 2021, 3, 'C3', 19, 18, '5', 1652.40, 60395.50, 99797524.20, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (58, 1, 2021, 4, 'C4', 20, 19, '3', 119.34, 333373.86, 39784836.45, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (59, 1, 2021, 4, 'C4', 21, 20, '3', 378.00, 321493.86, 121524679.08, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (60, 1, 2021, 5, 'C5', 22, 21, '6', 38.40, 10462.77, 401770.37, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (61, 1, 2021, 5, 'C5', 23, 22, '5', 48.00, 172340.18, 8272328.64, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (62, 1, 2021, 6, 'C6', 24, 23, '3', 0.51, 881116.85, 449369.59, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (63, 1, 2021, 6, 'C6', 25, 24, '5', 3.28, 84491.55, 277132.28, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (64, 1, 2021, 6, 'C6', 26, 25, '3', 277.19, 856258.72, 237346354.60, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (65, 1, 2021, 6, 'C6', 27, 26, '3', 550.80, 1124259.42, 619242088.54, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (66, 1, 2021, 6, 'C6', 28, 27, '7', 8163.47, 13618.55, 111174624.37, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (67, 1, 2021, 6, 'C6', 29, 28, '7', 682.40, 14163.05, 9664865.32, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (68, 1, 2021, 6, 'C6', 30, 29, '7', 16033.92, 18004.80, 288687522.82, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (69, 1, 2021, 6, 'C6', 31, 30, '5', 1836.00, 4000.00, 7344000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (70, 1, 2021, 6, 'C6', 32, 31, '6', 321.00, 10462.77, 3358549.17, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (71, 1, 2021, 6, 'C6', 33, 32, '5', 1836.00, 1870.00, 3433320.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (72, 1, 2021, 6, 'C6', 34, 33, '5', 10.60, 112919.07, 1196942.14, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (73, 1, 2021, 6, 'C6', 35, 34, '4', 554.40, 14322.00, 7940116.80, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (74, 1, 2021, 6, 'C6', 36, 35, '4', 642.00, 4867.50, 3124935.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (75, 1, 2021, 6, 'C6', 37, 36, '5', 33.60, 62500.00, 2100000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (76, 1, 2021, 6, 'C6', 38, 37, '5', 0.88, 225401.00, 198352.88, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (77, 1, 2021, 6, 'C6', 39, 38, '2', 30.00, 18000.00, 540000.00, '2021-01-10 17:10:53', NULL, NULL);
+INSERT INTO `t_anggaran_det` VALUES (78, 1, 2021, 7, 'C7', 40, 39, '5', 87.12, 166610.32, 14515091.08, '2021-01-10 17:10:53', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_hitung
