@@ -43,17 +43,11 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
               <div class="btn-group">
                 <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Download / Cetak</button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/download_excel_vektor/'.$this->uri->segment(3);?>">
-                    <i class="la la-arrow-circle-o-down"></i> Excel Vektor
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/download_excel_anggaran/'.$this->uri->segment(3);?>">
+                    <i class="la la-arrow-circle-o-down"></i> Excel Anggaran
                   </a>
-                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/download_excel_fuzzy/'.$this->uri->segment(3);?>">
-                    <i class="la la-arrow-circle-o-down"></i> Excel Defuzzifikasi
-                  </a>
-                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/cetak_data_vektor/'.$this->uri->segment(3);?>">
-                    <i class="la la-print"></i> Cetak Vektor
-                  </a>
-                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/cetak_data_fuzzy/'.$this->uri->segment(3);?>">
-                    <i class="la la-print"></i> Cetak Defuzzifikasi
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/cetak_data_anggaran/'.$this->uri->segment(3);?>">
+                    <i class="la la-print"></i> Cetak Anggaran
                   </a>
                 </div>
               </div>
@@ -63,11 +57,20 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
       </div>
 
       <div class="kt-portlet__body" id="vektor_area">
-        <div class="col-lg-12">
-          <span>Silahkan Pilih Tahun Proyek : </span>
-          <select name="" id="" class="form-control">
-            <option value="">2020</option>
-          </select>
+        <div class="col-lg-12 row">
+          <div class="col-3">
+            <span>Silahkan Pilih Tahun Proyek : </span>
+          </div>
+          <div class="col-6">
+            <select name="thn_proyek" id="thn_proyek" class="form-control">
+              <?php for ($i=(int)$data_anggaran->tahun_proyek; $i <= (int)$data_anggaran->tahun_akhir_proyek; $i++) { ?>
+              <option value="<?=$i;?>" <?php if($this->input->get('tahun') == $i) { echo 'selected'; }?>><?=$i;?></option>
+              <?php } ?>
+            </select>
+          </div>
+          <div class="col-2">
+            <button onclick="pilihTahunProyek('<?=$this->enkripsi->enc_dec('encrypt', $data_anggaran->id);?>')" type="button" class="btn btn-md btn-success"> Pilih</button>
+          </div>
         </div>
         <hr>
         <div class="col-lg-12 row table-responsive">

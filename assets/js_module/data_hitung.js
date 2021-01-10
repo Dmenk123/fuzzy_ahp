@@ -54,6 +54,11 @@ function reload_table()
     table.ajax.reload(null,false); //reload datatable ajax 
 }
 
+function pilihTahunProyek(id_anggaran) {
+    let tahun = $('#thn_proyek').val();
+    window.location.href = base_url+"data_hitung/detail_tabel_anggaran/"+id_anggaran+"?tahun="+tahun;
+}
+
 function save()
 {
     var url;

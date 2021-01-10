@@ -236,7 +236,7 @@ class Data_hitung extends CI_Controller {
 									<div class='btn-group'>
 									<button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Opsi</button>
 										<div class='dropdown-menu'>
-											<a class='dropdown-item' target='_blank' href='".base_url('data_hitung/detail_tabel_anggaran/').$this->enkripsi->enc_dec('encrypt', $v->id)."'>
+											<a class='dropdown-item' target='_blank' href='".base_url('data_hitung/detail_tabel_anggaran/').$this->enkripsi->enc_dec('encrypt', $v->id)."?tahun=".$v->tahun_proyek."'>
 												<i class='la la-bar-chart-o'></i> Lihat Data
 											</a>
 										</div>
@@ -454,7 +454,7 @@ class Data_hitung extends CI_Controller {
 		$this->template_view->load_view($content, $data);
 	}
 
-	public function detail_tabel_anggaran($id_anggaran, $tahun="")
+	public function detail_tabel_anggaran($id_anggaran)
 	{
 		$obj_date = new DateTime();
 		$id_user = $this->session->userdata('id_user'); 
@@ -471,6 +471,8 @@ class Data_hitung extends CI_Controller {
 		//cek di tabel child nya ada apa tidak
 		$data_child  = $this->m_global->multi_row('*', ['id_anggaran' => $id_anggaran], 't_anggaran_det');
 		
+		$tahun = $this->input->get('tahun');
+			
 		if($tahun == "") {
 			$tahun =  $data_anggaran->tahun_proyek;
 		}
@@ -483,12 +485,8 @@ class Data_hitung extends CI_Controller {
 			];
 
 			$join = [ 
-				[
-					'table' => 'm_kriteria', 'on' => 't_anggaran_det.id_kriteria = m_kriteria.id'
-				],
-				[
-					'table' => 'm_satuan', 'on' => 't_anggaran_det.id_satuan = m_satuan.id'
-				],
+				['table' => 'm_kriteria', 'on' => 't_anggaran_det.id_kriteria = m_kriteria.id'],
+				['table' => 'm_satuan', 'on' => 't_anggaran_det.id_satuan = m_satuan.id'],
 			];
 
 			$old_data = $this->m_global->multi_row('t_anggaran_det.*, m_kriteria.nama as nama_kriteria, m_satuan.nama as nama_satuan', $where, 't_anggaran_det', $join, 'urut');
@@ -503,6 +501,7 @@ class Data_hitung extends CI_Controller {
 			'title' => 'Detail Tabel Anggaran : ( Proyek '.$data_anggaran->nama_proyek.' )',
 			'data_user' => $data_user,
 			'kategori' => $kategori,
+			'data_anggaran' => $data_anggaran,
 			'data' => $old_data,
 			'tahun' => $tahun
 		);
@@ -1057,6 +1056,55 @@ class Data_hitung extends CI_Controller {
 		header('Cache-Control: max-age=0');
 
 		$writer->save('php://output');
+	}
+
+	public function download_excel_anggaran($id_anggaran = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+
+		if($id_anggaran == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+	
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+
+		$arr_thn = [];
+		for ($i=(int)$data_anggaran->tahun_proyek; $i <= (int)$data_anggaran->tahun_akhir_proyek; $i++) { 
+			//cek di tabel child nya ada apa tidak
+			$data_child  = $this->m_global->multi_row('*', ['id_anggaran' => $id_anggaran], 't_anggaran_det');
+			
+			$tahun = $i;
+
+			if($data_child) {
+				## cari data lawas (edit) 
+				$where = [
+					'id_anggaran' => $id_anggaran,
+					'tahun' => $tahun
+				];
+	
+				$join = [ 
+					['table' => 'm_kriteria', 'on' => 't_anggaran_det.id_kriteria = m_kriteria.id'],
+					['table' => 'm_satuan', 'on' => 't_anggaran_det.id_satuan = m_satuan.id'],
+				];
+	
+				$old_data = $this->m_global->multi_row('t_anggaran_det.*, m_kriteria.nama as nama_kriteria, m_satuan.nama as nama_satuan', $where, 't_anggaran_det', $join, 'urut');
+				echo $this->db->last_query();
+				exit;
+
+				$spreadsheet = $this->excel->spreadsheet_obj();
+				$writer = $this->excel->xlsx_obj($spreadsheet);
+				$number_format_obj = $this->excel->number_format_obj();
+			}
+		}		
 	}
 
 	public function cetak_data_ahp($id_hitung = false)
