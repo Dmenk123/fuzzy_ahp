@@ -120,16 +120,16 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
                     <th scope="row"><?=$no++;?></th>
                     <td width="30%"><?=$vv->nama_kriteria;?></td>
                     <td width="13%"><?=$vv->nama_satuan;?></td>
-                    <td width="15%" align="center">
-                      <?=number_format((float)$vv->qty, 2);?>
+                    <td width="15%" align="right">
+                      <?=number_format((float)$vv->qty, 2,',','.');?>
                     </td>
                     <td width="20%">
                       <span class="pull-left">Rp. </span>
-                      <span class="pull-right"><?=number_format((float)$vv->harga_satuan, 2);?></span>
+                      <span class="pull-right"><?=number_format((float)$vv->harga_satuan, 2,',','.');?></span>
                     </td>
                     <td width="25%">
                       <span class="pull-left">Rp. </span>
-                      <span class="pull-right"><?=number_format((float)$vv->harga_total, 2);?></span>
+                      <span class="pull-right"><?=number_format((float)$vv->harga_total, 2,',','.');?></span>
                     </td>
                   </tr>
                   <?php if($is_kolom_total) { ?>
@@ -137,7 +137,7 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
                       <th scope="row" colspan="5">Total </th>
                       <td>
                         <span class="pull-left">Rp. </span>
-                        <span class="pull-right"><?=number_format((float)$grand_total_kat, 2);?></span>
+                        <span class="pull-right"><?=number_format((float)$grand_total_kat, 2,',','.');?></span>
                       </td>
                     </tr>
                   <?php } ?>

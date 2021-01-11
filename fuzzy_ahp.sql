@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 10/01/2021 18:12:29
+ Date: 11/01/2021 23:59:26
 */
 
 SET NAMES utf8mb4;
@@ -55,8 +55,6 @@ INSERT INTO `m_himpunan` VALUES (12, '4 kali kurang penting', '2/5', '1/2', '2/3
 INSERT INTO `m_himpunan` VALUES (13, '5 kali kurang penting', '1/3', '2/5', '1/2', NULL, 0.333333343, 0.400000006, 0.500000000, '2020-12-01 23:57:05', '2020-12-27 13:19:20', NULL);
 INSERT INTO `m_himpunan` VALUES (14, '6 kali kurang penting', '2/7', '1/3', '2/5', NULL, 0.285714298, 0.333333343, 0.400000006, '2020-12-01 23:57:45', '2020-12-27 13:19:28', NULL);
 INSERT INTO `m_himpunan` VALUES (15, '7 kali kurang penting', '1/4', '2/7', '1/3', NULL, 0.250000000, 0.285714298, 0.333333343, '2020-12-01 23:58:20', '2020-12-27 13:19:35', NULL);
-INSERT INTO `m_himpunan` VALUES (16, '8 kali kurang penting', '2/9', '1/4', '2/7', NULL, 0.222222224, 0.250000000, 0.285714298, '2020-12-01 23:58:50', '2020-12-27 13:19:43', NULL);
-INSERT INTO `m_himpunan` VALUES (17, '9 kali kurang penting', '2/9', '2/9', '1/4', NULL, 0.222222224, 0.222222224, 0.250000000, '2020-12-01 23:59:16', '2020-12-27 13:19:51', NULL);
 
 -- ----------------------------
 -- Table structure for m_kategori
@@ -271,7 +269,7 @@ CREATE TABLE `m_user`  (
 -- ----------------------------
 -- Records of m_user
 -- ----------------------------
-INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2021-01-10 16:59:31', 'USR-00001', NULL, NULL, NULL, NULL);
+INSERT INTO `m_user` VALUES (1, 1, 'admin', 'SnIvSVV6c2UwdWhKS1ZKMDluUlp4dz09', 1, '2021-01-11 22:48:47', 'USR-00001', NULL, NULL, NULL, NULL);
 INSERT INTO `m_user` VALUES (2, 1, 'coba', 'Tzg1eTllUlU2a2xNQk5yYktIM1pwUT09', NULL, NULL, 'USR-00002', 'coba-1602775328.jpg', '2020-10-15 22:22:08', '2020-10-15 22:43:54', '2020-10-15 22:58:50');
 
 -- ----------------------------

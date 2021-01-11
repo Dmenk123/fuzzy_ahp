@@ -20,6 +20,8 @@ class Home extends CI_Controller {
 		$hari = date('d');
 		$id_user = $this->session->userdata('id_user');
 		$data_user = $this->m_user->get_detail_user($id_user);
+
+		
 		$data_dashboard = [];
 		
 		/**
@@ -39,8 +41,8 @@ class Home extends CI_Controller {
 		$content = [
 			'css' 	=> null,
 			'modal' => null,
-			'js'	=> null,
-			'view'	=> 'dashboard/view_dashboard'
+			'js'	=> 'data_hitung.js',
+			'view'	=> 'data_hitung/view_data_hitung'
 		];
 
 		$this->template_view->load_view($content, $data);
