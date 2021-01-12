@@ -1191,7 +1191,7 @@ class Data_hitung extends CI_Controller {
 
 							if($is_kolom_total) {
 								//merging
-								$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.$row.':F'.$row);
+								$spreadsheet->getActiveSheet()->mergeCells('A'.$row.':F'.$row);
 								$sheet->getCell('A'.$row)->setValue('Total');
 
 								$cellnya = $this->angka_ke_huruf($idx_tbl+6);
