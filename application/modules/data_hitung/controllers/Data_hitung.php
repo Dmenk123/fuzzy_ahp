@@ -1080,13 +1080,18 @@ class Data_hitung extends CI_Controller {
 		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
 
 		$arr_thn = [];
-		// for ($i=(int)$data_anggaran->tahun_proyek; $i <= (int)$data_anggaran->tahun_akhir_proyek; $i++) { 
+
+		$spreadsheet = $this->excel->spreadsheet_obj();
+		$writer = $this->excel->xlsx_obj($spreadsheet);
+		$number_format_obj = $this->excel->number_format_obj();
+
+		for ($i=(int)$data_anggaran->tahun_proyek; $i <= (int)$data_anggaran->tahun_akhir_proyek; $i++) 
+		{ 
 			//cek di tabel child nya ada apa tidak
 			$data_child  = $this->m_global->multi_row('*', ['id_anggaran' => $id_anggaran], 't_anggaran_det');
 			
-			// $tahun = $i;
-			$tahun = 2020;
-
+			$tahun = $i;
+			
 			if($data_child) {
 				## cari data lawas (edit) 
 				$where = [
@@ -1103,31 +1108,36 @@ class Data_hitung extends CI_Controller {
 				// echo $this->db->last_query();
 				// exit;
 
-				$spreadsheet = $this->excel->spreadsheet_obj();
-				$writer = $this->excel->xlsx_obj($spreadsheet);
-				$number_format_obj = $this->excel->number_format_obj();
-
+				// Zero based, so set the second tab as active sheet
+				$spreadsheet->setActiveSheetIndex($i - (int)$data_anggaran->tahun_proyek);
+				
+				## setelah sheet index di set, fungsi getActiveSheet akan sesuai index
 				$spreadsheet
 					->getActiveSheet()
 					->getStyle('A1:AA100')
 					->getNumberFormat()
 					->setFormatCode($number_format_obj::FORMAT_TEXT);
+
 				$sheet = $spreadsheet->getActiveSheet();
 				
-				$startRow = 2;
+				$startRow = 1;
 				$row = $startRow;
 				$idx_tbl = 0;
-				$no = 1; 
+				$no = 1;
+		
 				foreach ($kategori as $k => $v) {
 					
 					$grand_total_kat = 0;
 					
-					$sheet->getCell('A1')->setValue('#');
-					$sheet->getCell('B1')->setValue('Uraian');
-					$sheet->getCell('C1')->setValue('Satuan');
-					$sheet->getCell('D1')->setValue('Qty');
-					$sheet->getCell('E1')->setValue('Harga Satuan');
-					$sheet->getCell('F1')->setValue('Harga Total');
+					$sheet->getCell('A'.$row)->setValue('#');
+					$sheet->getCell('B'.$row)->setValue('Kategori');
+					$sheet->getCell('C'.$row)->setValue('Uraian');
+					$sheet->getCell('D'.$row)->setValue('Satuan');
+					$sheet->getCell('E'.$row)->setValue('Qty');
+					$sheet->getCell('F'.$row)->setValue('Harga Satuan');
+					$sheet->getCell('G'.$row)->setValue('Harga Total');
+					// increment
+					$row++;
 
 					foreach ($data as $kk => $vv) {
 						$kat_ini = $data[$kk]->id_kategori;
@@ -1152,57 +1162,60 @@ class Data_hitung extends CI_Controller {
 							$grand_total_kat += $vv->harga_total;
 
 							$cellnya = $this->angka_ke_huruf($idx_tbl);
-							$sheet->getCell($cellnya.''.$row)->setValue($no++);
-							$aa[] = $no;
-							$cellnya = $this->angka_ke_huruf($idx_tbl+1);
-							$sheet->getCell($cellnya.''.$row)->setValue($vv->nama_kriteria);
+							$sheet->getCell($cellnya . '' . $row)->setValue($no++);
+							$aa[] = $vv;
 
-							$cellnya = $this->angka_ke_huruf($idx_tbl+2);
-							$sheet->getCell($cellnya.''.$row)->setValue($vv->nama_satuan);
+							$cellnya = $this->angka_ke_huruf($idx_tbl + 1);
+							$sheet->getCell($cellnya . '' . $row)->setValue($v->nama);
 
-							$cellnya = $this->angka_ke_huruf($idx_tbl+3);
-							$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.00');
-							$sheet->setCellValue($cellnya.''.$row, number_format((float)$vv->qty, 2,',','.'));
+							$cellnya = $this->angka_ke_huruf($idx_tbl + 2);
+							$sheet->getCell($cellnya . '' . $row)->setValue($vv->nama_kriteria);
 
-							$cellnya = $this->angka_ke_huruf($idx_tbl+4);
-							$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.00');
-							$sheet->setCellValue($cellnya.''.$row, number_format((float)$vv->harga_satuan, 2,',','.'));
+							$cellnya = $this->angka_ke_huruf($idx_tbl + 3);
+							$sheet->getCell($cellnya . '' . $row)->setValue($vv->nama_satuan);
 
-							$cellnya = $this->angka_ke_huruf($idx_tbl+5);
-							$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.00');
-							$sheet->setCellValue($cellnya.''.$row, number_format((float)$vv->harga_total, 2,',','.'));
+							$cellnya = $this->angka_ke_huruf($idx_tbl + 4);
+							$sheet->getStyle($cellnya . '' . $row)->getNumberFormat()->setFormatCode('0.00');
+							$sheet->setCellValue($cellnya . '' . $row, number_format((float)$vv->qty, 2, ',', '.'));
+
+							$cellnya = $this->angka_ke_huruf($idx_tbl + 5);
+							$sheet->getStyle($cellnya . '' . $row)->getNumberFormat()->setFormatCode('0.00');
+							$sheet->setCellValue($cellnya . '' . $row, number_format((float)$vv->harga_satuan, 2, ',', '.'));
+
+							$cellnya = $this->angka_ke_huruf($idx_tbl + 6);
+							$sheet->getStyle($cellnya . '' . $row)->getNumberFormat()->setFormatCode('0.00');
+							$sheet->setCellValue($cellnya . '' . $row, number_format((float)$vv->harga_total, 2, ',', '.'));							
 							
-							$row = $row + 1;
+							// increment
+							$row++;
 
 							if($is_kolom_total) {
-								$no--;
 								//merging
-								$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.$row.':E'.$row);
+								$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.$row.':F'.$row);
 								$sheet->getCell('A'.$row)->setValue('Total');
 
-								$cellnya = $this->angka_ke_huruf($idx_tbl+5);
+								$cellnya = $this->angka_ke_huruf($idx_tbl+6);
 								$sheet->getStyle($cellnya.''.$row)->getNumberFormat()->setFormatCode('0.00');
 								$sheet->setCellValue($cellnya.''.$row, number_format((float)$grand_total_kat, 2,',','.'));
+								
+								// increment
+								$row++;
 							}
 						}
 					}
 				}
 
-				
-				// echo "<pre>";
-				// print_r ($aa);
-				// echo "</pre>";
-				// exit;
-
-				$filename = 'tabel-data-anggaran'.time();
-				header('Content-Type: application/vnd.ms-excel');
-				header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"'); 
-				header('Cache-Control: max-age=0');
-
-				$writer->save('php://output');
-				
+				$spreadsheet->getActiveSheet()->setTitle('Tahun ' . $i);
+				$spreadsheet->createSheet();				
 			}
-		// }		
+		} // end looping tahun
+
+		$filename = 'tabel-data-anggaran' . time();
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
 	}
 
 	public function cetak_data_ahp($id_hitung = false)

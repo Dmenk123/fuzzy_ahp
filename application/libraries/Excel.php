@@ -5,7 +5,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx as Reader;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
-
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class Excel
 {
@@ -44,4 +44,12 @@ class Excel
 		$csv = new Csv();
 		return $csv;
 	}
+
+	public function worksheet_obj($spreadsheet, $sheetName)
+	{
+		$newWorkSheet  = new Worksheet($spreadsheet, $sheetName);
+		return $newWorkSheet;
+	}
+
+	
 }
