@@ -66,6 +66,8 @@ class Data_hitung extends CI_Controller {
 			$table_html = $this->get_tabel_vektor();
 		}elseif ($menu == 'tabel_anggaran') {
 			$table_html = $this->get_tabel_anggaran();
+		}elseif ($menu == 'hitung_anggaran') {
+			$table_html = $this->get_hitung_anggaran();
 		}else{
 			return redirect('data_hitung');
 		}
@@ -247,7 +249,46 @@ class Data_hitung extends CI_Controller {
 		$html .= "</tbody></table>";
 		
 		$data = array(
-			'title' => 'Data Tabel Anggaran',
+			'title' => 'Daftar Proyek',
+			'html' => $html
+		);
+
+		return $data;
+	}
+
+	public function get_hitung_anggaran()
+	{
+		$data = $this->t_anggaran->get_data_transaksi_anggaran();
+		$html = "<table class='table table-striped- table-bordered table-hover table-checkable' id='tabel_data'>
+			  	<thead>
+					<tr>
+						<th style='width: 5%;'>No</th>
+						<th>Proyek</th>
+						<th style='width: 5%;'>Aksi</th>
+					</tr>
+			  	</thead>
+			  	<tbody>";
+				foreach ($data as $k => $v) 
+				{
+					$html .= "<tr>
+								<th>".++$k."</th>
+								<th>".$v->nama_proyek." [".$v->tahun_proyek.' s/d '.$v->tahun_akhir_proyek."]</th>
+								<th>
+									<div class='btn-group'>
+									<button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Opsi</button>
+										<div class='dropdown-menu'>
+											<a class='dropdown-item' target='_blank' href='".base_url('data_hitung/detail_hitung_anggaran/').$this->enkripsi->enc_dec('encrypt', $v->id)."?tahun=".$v->tahun_proyek."'>
+												<i class='la la-bar-chart-o'></i> Lihat Data
+											</a>
+										</div>
+									</div>
+								</th>
+							</tr>"; 
+				}
+		$html .= "</tbody></table>";
+		
+		$data = array(
+			'title' => 'Daftar Proyek',
 			'html' => $html
 		);
 
@@ -517,6 +558,79 @@ class Data_hitung extends CI_Controller {
 			'modal' => null,
 			'js'	=> 'data_hitung.js',
 			'view'	=> 'view_detail_tabel_anggaran'
+		];
+
+		$this->template_view->load_view($content, $data);
+	}
+
+	public function detail_hitung_anggaran($id_anggaran)
+	{
+		$obj_date = new DateTime();
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+	
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+		
+
+		$data_json = json_decode($data_anggaran->data_json);
+
+		// cek di tabel child nya ada apa tidak
+		// $data_child  = $this->m_global->multi_row('*', ['id_anggaran' => $id_anggaran], 't_anggaran_det');
+		
+		$tahun = $this->input->get('tahun');
+			
+		if($tahun == "") {
+			$tahun =  $data_anggaran->tahun_proyek;
+		}
+
+		// if($data_child) {
+		// 	## cari data lawas (edit) 
+		// 	$where = [
+		// 		'id_anggaran' => $id_anggaran,
+		// 		'tahun' => $tahun
+		// 	];
+
+		// 	$join = [ 
+		// 		['table' => 'm_kriteria', 'on' => 't_anggaran_det.id_kriteria = m_kriteria.id'],
+		// 		['table' => 'm_satuan', 'on' => 't_anggaran_det.id_satuan = m_satuan.id'],
+		// 	];
+
+		// 	$old_data = $this->m_global->multi_row('t_anggaran_det.*, m_kriteria.nama as nama_kriteria, m_satuan.nama as nama_satuan', $where, 't_anggaran_det', $join, 'urut');
+		// 	// echo $this->db->last_query();
+		// 	// exit;
+			
+		// }
+
+		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
+
+		$data = array(
+			'title' => 'Detail Pehitungan Anggaran : ( Proyek '.$data_anggaran->nama_proyek.' )',
+			'data_user' => $data_user,
+			'kategori' => $kategori,
+			'data_anggaran' => $data_anggaran,
+			// 'data' => $old_data,
+			'tahun' => $tahun,
+			'data' => $data_json
+		);
+		
+
+		/**
+		 * content data untuk template
+		 * param (css : link css pada direktori assets/css_module)
+		 * param (modal : modal komponen pada modules/nama_modul/views/nama_modal)
+		 * param (js : link js pada direktori assets/js_module)
+		 */
+		$content = [
+			'css' 	=> null,
+			'modal' => null,
+			'js'	=> 'data_hitung.js',
+			'view'	=> 'view_detail_hitung_anggaran'
 		];
 
 		$this->template_view->load_view($content, $data);
@@ -1401,6 +1515,66 @@ class Data_hitung extends CI_Controller {
 		$html = $this->load->view('view_pdf_fuzzy', $retval, true);
 	    $filename = 'tabel-defuzzifikasi-'.time();
 	    $this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
+	}
+
+	public function cetak_data_anggaran($id_anggaran = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		
+		if($id_anggaran == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+
+		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
+		$html = '';
+		for ($i=(int)$data_anggaran->tahun_proyek; $i <= (int)$data_anggaran->tahun_akhir_proyek; $i++) 
+		{
+			//cek di tabel child nya ada apa tidak
+			$data_child  = $this->m_global->multi_row('*', ['id_anggaran' => $id_anggaran], 't_anggaran_det');
+			
+			$tahun = $i;
+			if($data_child) {
+				## cari data lawas (edit) 
+				$where = [
+					'id_anggaran' => $id_anggaran,
+					'tahun' => $tahun
+				];
+
+				$join = [ 
+					['table' => 'm_kriteria', 'on' => 't_anggaran_det.id_kriteria = m_kriteria.id'],
+					['table' => 'm_satuan', 'on' => 't_anggaran_det.id_satuan = m_satuan.id'],
+				];
+	
+				$data = $this->m_global->multi_row('t_anggaran_det.*, m_kriteria.nama as nama_kriteria, m_satuan.nama as nama_satuan, m_satuan.kode as kode_satuan', $where, 't_anggaran_det', $join, 'urut');
+			}
+
+			$retval = [
+				'data' => $data,
+				'kategori' => $kategori,
+				'title' => 'Tabel Data Anggaran '.$data_anggaran->tahun_proyek.' s/d '.$data_anggaran->tahun_akhir_proyek,
+				'nama_proyek' => $data_anggaran->nama_proyek,
+				'tahun_proyek' => $i
+			];
+
+			$as[] = $retval;
+
+			$html .= $this->load->view('view_pdf_tabel_anggaran', $retval, true);
+		}
+		
+		$this->load->view('view_pdf_tabel_anggaran', $retval);
+		$filename = 'tabel-anggaran-'.$tahun.'-'.time();
+		$this->lib_dompdf->generate($html, $filename, true, 'A4', 'potrait');
 	}
 	public function angka_ke_huruf($angka)
 	{
