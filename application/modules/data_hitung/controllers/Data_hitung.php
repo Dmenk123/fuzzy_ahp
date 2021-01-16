@@ -589,23 +589,13 @@ class Data_hitung extends CI_Controller {
 			$tahun =  $data_anggaran->tahun_proyek;
 		}
 
-		// if($data_child) {
-		// 	## cari data lawas (edit) 
-		// 	$where = [
-		// 		'id_anggaran' => $id_anggaran,
-		// 		'tahun' => $tahun
-		// 	];
+		
+		// $join = [ 
+		// 	['table' => 'm_kriteria', 'on' => 't_anggaran_det.id_kriteria = m_kriteria.id'],
+		// 	['table' => 'm_satuan', 'on' => 't_anggaran_det.id_satuan = m_satuan.id'],
+		// ];
 
-		// 	$join = [ 
-		// 		['table' => 'm_kriteria', 'on' => 't_anggaran_det.id_kriteria = m_kriteria.id'],
-		// 		['table' => 'm_satuan', 'on' => 't_anggaran_det.id_satuan = m_satuan.id'],
-		// 	];
-
-		// 	$old_data = $this->m_global->multi_row('t_anggaran_det.*, m_kriteria.nama as nama_kriteria, m_satuan.nama as nama_satuan', $where, 't_anggaran_det', $join, 'urut');
-		// 	// echo $this->db->last_query();
-		// 	// exit;
-			
-		// }
+		$data_bobot = $this->m_global->multi_row('t_bobot_proses.*', ['id_anggaran' => $id_anggaran], 't_bobot_proses', null, 'kode asc, tahun asc');
 
 		$kategori = $this->m_global->multi_row('*', ['deleted_at' => null], 'm_kategori', NULL, 'urut');
 
@@ -614,11 +604,16 @@ class Data_hitung extends CI_Controller {
 			'data_user' => $data_user,
 			'kategori' => $kategori,
 			'data_anggaran' => $data_anggaran,
-			// 'data' => $old_data,
+			'data_bobot' => $data_bobot,
 			'tahun' => $tahun,
 			'data' => $data_json
 		);
 		
+		
+		// echo "<pre>";
+		// print_r ($data);
+		// echo "</pre>";
+		// exit;
 
 		/**
 		 * content data untuk template

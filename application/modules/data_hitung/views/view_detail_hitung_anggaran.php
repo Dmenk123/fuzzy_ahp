@@ -56,7 +56,7 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
         </div>
       </div>
 
-      <div class="kt-portlet__body" id="vektor_area">
+      <div class="kt-portlet__body" id="anggaran_area">
         <div class="col-lg-12 row table-responsive">
           <?php 
             $no = 1; 
@@ -85,6 +85,7 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
                 <th scope="row"><?='A'.$no++;?></th>
                 <td width="10%"><?=$tahun;?></td>
                 <?php foreach ($data as $kk => $vv) { ?>
+                 
                   <?php if($flag_tahun == $vv->tahun) { ?>     
                     <?php
                       
@@ -112,7 +113,7 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
                         <span class="pull-right"><strong><?=number_format((float)$grand_total_thn, 2,',','.');?></strong></span>
                       </td>
                     <?php } ?>
-
+ 
                     <?php }else{ ?>
                       <?php $flag_tahun = $vv->tahun; ?>
                       <?php $grand_total_thn = 0; ?>
@@ -124,7 +125,146 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
                           <span class="pull-right"><?=number_format((float)$vv->total, 2,',','.');?></span>
                         </td>
                   <?php } ?>
+
                 <?php } ?> 
+              </tr>
+            </tbody>
+          </table> 
+         
+        </div>
+      </div>
+
+      <div class="kt-portlet__body" id="proses_bobot_area">
+        <div class="col-lg-12 row table-responsive">
+          <h5>Proses Bobot Perhitungan Per Kategori</h5>
+          <hr>
+          <table class="table table-bordered table-hover">
+            <!-- <thead>
+              <tr>
+                <th style="text-align:center;">#</th>
+                <th style="text-align:center;">Tahun</th>
+                <?php 
+                  for ($i=0; $i < $jumlah_kolom; $i++) { 
+                    echo '<th style="text-align:center;">'.$data[$i]->kode_kategori.'</th>';
+                  }
+                ?>
+                <th style="text-align:center;">Total</th>
+              </tr>
+            </thead> -->
+            <tbody>
+              <?php $is_first_header = true; ?>
+              <?php $flag_kode = ''; ?>
+              <?php $flag_tahun = $data_bobot[0]->tahun; ?>
+              <?php foreach ($data_bobot as $k => $v) { ?>
+                <?php if($flag_kode != $v->kode) { ?>
+                  <?php if($is_first_header == false) { ?>
+                    <tr>
+                      <th colspan="5"></th>
+                    </tr>
+                  <?php } ?>
+                  <tr>
+                    <th><?=$v->kode;?></th>
+                    <th>MAX</th>
+                    <th>MIN</th>
+                    <th>MAX-MIN</th>
+                    <th>BOBOT (W)</th>
+                  </tr>
+                <?php } ?>
+
+                <tr>
+                  <td style="text-align:right;"><?=$v->nilai_awal;?></td>
+                  <td style="text-align:right;"><?=$v->max;?></td>
+                  <td style="text-align:right;"><?=$v->min;?></td>
+                  <td style="text-align:right;"><?=$v->max_min;?></td>
+                  <td style="text-align:right;"><?=number_format((float)$v->bobot, 10,',','.');?></td>
+                </tr>
+                
+                <?php 
+                  $flag_kode = $v->kode;
+                  $is_first_header = false; 
+                ?>
+              <?php } ?>
+            </tbody>
+          </table> 
+         
+        </div>
+      </div>
+
+      <div class="kt-portlet__body" id="bobot_area">
+        <div class="col-lg-12 row table-responsive">
+          <?php 
+              $no = 1; 
+              ## hitung jumlah kolomnya
+              $counter_kolom = 0;
+              $kode_bobot = '';
+              $arr_tahun = [];
+              foreach ($data_bobot as $kkk => $vvv) {
+                if($vvv->kode != $kode_bobot){
+                  $counter_kolom++;
+                }
+
+                $kode_bobot = $vvv->kode;
+              }
+
+              // assign kolom tahun
+              foreach ($data_bobot as $kkk => $vvv) {
+                if (!in_array($vvv->tahun, $arr_tahun)){
+                  array_push($arr_tahun, $vvv->tahun);
+                }
+              }
+
+              // var_dump($arr_tahun);exit;
+          ?>
+          <h5>Nilai Bobot Per Kategori</h5>
+          <hr>
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th style="text-align:center;">#</th>
+                <?php for ($i=1; $i <= $counter_kolom; $i++) { 
+                  echo '<th style="text-align:center;">C'.$i.'</th>';
+                } ?>
+              </tr>
+            </thead>
+            <tbody>
+              <?php for ($z=0; $z < count($arr_tahun); $z++) { ?>
+                <tr>
+                  <th style="text-align:center;">A<?=$z+1;?></th>
+
+                  <?php foreach ($data_bobot as $k => $v) { ?>
+                    <?php if($arr_tahun[$z] == $v->tahun) { ?>
+                      <td style="text-align:right;"><?=number_format((float)$v->bobot, 4,',','.');?></td>                    
+                    <?php } ?>
+                  <?php } ?>
+                  
+                </tr>
+              <?php } ?>
+
+              <!-- baris jumlah -->
+              <tr>
+                <th style="text-align:center;">JUMLAH</th>
+                <?php 
+                  $kode_bobot = $data_bobot[0]->kode; 
+                  $jumlah_bobot = 0;
+                  foreach ($data_bobot as $k => $v) {
+                    if($kode_bobot == $v->kode) {
+                      $jumlah_bobot += $v->bobot;
+                    }else{
+                  ?>
+                    <td style="text-align:right;"><?=number_format((float)$jumlah_bobot, 4,',','.');?></td>  
+                    <?php 
+                      //reset
+                      $jumlah_bobot = 0;
+                      //assign bobot
+                      $jumlah_bobot += $v->bobot;
+                    ?>
+                  <?php } ?>
+
+                  <?php $kode_bobot = $v->kode; ?>
+                <?php } ?>
+                
+                <!-- tambahan kolom -->
+                <td style="text-align:right;"><?=number_format((float)$jumlah_bobot, 4,',','.');?></td>  
               </tr>
             </tbody>
           </table> 

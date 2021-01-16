@@ -16,6 +16,7 @@ class Form_anggaran extends CI_Controller {
 		$this->load->model('m_satuan');
 		$this->load->model('t_anggaran');
 		$this->load->model('t_anggaran_det');
+		$this->load->model('t_bobot_proses');
 		$this->load->model('m_global');
 	}
 
@@ -361,15 +362,10 @@ class Form_anggaran extends CI_Controller {
 			];
 
 			$insert = $this->t_anggaran_det->save($data_ins);
-
-			$kampes[] = $data_ins;
+			//$kampes[] = $data_ins;
 		}
 
-		// echo "<pre>";
-		// print_r ($kampes);
-		// echo "</pre>";
-		// exit;
-
+		
 		## ambil data det, sum harga_total by kategori
 		$total_harga_kat = $this->t_anggaran_det->ambil_data_tot_harga($id_anggaran, $tahun_anggaran);
 
@@ -377,6 +373,83 @@ class Form_anggaran extends CI_Controller {
 		$json_data_anggaran = json_encode($total_harga_kat);
 		$data_upd = ['data_json' => $json_data_anggaran];
 		$upd = $this->m_global->update('t_anggaran', $data_upd, ['id' => $id_anggaran]);
+
+		## insert/update ke tabel t_bobot_proses
+		$old_data_bobot = $this->m_global->multi_row('*', ['id_anggaran' => $id_anggaran], 't_bobot_proses');
+		if($old_data_bobot){
+			## delete
+			$del_bobot = $this->m_global->delete(['id_anggaran' => $id_anggaran], 't_bobot_proses');
+		}
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+
+		$data_json = json_decode($data_anggaran->data_json);
+		$flag_tahun = $data_json[0]->tahun;
+		$is_kolom_akhir = false;
+
+		$idx = 0;
+		foreach ($data_json as $k => $v) 
+		{
+			if($flag_tahun == $v->tahun) {
+				$arr_anggaran[$idx]['tahun'] = $v->tahun;
+				$arr_anggaran[$idx]['data'][] = $v->total;
+			}else{
+				$flag_tahun = $v->tahun;
+				$arr_anggaran[++$idx]['data'][] = $v->total;
+				$arr_anggaran[$idx]['tahun'] = $v->tahun;
+			}	
+		}
+
+		## loop maneh ben enak ngitunge 
+		$idx1 = 0;
+		foreach ($arr_anggaran as $kk => $vv) {
+			$loop_tahun[] = $vv['tahun'];
+			
+			for ($i=0; $i < count($vv['data']); $i++) { 
+				${"c".($i+1)}[] = $vv['data'][$i];
+			}			
+		}
+
+		// assign variabel
+		$arr_anggaran_fix['tahun'] = $loop_tahun;
+		for ($z=0; $z < count($vv['data']); $z++)
+		{ 	
+			$kolom_anggaran_fix = $z+1;
+			$arr_anggaran_fix['C'.$kolom_anggaran_fix] = ${"c".$kolom_anggaran_fix};
+		}
+		### wes enak ngitunge
+
+		$jml_kolom_tahun = count($arr_anggaran_fix['tahun']);
+
+		## kolom pertama
+		for ($y=0; $y < $kolom_anggaran_fix; $y++) { 
+			for ($xxx=0; $xxx < $jml_kolom_tahun; $xxx++) { 
+				$min = min($arr_anggaran_fix['C'.($y+1)]);
+				$max = max($arr_anggaran_fix['C'.($y+1)]);
+				$max_min = (float)$max-(float)$min;
+				$nilai_awal = $max - $arr_anggaran_fix['C'.($y+1)][$xxx];
+				
+				$ins_bobot['id'] = $this->t_bobot_proses->get_max_id();
+				$ins_bobot['id_anggaran'] = $id_anggaran;
+				$ins_bobot['min'] = $min;
+				$ins_bobot['max'] = $max;
+				$ins_bobot['max_min'] = $max_min;
+				$ins_bobot['nilai_awal'] = $nilai_awal;
+				$ins_bobot['bobot'] = $nilai_awal/$max_min;
+				$ins_bobot['tahun'] = $arr_anggaran_fix['tahun'][$xxx];
+				$ins_bobot['kode'] = 'C'.($y+1);
+				$ins_bobot['created_at'] = $timestamp;
+
+				//$data_ins_bobot[] = $ins_bobot;
+				$this->t_bobot_proses->save($ins_bobot);
+			}
+			
+		}
+
+		// echo "<pre>";
+		// print_r ($data_ins_bobot);
+		// echo "</pre>";
+		// exit;
 
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
