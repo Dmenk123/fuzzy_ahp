@@ -1536,6 +1536,123 @@ class Data_hitung extends CI_Controller {
 
 		$writer->save('php://output');
 	}
+
+	public function download_excel_hasil_bobot($id_anggaran = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+
+		if($id_anggaran == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+	
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+
+		$data_json = json_decode($data_anggaran->data_json);
+		$data_bobot = $this->m_global->multi_row('t_bobot_proses.*', ['id_anggaran' => $id_anggaran], 't_bobot_proses', null, 'kode asc, tahun asc');
+		$tahun =  $data_anggaran->tahun_proyek;
+
+		$spreadsheet = $this->excel->spreadsheet_obj();
+		$writer = $this->excel->xlsx_obj($spreadsheet);
+		$number_format_obj = $this->excel->number_format_obj();
+						
+		$spreadsheet
+			->getActiveSheet()
+			->getStyle('A1:AA100')
+			->getNumberFormat()
+			->setFormatCode($number_format_obj::FORMAT_TEXT);
+
+		$sheet = $spreadsheet->getActiveSheet();
+		
+		$startRow = 1;
+		$row = $startRow;
+		$idx_tbl = 0;
+		$no = 1;
+		$counter_kolom = 0;
+		$kode_bobot = '';
+		$arr_tahun = [];
+
+		foreach ($data_bobot as $kkk => $vvv) {
+			if($vvv->kode != $kode_bobot){
+				$counter_kolom++;
+			}
+
+			$kode_bobot = $vvv->kode;
+		}
+
+		// assign kolom tahun
+		foreach ($data_bobot as $kkk => $vvv) {
+			if (!in_array($vvv->tahun, $arr_tahun)){
+			  array_push($arr_tahun, $vvv->tahun);
+			}
+		}
+
+		$cellnya = $this->angka_ke_huruf($idx_tbl++);
+		$sheet->getCell($cellnya . '' . $row)->setValue('#');
+
+		for ($i=1; $i <= $counter_kolom; $i++) { 
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue('C'.$i);
+		}
+
+		$row++;
+		$idx_tbl = 0;
+
+		for ($z=0; $z < count($arr_tahun); $z++) {
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue('A'.($z+1));
+
+			foreach ($data_bobot as $k => $v) {
+				if($arr_tahun[$z] == $v->tahun) {
+					$cellnya = $this->angka_ke_huruf($idx_tbl++);
+					$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$v->bobot, 4,',','.'));
+				}
+			}
+
+			$row++;
+			$idx_tbl = 0;
+		}
+
+		$cellnya = $this->angka_ke_huruf($idx_tbl++);
+		$sheet->getCell($cellnya . '' . $row)->setValue('JUMLAH');
+
+		$kode_bobot = $data_bobot[0]->kode; 
+		$jumlah_bobot = 0;
+		foreach ($data_bobot as $k => $v) {
+			if($kode_bobot == $v->kode) {
+				$jumlah_bobot += $v->bobot;
+			}else{
+				$cellnya = $this->angka_ke_huruf($idx_tbl++);
+				$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$jumlah_bobot, 4,',','.'));
+				
+				//reset
+				$jumlah_bobot = 0;
+				//assign bobot
+				$jumlah_bobot += $v->bobot;
+			}
+
+			$kode_bobot = $v->kode;
+		}
+
+		// tambahan kolom 
+		$cellnya = $this->angka_ke_huruf($idx_tbl++);
+		$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$jumlah_bobot, 4,',','.'));
+		
+		$filename = 'proses_hasil_bobot' . time();
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+	}
 	########################################################
 
 	public function cetak_data_ahp($id_hitung = false)
