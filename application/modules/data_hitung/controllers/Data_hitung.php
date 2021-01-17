@@ -68,10 +68,12 @@ class Data_hitung extends CI_Controller {
 			$table_html = $this->get_tabel_anggaran();
 		}elseif ($menu == 'hitung_anggaran') {
 			$table_html = $this->get_hitung_anggaran();
+		}elseif ($menu == 'perangkingan') {
+			$table_html = $this->get_hitung_rangking();
 		}else{
 			return redirect('data_hitung');
 		}
-
+		
 		$data = array(
 			'title' => 'Hasil Data Perhitungan',
 			'table_html' => $table_html,
@@ -278,6 +280,45 @@ class Data_hitung extends CI_Controller {
 									<button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Opsi</button>
 										<div class='dropdown-menu'>
 											<a class='dropdown-item' target='_blank' href='".base_url('data_hitung/detail_hitung_anggaran/').$this->enkripsi->enc_dec('encrypt', $v->id)."?tahun=".$v->tahun_proyek."'>
+												<i class='la la-bar-chart-o'></i> Lihat Data
+											</a>
+										</div>
+									</div>
+								</th>
+							</tr>"; 
+				}
+		$html .= "</tbody></table>";
+		
+		$data = array(
+			'title' => 'Daftar Proyek',
+			'html' => $html
+		);
+
+		return $data;
+	}
+
+	public function get_hitung_rangking()
+	{
+		$data = $this->t_anggaran->get_data_transaksi_anggaran();
+		$html = "<table class='table table-striped- table-bordered table-hover table-checkable' id='tabel_data'>
+			  	<thead>
+					<tr>
+						<th style='width: 5%;'>No</th>
+						<th>Proyek</th>
+						<th style='width: 5%;'>Aksi</th>
+					</tr>
+			  	</thead>
+			  	<tbody>";
+				foreach ($data as $k => $v) 
+				{
+					$html .= "<tr>
+								<th>".++$k."</th>
+								<th>".$v->nama_proyek." [".$v->tahun_proyek.' s/d '.$v->tahun_akhir_proyek."]</th>
+								<th>
+									<div class='btn-group'>
+									<button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Opsi</button>
+										<div class='dropdown-menu'>
+											<a class='dropdown-item' target='_blank' href='".base_url('data_hitung/detail_rangking/').$this->enkripsi->enc_dec('encrypt', $v->id)."?tahun=".$v->tahun_proyek."'>
 												<i class='la la-bar-chart-o'></i> Lihat Data
 											</a>
 										</div>
@@ -623,6 +664,130 @@ class Data_hitung extends CI_Controller {
 			'modal' => null,
 			'js'	=> 'data_hitung.js',
 			'view'	=> 'view_detail_hitung_anggaran'
+		];
+
+		$this->template_view->load_view($content, $data);
+	}
+
+	public function detail_rangking($id_anggaran)
+	{
+		$obj_date = new DateTime();
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+	
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+		
+		$data_json = json_decode($data_anggaran->data_json);
+
+		$tahun = $this->input->get('tahun');
+			
+		if($tahun == "") {
+			$tahun =  $data_anggaran->tahun_proyek;
+		}
+
+		$data_bobot = $this->m_global->multi_row('t_bobot_proses.*', ['id_anggaran' => $id_anggaran], 't_bobot_proses', null, 'kode asc, tahun asc');
+
+		## hitung bobot per kategori dan simpan ke array
+		$kode_bobot = '';
+		$counter_kolom = 0;
+		$arr_tahun = [];
+		foreach ($data_bobot as $kkk => $vvv) {
+			if($vvv->kode != $kode_bobot){
+				$counter_kolom++;
+			}
+
+			$kode_bobot = $vvv->kode;
+		}
+
+		// assign kolom tahun
+		foreach ($data_bobot as $kkk => $vvv) {
+			if (!in_array($vvv->tahun, $arr_tahun)){
+			  array_push($arr_tahun, $vvv->tahun);
+			}
+		}
+
+		for ($z=0; $z < count($arr_tahun); $z++) {
+			$arr_bbt = [];
+			foreach ($data_bobot as $k => $v) {
+				if($arr_tahun[$z] == $v->tahun) {
+					$arr_bbt[] = $v->bobot;
+				}
+			}
+
+			$arr_bobot[] = $arr_bbt;
+		}
+
+		$kode_bobot = $data_bobot[0]->kode; 
+		$jumlah_bobot = 0;
+		$arr_bbt = [];
+
+		foreach ($data_bobot as $k => $v) {
+
+			if($kode_bobot == $v->kode) {
+				$jumlah_bobot += $v->bobot;
+			}else{
+				$arr_bbt[] = $jumlah_bobot;
+
+				//reset
+				$jumlah_bobot = 0;
+				//assign bobot
+				$jumlah_bobot += $v->bobot;
+			}
+
+			$kode_bobot = $v->kode;
+		}
+		// tambahan kolom 
+		$arr_bbt[] = $jumlah_bobot;
+		//assign ke array bobot
+		$arr_bobot[] = $arr_bbt;
+
+		#### ambil data hitung 
+		$data_hitung = $this->m_global->single_row('*', ['id_proyek' => $data_anggaran->id_proyek, 'deleted_at' => null], 't_hitung');
+		
+		#### data normalisasi_ahp
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'tn.id_kategori = k.id']
+		];
+		
+		$normalisasi_ahp = $this->m_global->multi_row('tn.*, k.nama as nama_kategori', ['tn.id_hitung' => $data_hitung->id, 'tn.deleted_at' => null], 't_normalisasi tn', $join, 'tn.id_kategori asc, tn.kode_kategori_tujuan asc');
+
+		## cari data fuzzy simpan ke array
+		$fuzzy = [];
+		foreach ($normalisasi_ahp as $kkk => $vvv) { 
+			if($vvv->kode_kategori_tujuan == 'C1') {
+				$fuzzy[] = $vvv->nilai;
+			}
+		}
+		
+		$data = array(
+			'title' => 'Normalisasi Bobot & Perangkingan : ( Proyek '.$data_anggaran->nama_proyek.' )',
+			'data_user' => $data_user,
+			'data_anggaran' => $data_anggaran,
+			'data_bobot' => $data_bobot,
+			'hasil_bobot' => $arr_bobot,
+			'tahun' => $tahun,
+			'data' => $data_json,
+			'fuzzy' => $fuzzy
+		);
+
+		
+		/**
+		 * content data untuk template
+		 * param (css : link css pada direktori assets/css_module)
+		 * param (modal : modal komponen pada modules/nama_modul/views/nama_modal)
+		 * param (js : link js pada direktori assets/js_module)
+		 */
+		$content = [
+			'css' 	=> null,
+			'modal' => null,
+			'js'	=> 'data_hitung.js',
+			'view'	=> 'view_detail_rangking'
 		];
 
 		$this->template_view->load_view($content, $data);
@@ -1653,6 +1818,7 @@ class Data_hitung extends CI_Controller {
 
 		$writer->save('php://output');
 	}
+
 	########################################################
 
 	public function cetak_data_ahp($id_hitung = false)
@@ -2017,6 +2183,122 @@ class Data_hitung extends CI_Controller {
 		$filename = 'hasil-bobot-'.time();
 		$html .= $this->load->view('view_pdf_hasil_bobot', $retval, true);
 		$this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
+	}
+
+	public function cetak_hasil_rangking($id_anggaran = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		
+		if($id_anggaran == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+
+		$data_json = json_decode($data_anggaran->data_json);
+		$data_bobot = $this->m_global->multi_row('t_bobot_proses.*', ['id_anggaran' => $id_anggaran], 't_bobot_proses', null, 'kode asc, tahun asc');
+		$tahun =  $data_anggaran->tahun_proyek;
+
+		## hitung bobot per kategori dan simpan ke array
+		$kode_bobot = '';
+		$counter_kolom = 0;
+		$arr_tahun = [];
+		foreach ($data_bobot as $kkk => $vvv) {
+			if($vvv->kode != $kode_bobot){
+				$counter_kolom++;
+			}
+
+			$kode_bobot = $vvv->kode;
+		}
+
+		// assign kolom tahun
+		foreach ($data_bobot as $kkk => $vvv) {
+			if (!in_array($vvv->tahun, $arr_tahun)){
+			  array_push($arr_tahun, $vvv->tahun);
+			}
+		}
+
+		for ($z=0; $z < count($arr_tahun); $z++) {
+			$arr_bbt = [];
+			foreach ($data_bobot as $k => $v) {
+				if($arr_tahun[$z] == $v->tahun) {
+					$arr_bbt[] = $v->bobot;
+				}
+			}
+
+			$arr_bobot[] = $arr_bbt;
+		}
+
+		$kode_bobot = $data_bobot[0]->kode; 
+		$jumlah_bobot = 0;
+		$arr_bbt = [];
+
+		foreach ($data_bobot as $k => $v) {
+
+			if($kode_bobot == $v->kode) {
+				$jumlah_bobot += $v->bobot;
+			}else{
+				$arr_bbt[] = $jumlah_bobot;
+
+				//reset
+				$jumlah_bobot = 0;
+				//assign bobot
+				$jumlah_bobot += $v->bobot;
+			}
+
+			$kode_bobot = $v->kode;
+		}
+
+		// tambahan kolom 
+		$arr_bbt[] = $jumlah_bobot;
+		//assign ke array bobot
+		$arr_bobot[] = $arr_bbt;
+
+		#### ambil data hitung 
+		$data_hitung = $this->m_global->single_row('*', ['id_proyek' => $data_anggaran->id_proyek, 'deleted_at' => null], 't_hitung');
+		
+		#### data normalisasi_ahp
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'tn.id_kategori = k.id']
+		];
+		
+		$normalisasi_ahp = $this->m_global->multi_row('tn.*, k.nama as nama_kategori', ['tn.id_hitung' => $data_hitung->id, 'tn.deleted_at' => null], 't_normalisasi tn', $join, 'tn.id_kategori asc, tn.kode_kategori_tujuan asc');
+
+		## cari data fuzzy simpan ke array
+		$fuzzy = [];
+		foreach ($normalisasi_ahp as $kkk => $vvv) { 
+			if($vvv->kode_kategori_tujuan == 'C1') {
+				$fuzzy[] = $vvv->nilai;
+			}
+		}
+
+		$html = '';
+
+		$retval = [
+			'data' => $data_json,
+			'fuzzy' => $fuzzy,
+			'data_bobot' => $data_bobot,
+			'hasil_bobot' => $arr_bobot,
+			'data_anggaran' => $data_anggaran,
+			'title' => 'Total Anggaran '.$data_anggaran->tahun_proyek.' s/d '.$data_anggaran->tahun_akhir_proyek,
+			'nama_proyek' => $data_anggaran->nama_proyek,
+			'tahun' => $tahun
+		];
+
+
+		// $this->load->view('view_pdf_hasil_rangking', $retval);
+		$filename = 'hasil-rangking-'.time();
+		$html .= $this->load->view('view_pdf_hasil_rangking', $retval, true);
+		$this->lib_dompdf->generate($html, $filename, true, 'A4', 'potrait');
 	}
 
 
