@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 18/01/2021 00:03:50
+ Date: 18/01/2021 00:08:58
 */
 
 SET NAMES utf8mb4;
@@ -181,6 +181,7 @@ INSERT INTO `m_menu` VALUES (12, 11, 'Perhitungan AHP', 'Perhitungan AHP', 'hitu
 INSERT INTO `m_menu` VALUES (13, 11, 'Data Perhitungan', 'Data Perhitungan', 'data_hitung', 'flaticon-statistics', 1, 2, 3, 1, 1, 1);
 INSERT INTO `m_menu` VALUES (14, 6, 'Master Proyek', 'Master Proyek', 'master_proyek', 'flaticon2-start-up', 1, 2, 5, 1, 1, 1);
 INSERT INTO `m_menu` VALUES (15, 11, 'Formulir Anggaran', 'Formulir Anggaran', 'form_anggaran', 'flaticon2-list', 1, 2, 2, 1, 1, 1);
+INSERT INTO `m_menu` VALUES (16, 6, 'Master Satuan', 'Master Satuan', 'master_satuan', 'flaticon2-file-1', 1, 2, 6, 1, 1, 1);
 
 -- ----------------------------
 -- Table structure for m_proyek
@@ -870,6 +871,7 @@ INSERT INTO `t_role_menu` VALUES (8, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (9, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (10, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (14, 1, 1, 1, 1);
+INSERT INTO `t_role_menu` VALUES (16, 1, 1, 1, 0);
 INSERT INTO `t_role_menu` VALUES (11, 1, 0, 0, 0);
 INSERT INTO `t_role_menu` VALUES (12, 1, 1, 1, 1);
 INSERT INTO `t_role_menu` VALUES (15, 1, 1, 1, 1);
@@ -908,5 +910,10 @@ INSERT INTO `t_sintesis` VALUES (6, 1, 6, 'C6', 0.040872470, 0.061443914, 0.0921
 INSERT INTO `t_sintesis` VALUES (7, 1, 7, 'C7', 0.055508237, 0.092367470, 0.193230793, '2020-12-27 13:20:06', NULL, NULL);
 INSERT INTO `t_sintesis` VALUES (8, 2, 1, 'C1', 0.154189557, 0.238615960, 0.347815424, '2020-12-28 10:50:07', NULL, NULL);
 INSERT INTO `t_sintesis` VALUES (9, 2, 2, 'C2', 0.139211133, 0.212958321, 0.316898495, '2020-12-28 10:50:07', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (10, 2, 3, 'C3', 0.083056770, 0.137011737, 0.215774387, '2020-12-28 10:50:07', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (11, 2, 4, 'C4', 0.086581104, 0.134445980, 0.204180539, '2020-12-28 10:50:07', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (12, 2, 5, 'C5', 0.078945048, 0.123156622, 0.196451306, '2020-12-28 10:50:07', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (13, 2, 6, 'C6', 0.040872470, 0.061443914, 0.092152685, '2020-12-28 10:50:07', NULL, NULL);
+INSERT INTO `t_sintesis` VALUES (14, 2, 7, 'C7', 0.055508237, 0.092367470, 0.193230793, '2020-12-28 10:50:07', NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
