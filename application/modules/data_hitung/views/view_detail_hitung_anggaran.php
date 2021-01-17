@@ -1,16 +1,6 @@
 <?php
 $obj_date = new DateTime();
 $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_by('urut', 'ASC')->get()->result();
-
-
-// echo "<pre>";
-// print_r ($data_kat);
-// echo "</pre>";
-
-// echo "<pre>";
-// print_r ($data);
-// echo "</pre>";
-// exit;
 ?>
 <!-- begin:: Content -->
 <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
@@ -46,8 +36,14 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
                   <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/download_excel_anggaran/'.$this->uri->segment(3);?>">
                     <i class="la la-arrow-circle-o-down"></i> Excel Anggaran
                   </a>
-                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/cetak_data_anggaran/'.$this->uri->segment(3);?>">
-                    <i class="la la-print"></i> Cetak Anggaran
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/cetak_data_perhitungan_anggaran/'.$this->uri->segment(3);?>">
+                    <i class="la la-print"></i> Perhitungan Anggaran
+                  </a>
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/cetak_perhitungan_bobot/'.$this->uri->segment(3);?>">
+                    <i class="la la-print"></i> Perhitungan Bobot
+                  </a>
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/cetak_hasil_bobot/'.$this->uri->segment(3);?>">
+                    <i class="la la-print"></i> hasil Bobot
                   </a>
                 </div>
               </div>
@@ -139,18 +135,6 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
           <h5>Proses Bobot Perhitungan Per Kategori</h5>
           <hr>
           <table class="table table-bordered table-hover">
-            <!-- <thead>
-              <tr>
-                <th style="text-align:center;">#</th>
-                <th style="text-align:center;">Tahun</th>
-                <?php 
-                  for ($i=0; $i < $jumlah_kolom; $i++) { 
-                    echo '<th style="text-align:center;">'.$data[$i]->kode_kategori.'</th>';
-                  }
-                ?>
-                <th style="text-align:center;">Total</th>
-              </tr>
-            </thead> -->
             <tbody>
               <?php $is_first_header = true; ?>
               <?php $flag_kode = ''; ?>

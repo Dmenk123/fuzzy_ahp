@@ -580,9 +580,6 @@ class Data_hitung extends CI_Controller {
 
 		$data_json = json_decode($data_anggaran->data_json);
 
-		// cek di tabel child nya ada apa tidak
-		// $data_child  = $this->m_global->multi_row('*', ['id_anggaran' => $id_anggaran], 't_anggaran_det');
-		
 		$tahun = $this->input->get('tahun');
 			
 		if($tahun == "") {
@@ -1571,6 +1568,127 @@ class Data_hitung extends CI_Controller {
 		$filename = 'tabel-anggaran-'.$tahun.'-'.time();
 		$this->lib_dompdf->generate($html, $filename, true, 'A4', 'potrait');
 	}
+
+	public function cetak_data_perhitungan_anggaran($id_anggaran = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		
+		if($id_anggaran == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+
+		$data_json = json_decode($data_anggaran->data_json);
+		$tahun =  $data_anggaran->tahun_proyek;
+
+		$html = '';
+
+		$retval = [
+			'data' => $data_json,
+			//'data_json' => $data_json,
+			'title' => 'Total Anggaran '.$data_anggaran->tahun_proyek.' s/d '.$data_anggaran->tahun_akhir_proyek,
+			'nama_proyek' => $data_anggaran->nama_proyek,
+			'tahun' => $tahun
+		];
+
+
+		//$this->load->view('view_pdf_total_anggaran', $retval);
+		$filename = 'total-anggaran-'.time();
+		$html .= $this->load->view('view_pdf_total_anggaran', $retval, true);
+		$this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
+	}
+
+	public function cetak_perhitungan_bobot($id_anggaran = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		
+		if($id_anggaran == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+
+		$data_json = json_decode($data_anggaran->data_json);
+		$data_bobot = $this->m_global->multi_row('t_bobot_proses.*', ['id_anggaran' => $id_anggaran], 't_bobot_proses', null, 'kode asc, tahun asc');
+		$tahun =  $data_anggaran->tahun_proyek;
+
+		$html = '';
+
+		$retval = [
+			'data' => $data_json,
+			'data_bobot' => $data_bobot,
+			'title' => 'Total Anggaran '.$data_anggaran->tahun_proyek.' s/d '.$data_anggaran->tahun_akhir_proyek,
+			'nama_proyek' => $data_anggaran->nama_proyek,
+			'tahun' => $tahun
+		];
+
+
+		//$this->load->view('view_pdf_proses_bobot', $retval);
+		$filename = 'proses-bobot-'.time();
+		$html .= $this->load->view('view_pdf_proses_bobot', $retval, true);
+		$this->lib_dompdf->generate($html, $filename, true, 'A4', 'potrait');
+	}
+
+	public function cetak_hasil_bobot($id_anggaran = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+		
+		if($id_anggaran == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+
+		$data_json = json_decode($data_anggaran->data_json);
+		$data_bobot = $this->m_global->multi_row('t_bobot_proses.*', ['id_anggaran' => $id_anggaran], 't_bobot_proses', null, 'kode asc, tahun asc');
+		$tahun =  $data_anggaran->tahun_proyek;
+
+		$html = '';
+
+		$retval = [
+			'data' => $data_json,
+			'data_bobot' => $data_bobot,
+			'title' => 'Total Anggaran '.$data_anggaran->tahun_proyek.' s/d '.$data_anggaran->tahun_akhir_proyek,
+			'nama_proyek' => $data_anggaran->nama_proyek,
+			'tahun' => $tahun
+		];
+
+
+		// $this->load->view('view_pdf_hasil_bobot', $retval);
+		$filename = 'hasil-bobot-'.time();
+		$html .= $this->load->view('view_pdf_hasil_bobot', $retval, true);
+		$this->lib_dompdf->generate($html, $filename, true, 'A4', 'landscape');
+	}
+
+
 	public function angka_ke_huruf($angka)
 	{
 		foreach (range('A', 'Z') as $char) {
