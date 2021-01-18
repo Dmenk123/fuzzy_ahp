@@ -762,6 +762,23 @@ class Hitung_ahp extends CI_Controller {
 		return $retval;
 	}
 
+	public function delete_data()
+	{
+		$id_hitung = $this->input->post('id');
+		## delete
+		$del = $this->m_global->delete(['id' => $id_hitung, 'deleted_at' => null], 't_hitung');
+		$del_det = $this->m_global->delete(['id_hitung' => $id_hitung, 'deleted_at' => null], 't_hitung_det');
+		if($del) {
+			$retval['status'] = TRUE;
+			$retval['pesan'] = 'Data Perhitungan Telah dihapus';
+		}else{
+			$retval['status'] = FALSE;
+			$retval['pesan'] = 'Data Perhitungan Telah dihapus';
+		}
+
+		echo json_encode($retval);
+	}
+
 	///////////////////////////////////////////////////////////////////
 
 	// ===============================================

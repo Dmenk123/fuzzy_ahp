@@ -337,14 +337,14 @@ function delete_data(id){
       }).then((result) => {
         if (result.value) {
             $.ajax({
-                url : base_url + 'master_kriteria/delete_data',
+                url : base_url + 'hitung_ahp/delete_data',
                 type: "POST",
                 dataType: "JSON",
                 data : {id:id},
                 success: function(data)
                 {
                     swalConfirm.fire('Berhasil Hapus Data!', data.pesan, 'success');
-                    table.ajax.reload();
+                    location.reload();
                 },
                 error: function (jqXHR, textStatus, errorThrown)
                 {
