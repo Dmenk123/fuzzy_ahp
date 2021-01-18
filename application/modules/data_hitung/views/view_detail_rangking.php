@@ -175,10 +175,11 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
               //sorting
               asort($arr_skor);
               // buat array, pakai value sebagai key untuk mencari rangking
+              $nomor = 1;
               foreach ($arr_skor as $key => $value) {
-                $arr_rangking[number_format((float)$value, 4,',','.')] = $key+1;
+                $arr_rangking[number_format((float)$value, 4,',','.')] = $nomor++;
               }
-
+              
               ?>
               
               <?php for ($i=0; $i < count($hasil_bobot)-1; $i++) { ?> 

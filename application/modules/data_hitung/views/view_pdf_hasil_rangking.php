@@ -162,17 +162,25 @@
 
       <?php 
         $no = 1; 
+        $arr_kode = [];
         ## hitung jumlah kolomnya
         $counter_kolom = 0;
         $kode_bobot = '';
         $arr_tahun = [];
-        foreach ($data_bobot as $kkk => $vvv) {
-          if($vvv->kode != $kode_bobot){
-            $counter_kolom++;
-          }
-
-          $kode_bobot = $vvv->kode;
+        foreach ($data_bobot as $kk => $vv) {
+          $arr_kode[] = $vv->kode;
         }
+        $arr_kode = array_unique($arr_kode);
+        // foreach ($data_bobot as $kkk => $vvv) {
+        //   if($vvv->kode != $kode_bobot){
+        //     $counter_kolom++;
+        //   }
+
+        //   $kode_bobot = $vvv->kode;
+        // }
+        // foreach ($arr_kode as $key => $value) {  
+        //   echo '<th >'.$value.'</th>';
+        // }
 
         // assign kolom tahun
         foreach ($data_bobot as $kkk => $vvv) {
@@ -189,13 +197,17 @@
         <?php 
           $kode_bobot = '';
           echo '<th>#</th>'; 
-          foreach ($data_bobot as $key => $value) {  
-            if($value->kode == $kode_bobot) {
-              echo '<th>'.$value->kode.'</th>';
-            }
+          // foreach ($data_bobot as $key => $value) {  
+          //   if($value->kode == $kode_bobot) {
+          //     echo '<th>'.$value->kode.'</th>';
+          //   }
             
-            $kode_bobot = $value->kode;
-          } 
+          //   $kode_bobot = $value->kode;
+          // } 
+
+          foreach ($arr_kode as $key => $value) {  
+            echo '<th >'.$value.'</th>';
+         }
         ?>
       </thead>
       <tbody>
@@ -239,13 +251,17 @@
           $kode_bobot = '';
           $no = 1;
           echo '<th>#</th>'; 
-          foreach ($data_bobot as $key => $value) {  
-            if($value->kode == $kode_bobot) {
-              echo '<th style="text-align:center">'.$value->kode.'</th>';
-            }
+          // foreach ($data_bobot as $key => $value) {  
+          //   if($value->kode == $kode_bobot) {
+          //     echo '<th style="text-align:center">'.$value->kode.'</th>';
+          //   }
             
-            $kode_bobot = $value->kode;
-          } ?>
+          //   $kode_bobot = $value->kode;
+          // }
+          
+          foreach ($arr_kode as $key => $value) {  
+            echo '<th >'.$value.'</th>';
+          }?>
       </thead>
       <tbody>
         <td scope="row">W</td>
@@ -293,8 +309,9 @@
         //sorting
         asort($arr_skor);
         // buat array, pakai value sebagai key untuk mencari rangking
+        $nomor = 1;
         foreach ($arr_skor as $key => $value) {
-          $arr_rangking[number_format((float)$value, 4,',','.')] = $key+1;
+          $arr_rangking[number_format((float)$value, 4,',','.')] = $nomor++;
         }
 
         ?>
