@@ -59,14 +59,18 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
           <table class="table table-bordered table-hover">
             <thead>
               <?php 
+                $arr_kode = [];
                 $kode_bobot = '';
                 echo '<th>#</th>'; 
-                foreach ($data_bobot as $key => $value) {  
-                  if($value->kode == $kode_bobot) {
-                    echo '<th >'.$value->kode.'</th>';
-                  }
-                  
-                  $kode_bobot = $value->kode;
+                ## hapus duplicate array
+                foreach ($data_bobot as $kk => $vv) {
+                  $arr_kode[] = $vv->kode;
+                }
+                $arr_kode = array_unique($arr_kode);
+                ## end hapus duplicate array
+
+                foreach ($arr_kode as $key => $value) {  
+                    echo '<th >'.$value.'</th>';
                 } ?>
             </thead>
             <tbody>
@@ -116,12 +120,8 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
                 $kode_bobot = '';
                 $no = 1;
                 echo '<th>#</th>'; 
-                foreach ($data_bobot as $key => $value) {  
-                  if($value->kode == $kode_bobot) {
-                    echo '<th style="text-align:center">'.$value->kode.'</th>';
-                  }
-                  
-                  $kode_bobot = $value->kode;
+                foreach ($arr_kode as $key => $value) {  
+                    echo '<th style="text-align:center">'.$value.'</th>';
                 } ?>
             </thead>
             <tbody>
