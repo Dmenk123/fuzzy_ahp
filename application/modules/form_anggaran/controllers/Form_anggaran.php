@@ -466,6 +466,21 @@ class Form_anggaran extends CI_Controller {
 		echo json_encode($retval);
 	}
 
+	public function delete_data()
+	{
+		$id = $this->input->post('id');
+		$del = $this->m_global->delete(['id' => $id], 't_anggaran');
+		$del_det = $this->m_global->delete(['id_anggaran' => $id], 't_anggaran_det');
+		if($del) {
+			$retval['status'] = TRUE;
+			$retval['pesan'] = 'Data Perhitungan dihapus';
+		}else{
+			$retval['status'] = FALSE;
+			$retval['pesan'] = 'Data Perhitungan Gagal dihapus';
+		}
+
+		echo json_encode($retval);
+	}
 	///////////////////////////////////////////////////////////////////
 
 	// ===============================================
