@@ -1819,6 +1819,187 @@ class Data_hitung extends CI_Controller {
 		$writer->save('php://output');
 	}
 
+	public function download_excel_hasil_rangking($id_anggaran = false)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_user->get_detail_user($id_user);
+
+		if($id_anggaran == false) {
+			return redirect('data_hitung');
+		}
+
+		$id_anggaran = $this->enkripsi->enc_dec('decrypt', $id_anggaran);
+
+		$data_anggaran = $this->m_global->single_row('t_anggaran.*, m_proyek.nama_proyek, m_proyek.tahun_proyek, m_proyek.tahun_akhir_proyek, m_proyek.durasi_tahun', ['t_anggaran.id' => $id_anggaran, 't_anggaran.deleted_at' =>null], 't_anggaran', [['table' => 'm_proyek', 'on' => 't_anggaran.id_proyek = m_proyek.id']]);
+	
+		if(!$data_anggaran) {
+			return redirect('data_hitung');
+		}
+
+		$data_json = json_decode($data_anggaran->data_json);
+		$data_bobot = $this->m_global->multi_row('t_bobot_proses.*', ['id_anggaran' => $id_anggaran], 't_bobot_proses', null, 'kode asc, tahun asc');
+		$tahun =  $data_anggaran->tahun_proyek;
+
+		$spreadsheet = $this->excel->spreadsheet_obj();
+		$writer = $this->excel->xlsx_obj($spreadsheet);
+		$number_format_obj = $this->excel->number_format_obj();
+		
+		## hitung bobot per kategori dan simpan ke array
+		$kode_bobot = '';
+		$counter_kolom = 0;
+		$arr_tahun = [];
+		foreach ($data_bobot as $kkk => $vvv) {
+			if($vvv->kode != $kode_bobot){
+				$counter_kolom++;
+			}
+
+			$kode_bobot = $vvv->kode;
+		}
+
+		// assign kolom tahun
+		foreach ($data_bobot as $kkk => $vvv) {
+			if (!in_array($vvv->tahun, $arr_tahun)){
+			  array_push($arr_tahun, $vvv->tahun);
+			}
+		}
+
+		for ($z=0; $z < count($arr_tahun); $z++) {
+			$arr_bbt = [];
+			foreach ($data_bobot as $k => $v) {
+				if($arr_tahun[$z] == $v->tahun) {
+					$arr_bbt[] = $v->bobot;
+				}
+			}
+
+			$arr_bobot[] = $arr_bbt;
+		}
+
+		$kode_bobot = $data_bobot[0]->kode; 
+		$jumlah_bobot = 0;
+		$arr_bbt = [];
+
+		foreach ($data_bobot as $k => $v) {
+
+			if($kode_bobot == $v->kode) {
+				$jumlah_bobot += $v->bobot;
+			}else{
+				$arr_bbt[] = $jumlah_bobot;
+
+				//reset
+				$jumlah_bobot = 0;
+				//assign bobot
+				$jumlah_bobot += $v->bobot;
+			}
+
+			$kode_bobot = $v->kode;
+		}
+		// tambahan kolom 
+		$arr_bbt[] = $jumlah_bobot;
+		//assign ke array bobot
+		$arr_bobot[] = $arr_bbt;
+
+		#### ambil data hitung 
+		$data_hitung = $this->m_global->single_row('*', ['id_proyek' => $data_anggaran->id_proyek, 'deleted_at' => null], 't_hitung');
+		
+		#### data normalisasi_ahp
+		$join = [ 
+			['table' => 'm_kategori as k', 'on' => 'tn.id_kategori = k.id']
+		];
+		
+		$normalisasi_ahp = $this->m_global->multi_row('tn.*, k.nama as nama_kategori', ['tn.id_hitung' => $data_hitung->id, 'tn.deleted_at' => null], 't_normalisasi tn', $join, 'tn.id_kategori asc, tn.kode_kategori_tujuan asc');
+
+		## cari data fuzzy simpan ke array
+		$fuzzy = [];
+		foreach ($normalisasi_ahp as $kkk => $vvv) { 
+			if($vvv->kode_kategori_tujuan == 'C1') {
+				$fuzzy[] = $vvv->nilai;
+			}
+		}
+
+		$spreadsheet
+			->getActiveSheet()
+			->getStyle('A1:AA100')
+			->getNumberFormat()
+			->setFormatCode($number_format_obj::FORMAT_TEXT);
+
+		$sheet = $spreadsheet->getActiveSheet();
+		
+		$startRow = 1;
+		$row = $startRow;
+		$idx_tbl = 0;
+		$no = 1;
+		$counter_kolom = 0;
+		$kode_bobot = '';
+		$arr_tahun = [];
+
+		$arr_kode = [];
+		$kode_bobot = '';
+		
+		$cellnya = $this->angka_ke_huruf($idx_tbl++);
+		$sheet->getCell($cellnya . '' . $row)->setValue('#');
+		
+		## hapus duplicate array
+		foreach ($data_bobot as $kk => $vv) {
+			$arr_kode[] = $vv->kode;
+		}
+		$arr_kode = array_unique($arr_kode);
+		## end hapus duplicate array
+
+		foreach ($arr_kode as $key => $value) {  
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue($value);
+		}
+		
+		$row++;
+		$idx_tbl = 0;
+		$flag_tahun = $tahun;
+		$arr_total = [];
+		
+		for ($i=0; $i < count($arr_bobot)-1; $i++) {
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue($no++);
+
+			for ($z=0; $z < count($arr_bobot[$i]); $z++) { 
+				$arr_total[$i][$z] = (float)$arr_bobot[$i][$z] / $arr_bobot[count($arr_bobot)-1][$z]; 
+
+				$cellnya = $this->angka_ke_huruf($idx_tbl++);
+				$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$arr_bobot[$i][$z] / $arr_bobot[count($arr_bobot)-1][$z], 4,',','.'));
+			}
+
+			$row++;
+			$idx_tbl = 0;
+		}
+
+		$final_total_array = [];
+		foreach ($arr_total as $kkk => $vvv) {
+			foreach ($vvv as $id => $value) {
+			  //$final_total_array[$id] += $value;
+			  array_key_exists( $id, $final_total_array ) ? $final_total_array[$id] += $value : $final_total_array[$id] = $value;
+			}
+		}
+
+		// baris total
+
+		$cellnya = $this->angka_ke_huruf($idx_tbl++);
+		$sheet->getCell($cellnya . '' . $row)->setValue('Jumlah');
+
+		foreach ($final_total_array as $kkkk => $vvvv) {
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$vvvv, 4,',','.'));
+		}
+
+		###########################################
+		
+		$filename = 'proses_hasil_rangking' . time();
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+		header('Cache-Control: max-age=0');
+
+		$writer->save('php://output');
+	}
+
 	########################################################
 
 	public function cetak_data_ahp($id_hitung = false)

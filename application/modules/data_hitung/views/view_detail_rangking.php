@@ -33,7 +33,7 @@ $data_kat = $this->db->from('m_kategori')->where(['deleted_at' => null])->order_
               <div class="btn-group">
                 <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Download / Cetak</button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/download_excel_normalisasi_bobot/'.$this->uri->segment(3);?>">
+                  <a class="dropdown-item" target="_blank" href="<?= base_url().$this->uri->segment(1).'/download_excel_hasil_rangking/'.$this->uri->segment(3);?>">
                     <i class="la la-arrow-circle-o-down"></i> Excel Hasil Rangking
                   </a>
                  

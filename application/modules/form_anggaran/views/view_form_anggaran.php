@@ -131,23 +131,26 @@
                                                 </select>
                                               </td>
                                               <td width="15%">
-                                                <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)">
+                                                <!-- <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)"> -->
+                                                <!-- <input type="text" id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)"> -->
+                                                <input class="form-control form-control-sm maskmoney2" style="text-align: right;" id="f_qty_<?=$kk;?>" name="f_qty[]"  onkeyup="hitungTotal(<?=$kk;?>)" value="0">
                                                 <input type="hidden" id="f_qtyraw_<?=$kk;?>" name="f_qtyraw[]" class="form-control form-control-sm">
                                               </td>
                                               <td width="20%">
-                                                <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)">
+                                                <!-- <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)"> -->
+                                                <input type="text" id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney2" onkeyup="hitungTotal(<?=$kk;?>)" style="text-align: right;" value="0">
                                                 <input type="hidden" id="f_hargaraw_<?=$kk;?>" name="f_hargaraw[]" class="form-control form-control-sm">
                                               </td>
                                               <td width="25%">
-                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney <?='totale_mbah'.$k?>" data-id="<?=$k;?>" disabled value="0">
-                                                <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm">
+                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm" data-id="<?=$k;?>" disabled value="0">
+                                                <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm <?='totale_mbah'.$k?>">
                                               </td>
                                             </tr>
                                             <?php if($is_kolom_total) { ?>
                                               <tr>
                                                 <th scope="row" colspan="5">Total </th>
                                                 <td>
-                                                  <input type="text" name="f_grand_tot[]" id="f_grand_tot_<?=$k;?>" class="form-control form-control-sm maskmoney" disabled value="<?= $grand_total_kat; ?>">
+                                                  <input type="text" name="f_grand_tot[]" id="f_grand_tot_<?=$k;?>" class="form-control form-control-sm" disabled value="<?= $grand_total_kat; ?>">
                                                   <input type="hidden" id="f_grand_totraw_<?=$k;?>" name="f_grand_totraw[]" class="form-control form-control-sm" value="0">
                                                 </td>
                                               </tr>

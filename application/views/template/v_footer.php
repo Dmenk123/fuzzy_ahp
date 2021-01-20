@@ -50,6 +50,8 @@
         <script src="<?= base_url('assets/'); ?>plugins/ckeditor/ckeditor.js" type="text/javascript"></script>
         <script src="<?= base_url('assets/'); ?>plugins/ckeditor/adapters/jquery.js" type="text/javascript"></script>
         <script src="<?= base_url('assets/'); ?>plugins/jquery-mask-money/dist/jquery.maskMoney.min.js" type="text/javascript"></script>
+        <script src="<?= base_url('assets/'); ?>plugins/inputmask/dist/jquery.inputmask.min.js" type="text/javascript"></script>
+        
         <!--end::Global Theme Bundle -->
         
         <!-- begin::Global Config(global config for global JS sciprts) -->
@@ -153,7 +155,33 @@
                 //     // }
                 // };
 
-                $('.maskmoney').maskMoney();
+                $('.maskmoney').maskMoney({ 
+                    thousands: '.', 
+                    decimal: ',', 
+                    //formatOnBlur: true, 
+                    reverse: true, 
+                    //selectAllOnFocus: true, 
+                    precision: 0
+                });
+
+                $(".maskmoney2").inputmask({
+                    prefix: "",
+                    groupSeparator: ".",
+                    radixPoint: ",",
+                    alias: "currency",
+                    placeholder: "0",
+                    autoGroup: true,
+                    digits: 2,
+                    digitsOptional: false,
+                    clearMaskOnLostFocus: false,
+                    inputmode: "numeric",
+                    onBeforeMask: function (value, opts) {
+                        return value;
+                    },
+                    
+                });
+                // /$(".maskmoney2").inputmask({ alias : "currency", mask : "0.00" });
+                // $(".maskmoney2").maskMoney({reverse:true});
             });
         </script>
         <?php if(isset($link_js)) { ?>

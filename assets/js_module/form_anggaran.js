@@ -2,7 +2,8 @@ var save_method;
 var table;
 
 $(document).ready(function() {
-    $('.maskmoney').maskMoney('mask')
+    // $('.maskmoney').maskMoney('mask', {reverse: true});
+    // $('.maskmoney').maskMoney('mask');
     //force integer input in textfield
     $('input.numberinput').bind('keypress', function (e) {
         return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;
@@ -224,16 +225,24 @@ $(document).ready(function() {
 });
 
 function hitungTotal(index){
-    let qty = $('#f_qty_'+index).maskMoney('unmasked')[0];
-    let harga = $('#f_harga_'+index).maskMoney('unmasked')[0];
+    let qty = $('#f_qty_'+index).inputmask('unmaskedvalue');
+    let harga = $('#f_harga_'+index).inputmask('unmaskedvalue');
+   
+    qty = qty.replace(",", ".");
+    harga = harga.replace(",", ".");
+   
+    qtyFix = parseFloat(qty).toFixed(2);
+    hargaFix = parseFloat(harga).toFixed(2);
+    
     let total = qty * harga;
     let total_new = Number(total.toFixed(2));
+    //console.log(total_new);
     let idx = $('#f_harga_tot_'+index).data("id");
 
-    $('#f_harga_tot_'+index).maskMoney('mask', total_new);
+    $('#f_harga_tot_'+index).val(formatMoney(total_new));
+    // set raw value
     $('#f_qtyraw_'+index).val(qty);
     $('#f_hargaraw_'+index).val(harga);
-
     $('#f_harga_totraw_'+index).val(total_new);
 
     hitungGrandTotal(idx)
@@ -243,14 +252,21 @@ function hitungGrandTotal(index){
     let grandTotal = 0;
     $(".totale_mbah"+index).each(function() {
         //alert($(this).val());
-        let harga = $(this).maskMoney('unmasked')[0];
+        // let harga = $(this).val();
+        let harga = Number($(this).val()) ? Number($(this).val()) : 0;
+        // harga = harga.replace(",", ".");
+        //let hargaFix = parseFloat(harga).toFixed(2);
+        // console.log(typeof(harga));
         grandTotal = grandTotal + harga;
+        //grandTotal = Number(grandTotal.toFixed(2)) + hargaFix;
     });
 
-    console.log(grandTotal);
-    let grandTotalNew = Number(grandTotal.toFixed(2));
-    $('#f_grand_tot_'+index).maskMoney('mask', grandTotalNew);
-    $('#f_grand_totraw_'+index).val(grandTotalNew);
+    //console.log(grandTotal);
+    //let grandTotalNew = Number(grandTotal.toFixed(2));
+    $('#f_grand_tot_'+index).val(formatMoney(grandTotal));
+    $('#f_grand_totraw_'+index).val(grandTotal);
+    // $('#f_grand_tot_'+index).maskMoney('mask', grandTotalNew);
+    // $('#f_grand_totraw_'+index).val(grandTotalNew);
 }
 
 function add_menu()
@@ -402,3 +418,19 @@ function reset_modal_form()
     $('div.form-group').children().removeClass("is-invalid invalid-feedback");
     $('span.help-block').text('');
 }
+
+function formatMoney(number, decPlaces = 2, decSep = ',', thouSep = '.') {
+    decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+    decSep = typeof decSep === "undefined" ? "." : decSep;
+    thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+    var sign = number < 0 ? "-" : "";
+    var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+    var j = (j = i.length) > 3 ? j % 3 : 0;
+    
+    return sign +
+        (j ? i.substr(0, j) + thouSep : "") +
+        i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+        (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+}
+
+

@@ -473,10 +473,10 @@ class Form_anggaran extends CI_Controller {
 		$del_det = $this->m_global->delete(['id_anggaran' => $id], 't_anggaran_det');
 		if($del) {
 			$retval['status'] = TRUE;
-			$retval['pesan'] = 'Data Perhitungan dihapus';
+			$retval['pesan'] = 'Data Perhitungan Anggaran dihapus';
 		}else{
 			$retval['status'] = FALSE;
-			$retval['pesan'] = 'Data Perhitungan Gagal dihapus';
+			$retval['pesan'] = 'Data Perhitungan Anggaran Gagal dihapus';
 		}
 
 		echo json_encode($retval);
