@@ -1931,9 +1931,7 @@ class Data_hitung extends CI_Controller {
 		$idx_tbl = 0;
 		$no = 1;
 		$counter_kolom = 0;
-		$kode_bobot = '';
 		$arr_tahun = [];
-
 		$arr_kode = [];
 		$kode_bobot = '';
 		
@@ -1980,14 +1978,57 @@ class Data_hitung extends CI_Controller {
 			}
 		}
 
-		// baris total
-
 		$cellnya = $this->angka_ke_huruf($idx_tbl++);
 		$sheet->getCell($cellnya . '' . $row)->setValue('Jumlah');
 
 		foreach ($final_total_array as $kkkk => $vvvv) {
 			$cellnya = $this->angka_ke_huruf($idx_tbl++);
 			$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$vvvv, 4,',','.'));
+		}
+
+		##############################################################
+
+		$row++;
+		$idx_tbl = 0;
+		$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.$row.':H'.$row);
+		$sheet->getCell('A'.$row)->setValue('');
+
+		##############################################################
+		
+		$row++;
+		$idx_tbl = 0;
+		$kode_bobot = '';
+		$no = 1;
+		
+		$cellnya = $this->angka_ke_huruf($idx_tbl++);
+		$sheet->getCell($cellnya . '' . $row)->setValue('#');
+		
+		foreach ($arr_kode as $key => $value) {  
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue($value);
+		}
+
+		$row++;
+		$idx_tbl = 0;
+		foreach ($fuzzy as $k => $v) {
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$v, 4,',','.'));
+		}
+
+		$row++;
+		$idx_tbl = 0;
+		for ($i=0; $i < count($arr_bobot)-1; $i++) { 
+			
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue($no++);
+
+			for ($z=0; $z < count($arr_bobot[$i]); $z++) {
+				$cellnya = $this->angka_ke_huruf($idx_tbl++);
+				$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$arr_bobot[$i][$z] / $arr_bobot[count($arr_bobot)-1][$z], 4,',','.'));
+			}
+
+			$row++;
+			$idx_tbl = 0;
 		}
 
 		###########################################
