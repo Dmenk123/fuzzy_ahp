@@ -3,7 +3,22 @@ var table;
 
 $(document).ready(function() {
     // $('.maskmoney').maskMoney('mask', {reverse: true});
-    // $('.maskmoney').maskMoney('mask');
+    $(".maskmoney2").inputmask({
+        prefix: "",
+        groupSeparator: ".",
+        radixPoint: ",",
+        alias: "currency",
+        placeholder: "0",
+        autoGroup: true,
+        digits: 2,
+        digitsOptional: false,
+        clearMaskOnLostFocus: false,
+        inputmode: "numeric",
+        onBeforeMask: function (value, opts) {
+            return value;
+        },
+    });
+
     //force integer input in textfield
     $('input.numberinput').bind('keypress', function (e) {
         return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;

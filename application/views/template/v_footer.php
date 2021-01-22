@@ -164,22 +164,22 @@
                     precision: 0
                 });
 
-                $(".maskmoney2").inputmask({
-                    prefix: "",
-                    groupSeparator: ".",
-                    radixPoint: ",",
-                    alias: "currency",
-                    placeholder: "0",
-                    autoGroup: true,
-                    digits: 2,
-                    digitsOptional: false,
-                    clearMaskOnLostFocus: false,
-                    inputmode: "numeric",
-                    onBeforeMask: function (value, opts) {
-                        return value;
-                    },
+                // $(".maskmoney2").inputmask({
+                //     prefix: "",
+                //     groupSeparator: ".",
+                //     radixPoint: ",",
+                //     alias: "currency",
+                //     placeholder: "0",
+                //     autoGroup: true,
+                //     digits: 2,
+                //     digitsOptional: false,
+                //     clearMaskOnLostFocus: false,
+                //     inputmode: "numeric",
+                //     onBeforeMask: function (value, opts) {
+                //         return value;
+                //     },
                     
-                });
+                //});
                 // /$(".maskmoney2").inputmask({ alias : "currency", mask : "0.00" });
                 // $(".maskmoney2").maskMoney({reverse:true});
             });

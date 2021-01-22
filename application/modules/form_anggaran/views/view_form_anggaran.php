@@ -131,13 +131,10 @@
                                                 </select>
                                               </td>
                                               <td width="15%">
-                                                <!-- <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)"> -->
-                                                <!-- <input type="text" id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)"> -->
                                                 <input class="form-control form-control-sm maskmoney2" style="text-align: right;" id="f_qty_<?=$kk;?>" name="f_qty[]"  onkeyup="hitungTotal(<?=$kk;?>)" value="0">
                                                 <input type="hidden" id="f_qtyraw_<?=$kk;?>" name="f_qtyraw[]" class="form-control form-control-sm">
                                               </td>
                                               <td width="20%">
-                                                <!-- <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)"> -->
                                                 <input type="text" id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney2" onkeyup="hitungTotal(<?=$kk;?>)" style="text-align: right;" value="0">
                                                 <input type="hidden" id="f_hargaraw_<?=$kk;?>" name="f_hargaraw[]" class="form-control form-control-sm">
                                               </td>
@@ -198,23 +195,23 @@
                                                 </select>
                                               </td>
                                               <td width="15%">
-                                                <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',$vv->qty); ?>">
+                                                <input type="text" data-thousands="." data-decimal="," id="f_qty_<?=$kk;?>" name="f_qty[]" class="form-control form-control-sm maskmoney2" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',$vv->qty); ?>">
                                                 <input type="hidden" id="f_qtyraw_<?=$kk;?>" name="f_qtyraw[]" class="form-control form-control-sm" value="<?= $vv->qty; ?>">
                                               </td>
                                               <td width="20%">
-                                                <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',$vv->harga_satuan); ?>">
+                                                <input type="text" data-thousands="." data-decimal="," id="f_harga_<?=$kk;?>" name="f_harga[]" class="form-control form-control-sm maskmoney2" onkeyup="hitungTotal(<?=$kk;?>)" value="<?= str_ireplace('.',',',$vv->harga_satuan); ?>">
                                                 <input type="hidden" id="f_hargaraw_<?=$kk;?>" name="f_hargaraw[]" class="form-control form-control-sm" value="<?= $vv->harga_satuan; ?>">
                                               </td>
                                               <td width="25%">
-                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm maskmoney <?='totale_mbah'.$k?>" disabled value="<?= $vv->harga_total; ?>" data-id="<?=$k;?>">
-                                                <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm" value="<?= $vv->harga_total; ?>">
+                                                <input type="text" name="f_harga_tot[]" id="f_harga_tot_<?=$kk;?>" class="form-control form-control-sm" disabled value="<?= number_format($vv->harga_total,2,',','.'); ?>" data-id="<?=$k;?>">
+                                                <input type="hidden" id="f_harga_totraw_<?=$kk;?>" name="f_harga_totraw[]" class="form-control form-control-sm <?='totale_mbah'.$k?>" value="<?= $vv->harga_total; ?>">
                                               </td>
                                             </tr>
                                             <?php if($is_kolom_total) { ?>
                                               <tr>
                                                 <th scope="row" colspan="5">Total </th>
                                                 <td>
-                                                  <input type="text" name="f_grand_tot[]" id="f_grand_tot_<?=$k;?>" class="form-control form-control-sm maskmoney" disabled value="<?= $grand_total_kat; ?>">
+                                                  <input type="text" name="f_grand_tot[]" id="f_grand_tot_<?=$k;?>" class="form-control form-control-sm" disabled value="<?= number_format($grand_total_kat,2,',','.'); ?>">
                                                   <input type="hidden" id="f_grand_totraw_<?=$k;?>" name="f_grand_totraw[]" class="form-control form-control-sm" value="<?= $vv->harga_total; ?>">
                                                 </td>
                                               </tr>
