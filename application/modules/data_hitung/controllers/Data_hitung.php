@@ -1935,6 +1935,13 @@ class Data_hitung extends CI_Controller {
 		$arr_kode = [];
 		$kode_bobot = '';
 		
+
+		##############################################################
+		$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.$row.':H'.$row);
+		$sheet->getCell('A'.$row++)->setValue('Tabel Normalisasi');
+		$idx_tbl = 0;
+		##############################################################
+
 		$cellnya = $this->angka_ke_huruf($idx_tbl++);
 		$sheet->getCell($cellnya . '' . $row)->setValue('#');
 		
@@ -1986,13 +1993,12 @@ class Data_hitung extends CI_Controller {
 			$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$vvvv, 4,',','.'));
 		}
 
-		##############################################################
-
 		$row++;
-		$idx_tbl = 0;
-		$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.$row.':H'.$row);
-		$sheet->getCell('A'.$row)->setValue('');
 
+		##############################################################
+		$sheet->getCell('A'.$row++)->setValue('');
+		$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.$row.':H'.$row);
+		$sheet->getCell('A'.$row)->setValue('Proses Perhitungan Rangking');
 		##############################################################
 		
 		$row++;
@@ -2031,8 +2037,60 @@ class Data_hitung extends CI_Controller {
 			$idx_tbl = 0;
 		}
 
-		###########################################
+		##############################################################
+		$sheet->getCell('A'.$row++)->setValue('');
+		$spreadsheet->setActiveSheetIndex(0)->mergeCells('A'.$row.':H'.$row);
+		$sheet->getCell('A'.$row)->setValue('Hasil Rangking');
+		##############################################################
+
+		$row++;
+		$idx_tbl = 0;
+		$kode_bobot = '';
+		$no = 1;
 		
+		$sheet->getCell('A' . $row)->setValue('#');
+		$sheet->getCell('B' . $row)->setValue('TOTAL SKOR');
+		$sheet->getCell('C' . $row)->setValue('RANGKING');
+		$row++;
+		
+		for ($i=0; $i < count($arr_bobot)-1; $i++) { 
+			// assign array rangking untuk di sorting
+			$skor_raw = 0;
+			for ($z=0; $z < count($arr_bobot[$i]); $z++) {
+				$skor_raw += (((float)$arr_bobot[$i][$z] / $arr_bobot[count($arr_bobot)-1][$z]) * $fuzzy[$z]);
+			}
+
+			$arr_skor[] = $skor_raw;
+		}
+
+		//sorting
+		asort($arr_skor);
+		// buat array, pakai value sebagai key untuk mencari rangking
+		$nomor = 1;
+		foreach ($arr_skor as $key => $value) {
+		  $arr_rangking[number_format((float)$value, 4,',','.')] = $nomor++;
+		}
+
+		for ($i=0; $i < count($arr_bobot)-1; $i++) { 
+			$skor = 0;
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue('A'.$no++);
+
+			for ($z=0; $z < count($arr_bobot[$i]); $z++) {
+				$skor += (((float)$arr_bobot[$i][$z] / $arr_bobot[count($arr_bobot)-1][$z]) * $fuzzy[$z]);
+			}
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue(number_format((float)$skor, 4,',','.'));
+
+			$cellnya = $this->angka_ke_huruf($idx_tbl++);
+			$sheet->getCell($cellnya . '' . $row)->setValue($arr_rangking[number_format((float)$skor, 4,',','.')]);
+
+			$row++;
+			$idx_tbl = 0;
+		}
+
 		$filename = 'proses_hasil_rangking' . time();
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');

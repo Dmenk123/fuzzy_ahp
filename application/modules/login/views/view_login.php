@@ -33,7 +33,7 @@
 		<link href="<?= base_url('assets/template/')?>assets/css/skins/aside/dark.css" rel="stylesheet" type="text/css" />
 
 		<!--end::Layout Skins -->
-		<link rel="shortcut icon" href="<?= base_url('assets/template/')?>assets/media/logos/favicon.ico" />
+		<link rel="shortcut icon" href="<?= base_url('assets/template/')?>assets/media/logos/Logo-uwks-sm.png" />
 	</head>
 
 	<!-- end::Head -->
@@ -49,7 +49,7 @@
 						<div class="kt-login__container">
 							<div class="kt-login__signin">
 								<div class="kt-login__head">
-									<h3 class="kt-login__title">Backoffice Aplikasi</h3>
+									<h3 class="kt-login__title">Sistem Pakar Fuzzy AHP</h3>
 								</div>
 								<form class="kt-form">
 									<div class="input-group">
